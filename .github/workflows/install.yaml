@@ -21,7 +21,6 @@ jobs:
         run: |
           wget http://tinycorelinux.net/12.x/x86/release/Core-current.iso -O tinycore.iso
 
-
       - name: Mount Tiny Core Linux ISO
         run: |
           sudo mkdir /mnt/iso
@@ -31,7 +30,7 @@ jobs:
         run: |
           # Add code to customize the mounted Tiny Core Linux system
           # For example, you can add or modify files, packages, configurations, etc.
-          sudo chroot /mnt/iso /bin/sh -c "tce-load -wi micro"
+          sudo chroot /mnt/iso /bin/busybox sh -c "tce-load -wi micro"
 
       - name: Unmount Tiny Core Linux ISO
         run: |
