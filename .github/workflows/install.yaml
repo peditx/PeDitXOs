@@ -9,6 +9,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Delete previous workflow runs
+        uses: actions/github-script@v4
+        with:
+          script: |
+            const { Octokit } = require("@octokit/rest");
+            const octokit = new Octokit();
+            const { data: runs } = await octokit.actions.listWorkflowRuns({
+              owner: "${{ github.repository_owner }}",
+              repo: "${{ github.repository }}",
+              workflow_file_name: "${{ github.workflow }}",
+              status: "completed",
+            });
+            for (const run of runs.workflow_runs) {
+              await octokit.actions.deleteWorkflowRun({
+                owner: "${{ github.repository_owner }}",
+                repo: "${{ github.repository }}",
+                run_id: run.id,
+              });
+            }
+
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -30,7 +50,7 @@ jobs:
         run: |
           # Add code to customize the mounted Tiny Core Linux system
           # For example, you can add or modify files, packages, configurations, etc.
-          sudo chroot /mnt/iso /bin/ash -c "tce-load -wi micro"
+          sudo chroot /mnt/iso /bin/busybox sh -c "tce-load -wi micro"
 
       - name: Unmount Tiny Core Linux ISO
         run: |
