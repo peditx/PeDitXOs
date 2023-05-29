@@ -15,7 +15,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget curl nano vi parted squashfs-tools genisoimage
+          sudo apt-get install -y wget curl squashfs-tools genisoimage
 
       - name: Download Tiny Core Linux base system
         run: |
@@ -30,6 +30,7 @@ jobs:
         run: |
           # Add code to customize the mounted Tiny Core Linux system
           # For example, you can add or modify files, packages, configurations, etc.
+          sudo chroot /mnt/iso /bin/sh -c "tce-load -wi micro"
 
       - name: Unmount Tiny Core Linux ISO
         run: |
