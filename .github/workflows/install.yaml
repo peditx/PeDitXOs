@@ -1,0 +1,55 @@
+name: Build and Customize Live Debian ISO
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget curl nano vi parted
+
+      - name: Clone live-build repository
+        run: |
+          git clone https://github.com/debian-live/live-build.git
+          cd live-build
+          git checkout tags/debian/3.0.7-1
+
+      - name: Customize live-build configuration
+        run: |
+          cd live-build
+          # Add customizations to configuration files, if needed
+
+      - name: Build Live Debian ISO
+        run: |
+          cd live-build
+          sudo lb config
+          sudo lb build
+
+      - name: Download boot logo image
+        run: |
+          wget https://peditx.ir/wp-content/uploads/2023/05/lastg-logo.png -O boot-logo.png
+
+      - name: Customize boot logo
+        run: |
+          # Add code to modify the boot logo using the downloaded image
+          # For example, you can use ImageMagick or other image manipulation tools
+
+      - name: Create ISO
+        run: |
+          cd live-build
+          sudo cp binary.hybrid.iso ${{ github.workspace }}/PeDitXOs.iso
+
+      - name: Upload ISO artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Custom Debian ISO
+          path: ${{ github.workspace }}/PeDitXOs.iso
