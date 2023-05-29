@@ -9,26 +9,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Delete previous workflow runs
-        uses: actions/github-script@v4
-        with:
-          script: |
-            const { Octokit } = require("@octokit/rest");
-            const octokit = new Octokit();
-            const { data: runs } = await octokit.actions.listWorkflowRuns({
-              owner: "${{ github.repository_owner }}",
-              repo: "${{ github.repository }}",
-              workflow_file_name: "${{ github.workflow }}",
-              status: "completed",
-            });
-            for (const run of runs.workflow_runs) {
-              await octokit.actions.deleteWorkflowRun({
-                owner: "${{ github.repository_owner }}",
-                repo: "${{ github.repository }}",
-                run_id: run.id,
-              });
-            }
-
       - name: Checkout repository
         uses: actions/checkout@v2
 
