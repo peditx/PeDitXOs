@@ -1,4 +1,4 @@
-name: Build and Customize Live Tiny Core Linux ISO
+name: Build and Customize Live Linux ISO
 on:
   push:
     branches:
@@ -17,32 +17,32 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y wget curl squashfs-tools genisoimage
 
-      - name: Download Tiny Core Linux base system
+      - name: Download Linux base system
         run: |
-          wget http://tinycorelinux.net/12.x/x86/release/Core-current.iso -O tinycore.iso
+          wget https://www.ibiblio.org/pub/linux/distributions/tinycorelinux/12.x/x86/release/Core-current.iso -O linux-base.iso
 
-      - name: Mount Tiny Core Linux ISO
+      - name: Mount Linux ISO
         run: |
           sudo mkdir /mnt/iso
-          sudo mount -o loop tinycore.iso /mnt/iso
+          sudo mount -o loop linux-base.iso /mnt/iso
 
-      - name: Customize Tiny Core Linux
+      - name: Customize Linux
         run: |
-          # Add code to customize the mounted Tiny Core Linux system
+          # Add code to customize the mounted Linux system
           # For example, you can add or modify files, packages, configurations, etc.
-          sudo chroot /mnt/iso /bin/busybox sh -c "tce-load -wi micro"
+          sudo chroot /mnt/iso /bin/sh -c "apt-get update && apt-get install -y package1 package2 ..."
 
-      - name: Unmount Tiny Core Linux ISO
+      - name: Unmount Linux ISO
         run: |
           sudo umount /mnt/iso
           sudo rm -rf /mnt/iso
 
       - name: Create ISO
         run: |
-          sudo mkisofs -quiet -l -J -R -V TC_CUSTOM -no-emul-boot -boot-load-size 4 -boot-info-table -b isolinux/isolinux.bin -c isolinux/boot.cat -o tinycore-custom.iso .
+          sudo mkisofs -quiet -l -J -R -V CUSTOM -no-emul-boot -boot-load-size 4 -boot-info-table -b isolinux/isolinux.bin -c isolinux/boot.cat -o custom-linux.iso .
 
       - name: Upload ISO artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Custom Tiny Core Linux ISO
-          path: tinycore-custom.iso
+          name: Custom Linux ISO
+          path: custom-linux.iso
