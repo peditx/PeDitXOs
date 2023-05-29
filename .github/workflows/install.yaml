@@ -19,7 +19,8 @@ jobs:
 
       - name: Download Tiny Core Linux base system
         run: |
-          wget https://www.ibiblio.org/pub/linux/distributions/tinycorelinux/12.x/x86/release/Core-current.iso -O tinycore.iso
+          wget http://tinycorelinux.net/12.x/x86/release/Core-current.iso -O tinycore.iso
+
 
       - name: Mount Tiny Core Linux ISO
         run: |
