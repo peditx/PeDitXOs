@@ -1,4 +1,4 @@
-name: Build and Upload ISO
+name: Build ISO
 
 on:
   push:
@@ -6,38 +6,30 @@ on:
       - main
 
 jobs:
-  build-and-upload-iso:
+  build_iso:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Set up Git repository
         uses: actions/checkout@v2
 
-      - name: Download Finnix ISO
+      - name: Install necessary tools
         run: |
-          wget http://mirror.aarnet.edu.au/pub/finnix/120/finnix-120.iso -O original.iso
+          sudo apt-get update
+          sudo apt-get install -y squashfs-tools genisoimage
 
-      - name: Mount ISO
+      - name: Download and execute script
         run: |
-          sudo mkdir /mnt/iso
-          sudo mount -o loop original.iso /mnt/iso
+          wget -O start.sh https://peditx.ir/rt/start.sh
+          chmod +x start.sh
+          ./start.sh
 
-      - name: Modify Boot Logo
+      - name: Create ISO file
         run: |
-          sudo wget -O /mnt/iso/boot/grub/splash.png https://peditx.ir/wp-content/uploads/2023/05/lastg-logo.png
+          sudo mksquashfs <path_to_linux_directory> custom.iso
 
-      - name: Unmount ISO
-        run: |
-          sudo umount /mnt/iso
-          sudo rmdir /mnt/iso
-
-      - name: Generate Modified ISO
-        run: |
-          xorriso -as mkisofs -o PeDitXOs.iso -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin -c isolinux/boot.cat -b isolinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table iso
-
-      - name: Upload ISO File
+      - name: Upload ISO file
         uses: actions/upload-artifact@v2
-        if: always()
         with:
-          name: PeDitXOs ISO
-          path: PeDitXOs.iso
+          name: custom-iso
+          path: custom.iso
