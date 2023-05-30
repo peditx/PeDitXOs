@@ -37,7 +37,7 @@ jobs:
 
       - name: Customize ISO
         run: |
-          sudo chroot extracted/ /bin/bash -c "apt-get update && apt-get install -y wget curl nano vi parted resize2fs"
+          sudo chroot extracted/ /bin/sh -c "apt-get update && apt-get install -y wget curl nano vi parted resize2fs"
 
       - name: Repack ISO
         run: |
