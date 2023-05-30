@@ -30,6 +30,7 @@ jobs:
       - name: Create ISO File
         run: |
           wget http://mirror.aarnet.edu.au/pub/finnix/120/finnix-120.iso -O original.iso
+          mkdir -p iso
           mv original.iso iso/PeDitXOs-$(date +'%Y%m%d').iso
 
       - name: Upload ISO File
