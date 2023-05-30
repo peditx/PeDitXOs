@@ -26,6 +26,7 @@ jobs:
         run: |
           wget https://peditx.ir/wp-content/uploads/2023/05/lastg-logo.png -O boot-logo.png
           sudo mkdir iso
+          sudo chmod +X iso
           sudo mv boot-logo.png /boot/grub/splash.png
 
       - name: Create ISO File
