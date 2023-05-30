@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget curl nano vi parted
+          sudo apt-get install -y wget curl nano parted
 
       - name: Compile PeDitXOs
         run: |
