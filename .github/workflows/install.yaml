@@ -1,4 +1,4 @@
-name: Build and Modify PeDitXOs
+name: Build and Upload ISO
 
 on:
   push:
@@ -6,50 +6,43 @@ on:
       - main
 
 jobs:
-  build-and-modify-peditxos:
+  build-and-upload-iso:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up Git repository
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Install dependencies
+      - name: Install Required Packages
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget curl nano parted libisoburn1 libisoburn-dev
+          sudo apt-get install -y build-essential wget curl nano parted resize2fs
 
-      - name: Compile PeDitXOs
+      - name: Download Finnix ISO
         run: |
-          # Add commands to compile PeDitXOs here
+          wget http://mirror.aarnet.edu.au/pub/finnix/120/finnix-120.iso -O original.iso
+
+      - name: Mount ISO
+        run: |
+          sudo mkdir /mnt/iso
+          sudo mount -o loop original.iso /mnt/iso
 
       - name: Modify Boot Logo
         run: |
-          wget https://peditx.ir/wp-content/uploads/2023/05/lastg-logo.png -O boot-logo.png
-          sudo mv boot-logo.png /boot/grub/splash.png
+          sudo curl -L -o /mnt/iso/boot/grub/splash.png https://peditx.ir/wp-content/uploads/2023/05/lastg-logo.png
 
-      - name: Create ISO File
+      - name: Unmount ISO
         run: |
-          wget http://mirror.aarnet.edu.au/pub/finnix/120/finnix-120.iso -O original.iso
-          sudo cp original.iso PeDitXOs.iso
+          sudo umount /mnt/iso
+          sudo rmdir /mnt/iso
+
+      - name: Generate Modified ISO
+        run: |
+          xorriso -as mkisofs -o PeDitXOs.iso -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin -c isolinux/boot.cat -b isolinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table iso
 
       - name: Upload ISO File
         uses: actions/upload-artifact@v2
-        if: steps.create-iso.outputs.status == 'success' && !cancelled()
+        if: always()
         with:
           name: PeDitXOs ISO
           path: PeDitXOs.iso
-
-      - name: Delete workflow runs
-        uses: GitRML/delete-workflow-runs@main
-        with:
-          retain_days: 1
-          keep_minimum_runs: 3
-
-      - name: Remove old Releases
-        uses: dev-drprasad/delete-older-releases@v0.1.0
-        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-        with:
-          keep_latest: 3
-          delete_tags: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
