@@ -1,4 +1,4 @@
-name: Build and Customize Debian Netinst ISO
+name: Build and Customize Debian ISO
 on:
   push:
     branches:
@@ -14,36 +14,39 @@ jobs:
 
       - name: Delete previous artifacts
         run: |
-          rm -rf ${{ github.workspace }}/.github/workflows/custom-debian.iso
+          rm -rf ${{ github.workspace }}/custom-debian.iso
 
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget curl genisoimage squashfs-tools
+          sudo apt-get install -y squashfs-tools genisoimage wget
 
       - name: Download Debian Netinst ISO
         run: |
-          wget https://cdimage.debian.org/debian-cd/current/i386/iso-cd/debian-11.7.0-i386-netinst.iso -O debian-netinst.iso
+          wget -O debian-netinst.iso https://deb.debian.org/debian/dists/bullseye/main/installer-i386/current/images/netboot/mini.iso
 
-      - name: Mount Debian Netinst ISO
+      - name: Mount ISO
         run: |
-          sudo mkdir /mnt/iso
-          sudo mount -o loop debian-netinst.iso /mnt/iso
+          mkdir iso
+          sudo mount -o loop debian-netinst.iso iso
 
-      - name: Customize Debian Netinst
+      - name: Extract ISO contents
         run: |
-          # Add code to customize the mounted Debian Netinst system
-          # For example, you can add or modify files, packages, configurations, etc.
-           sudo chroot /mnt/iso /bin/sh -c "apt-get update && apt-get install -y wget curl nano vi parted resize2fs"
+          mkdir extracted
+          rsync -a iso/ extracted/
 
-      - name: Unmount Debian Netinst ISO
+      - name: Customize ISO
         run: |
-          sudo umount /mnt/iso
-          sudo rm -rf /mnt/iso
+          sudo chroot extracted/ /bin/bash -c "apt-get update && apt-get install -y wget curl nano vi parted resize2fs"
 
-      - name: Create ISO
+      - name: Repack ISO
         run: |
-          sudo mkisofs -quiet -l -J -R -V CUSTOM -no-emul-boot -boot-load-size 4 -boot-info-table -b isolinux/isolinux.bin -c isolinux/boot.cat -o custom-debian.iso .
+          sudo genisoimage -o custom-debian.iso -r -J -no-emul-boot -boot-load-size 4 -boot-info-table -b isolinux/isolinux.bin -c isolinux/boot.cat extracted/
+
+      - name: Cleanup
+        run: |
+          sudo umount iso
+          rm -rf iso extracted debian-netinst.iso
 
       - name: Upload ISO artifact
         uses: actions/upload-artifact@v2
