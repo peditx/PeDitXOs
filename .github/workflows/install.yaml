@@ -30,10 +30,10 @@ jobs:
       - name: Create ISO File
         run: |
           wget http://mirror.aarnet.edu.au/pub/finnix/120/finnix-120.iso -O original.iso
-          mv original.iso path/to/iso/PeDitXOs-$(date +'%Y%m%d').iso
+          mv original.iso iso/PeDitXOs-$(date +'%Y%m%d').iso
 
       - name: Upload ISO File
         uses: actions/upload-artifact@v2
         with:
           name: PeDitXOs ISO
-          path: path/to/iso/PeDitXOs-$(date +'%Y%m%d').iso
+          path: iso/PeDitXOs-$(date +'%Y%m%d').iso
