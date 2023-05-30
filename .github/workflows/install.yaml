@@ -33,11 +33,11 @@ jobs:
           sudo cp original.iso PeDitXOs.iso
 
       - name: Upload ISO File
-        uses: actions/upload-artifact@main
-        if: steps.organize.outputs.status == 'success' && !cancelled()
+        uses: actions/upload-artifact@v2
+        if: steps.create-iso.outputs.status == 'success' && !cancelled()
         with:
           name: PeDitXOs ISO
-          path: PeDitXOs.iso
+          path: ./PeDitXOs.iso
 
       - name: Delete workflow runs
         uses: GitRML/delete-workflow-runs@main
