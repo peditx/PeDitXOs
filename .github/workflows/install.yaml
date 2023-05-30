@@ -30,26 +30,14 @@ jobs:
       - name: Create ISO File
         run: |
           wget http://mirror.aarnet.edu.au/pub/finnix/120/finnix-120.iso -O original.iso
-          mkdir -p iso
-          mv original.iso iso/PeDitXOs-$(date +'%Y%m%d').iso
+          sudo cp original.iso PeDitXOs.iso
 
       - name: Upload ISO File
         uses: actions/upload-artifact@main
         if: steps.organize.outputs.status == 'success' && !cancelled()
         with:
           name: PeDitXOs ISO
-          path: iso/PeDitXOs-$(date +'%Y%m%d').iso
-          if-no-files-found: warn
-
-      - name: Upload firmware to release
-        uses: softprops/action-gh-release@v1
-        if: steps.tag.outputs.status == 'success' && !cancelled()
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.tag.outputs.release_tag }}
-          body_path: release.txt
-          files: ${{ env.FIRMWARE }}/*
+          path: PeDitXOs.iso
 
       - name: Delete workflow runs
         uses: GitRML/delete-workflow-runs@main
