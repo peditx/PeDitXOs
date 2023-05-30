@@ -1,4 +1,4 @@
-name: Build and Customize Live Linux ISO
+name: Build and Customize Alpine Linux Live ISO
 on:
   push:
     branches:
@@ -12,37 +12,41 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Delete previous artifacts
+        run: |
+          rm -rf ${{ github.workspace }}/.github/workflows/custom-alpine.iso
+
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y wget curl squashfs-tools genisoimage
 
-      - name: Download Linux base system
+      - name: Download Alpine Linux base system
         run: |
-          wget https://www.ibiblio.org/pub/linux/distributions/tinycorelinux/12.x/x86/release/Core-current.iso -O linux-base.iso
+          wget https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86/alpine-netboot-3.18.0-x86.tar.gz -O alpine-base.iso
 
-      - name: Mount Linux ISO
+      - name: Mount Alpine Linux ISO
         run: |
           sudo mkdir /mnt/iso
-          sudo mount -o loop linux-base.iso /mnt/iso
+          sudo mount -o loop alpine-base.iso /mnt/iso
 
-      - name: Customize Linux
+      - name: Customize Alpine Linux
         run: |
-          # Add code to customize the mounted Linux system
+          # Add code to customize the mounted Alpine Linux system
           # For example, you can add or modify files, packages, configurations, etc.
-          sudo chroot /mnt/iso /bin/sh -c "apt-get update && apt-get install -y package1 package2 ..."
+          sudo chroot /mnt/iso /bin/sh -c "apk update && apk add package1 package2 ..."
 
-      - name: Unmount Linux ISO
+      - name: Unmount Alpine Linux ISO
         run: |
           sudo umount /mnt/iso
           sudo rm -rf /mnt/iso
 
       - name: Create ISO
         run: |
-          sudo mkisofs -quiet -l -J -R -V CUSTOM -no-emul-boot -boot-load-size 4 -boot-info-table -b isolinux/isolinux.bin -c isolinux/boot.cat -o custom-linux.iso .
+          sudo mkisofs -quiet -l -J -R -V CUSTOM -no-emul-boot -boot-load-size 4 -boot-info-table -b isolinux/isolinux.bin -c isolinux/boot.cat -o custom-alpine.iso .
 
       - name: Upload ISO artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Custom Linux ISO
-          path: custom-linux.iso
+          name: Custom Alpine Linux ISO
+          path: custom-alpine.iso
