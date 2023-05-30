@@ -20,6 +20,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y wget curl squashfs-tools genisoimage
+          sudo chroot /mnt/iso /bin/bash -c "apk update && apk add package1 package2 ..."
 
       - name: Download Alpine Linux base system
         run: |
