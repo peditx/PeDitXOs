@@ -24,7 +24,7 @@ jobs:
 
       - name: Modify Boot Logo
         run: |
-          sudo curl -L -o /mnt/iso/boot/grub/splash.png https://peditx.ir/wp-content/uploads/2023/05/lastg-logo.png
+          sudo wget -O /mnt/iso/boot/grub/splash.png https://peditx.ir/wp-content/uploads/2023/05/lastg-logo.png
 
       - name: Unmount ISO
         run: |
