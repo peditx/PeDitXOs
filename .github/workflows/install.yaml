@@ -37,7 +37,7 @@ jobs:
         if: steps.create-iso.outputs.status == 'success' && !cancelled()
         with:
           name: PeDitXOs ISO
-          path: ./PeDitXOs.iso
+          path: PeDitXOs.iso
 
       - name: Delete workflow runs
         uses: GitRML/delete-workflow-runs@main
