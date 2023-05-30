@@ -1,4 +1,4 @@
-name: Build and Customize Debian Live ISO
+name: Build and Customize Debian Netinst ISO
 on:
   push:
     branches:
@@ -21,22 +21,22 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y wget curl genisoimage squashfs-tools
 
-      - name: Download Debian Live base system
+      - name: Download Debian Netinst ISO
         run: |
-          wget https://cdimage.debian.org/debian-cd/current/i386/iso-cd/debian-11.7.0-i386-netinst.iso -O debian-live.iso
+          wget https://cdimage.debian.org/debian-cd/current/i386/iso-cd/debian-11.7.0-i386-netinst.iso -O debian-netinst.iso
 
-      - name: Mount Debian Live ISO
+      - name: Mount Debian Netinst ISO
         run: |
           sudo mkdir /mnt/iso
-          sudo mount -o loop debian-live.iso /mnt/iso
+          sudo mount -o loop debian-netinst.iso /mnt/iso
 
-      - name: Customize Debian Live
+      - name: Customize Debian Netinst
         run: |
-          # Add code to customize the mounted Debian Live system
+          # Add code to customize the mounted Debian Netinst system
           # For example, you can add or modify files, packages, configurations, etc.
           sudo chroot /mnt/iso /bin/bash -c "apt-get update && apt-get install -y package1 package2 ..."
 
-      - name: Unmount Debian Live ISO
+      - name: Unmount Debian Netinst ISO
         run: |
           sudo umount /mnt/iso
           sudo rm -rf /mnt/iso
@@ -48,5 +48,5 @@ jobs:
       - name: Upload ISO artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Custom Debian Live ISO
+          name: Custom Debian Netinst ISO
           path: custom-debian.iso
