@@ -23,7 +23,7 @@ jobs:
 
       - name: Download Alpine Linux base system
         run: |
-          wget https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86/alpine-netboot-3.18.0-x86.tar.gz -O alpine-base.iso
+          wget https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86/alpine-standard-3.18.0-x86.iso -O alpine-base.iso
 
       - name: Mount Alpine Linux ISO
         run: |
