@@ -30,9 +30,7 @@ jobs:
       - name: Create ISO File
         run: |
           wget http://mirror.aarnet.edu.au/pub/finnix/120/finnix-120.iso -O original.iso
-          sudo xorriso -indev original.iso -outdev trimmed.iso -rm 'unnecessary_file1' -rm 'unnecessary_file2'  # Replace with actual unnecessary file names
-          # Add any other necessary customization to the trimmed ISO file here
-          mv trimmed.iso path/to/iso/PeDitXOs-$(date +'%Y%m%d').iso
+          mv original.iso path/to/iso/PeDitXOs-$(date +'%Y%m%d').iso
 
       - name: Upload ISO File
         uses: actions/upload-artifact@v2
