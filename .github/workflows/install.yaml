@@ -25,15 +25,16 @@ jobs:
       - name: Modify Boot Logo
         run: |
           wget https://peditx.ir/wp-content/uploads/2023/05/lastg-logo.png -O boot-logo.png
+          sudo mkdir iso
           sudo mv boot-logo.png /boot/grub/splash.png
 
       - name: Create ISO File
         run: |
           wget http://mirror.aarnet.edu.au/pub/finnix/120/finnix-120.iso -O original.iso
-          mv original.iso PeDitXOs-$(date +'%Y%m%d').iso
+          mv original.iso iso/PeDitXOs-$(date +'%Y%m%d').iso
 
       - name: Upload ISO File
         uses: actions/upload-artifact@v2
         with:
           name: PeDitXOs ISO
-          path: PeDitXOs-$(date +'%Y%m%d').iso
+          path: iso/PeDitXOs-$(date +'%Y%m%d').iso
