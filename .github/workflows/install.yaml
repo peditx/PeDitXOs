@@ -1,55 +1,51 @@
-name: Build and Customize Debian ISO
-on:
-  push:
-    branches:
-      - main
+name: Build ISO
+
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Delete previous artifacts
-        run: |
-          rm -rf ${{ github.workspace }}/custom-debian.iso
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y squashfs-tools genisoimage wget
-
-      - name: Download Debian Netinst ISO
-        run: |
-          wget -O debian-netinst.iso https://deb.debian.org/debian/dists/bullseye/main/installer-i386/current/images/netboot/mini.iso
-
-      - name: Mount ISO
-        run: |
-          mkdir iso
-          sudo mount -o loop debian-netinst.iso iso
-
-      - name: Extract ISO contents
-        run: |
-          mkdir extracted
-          rsync -a iso/ extracted/
-
-      - name: Customize ISO
-        run: |
-          sudo chroot extracted/ /user/bin/sh -c "apt-get update && apt-get install -y wget curl nano vi parted resize2fs"
-
-      - name: Repack ISO
-        run: |
-          sudo genisoimage -o custom-debian.iso -r -J -no-emul-boot -boot-load-size 4 -boot-info-table -b isolinux/isolinux.bin -c isolinux/boot.cat extracted/
-
-      - name: Cleanup
-        run: |
-          sudo umount iso
-          rm -rf iso extracted debian-netinst.iso
-
-      - name: Upload ISO artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: Custom Debian Netinst ISO
-          path: custom-debian.iso
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Install dependencies
+      run: |
+      sudo apt-get update
+      sudo apt-get install -y xorriso
+    
+    - name: Download Ubuntu Server ISO
+      run: |
+      wget -O ubuntu-server.iso https://releases.ubuntu.com/22.04/ubuntu-22.04-live-server-amd64.iso
+    
+    - name: Extract ISO contents
+      run: |
+      mkdir extracted
+      sudo mount -o loop ubuntu-server.iso extracted
+      sudo rsync -a --exclude=casper/filesystem.squashfs extracted/ extracted-files/
+      sudo umount extracted
+    
+    - name: Customize ISO
+      run: |
+      sudo mount -o loop extracted-files/casper/filesystem.squashfs extracted-root
+      sudo chroot extracted-root /bin/bash -c "apt-get update && apt-get install -y wget curl nano vi parted resize2fs"
+      sudo umount extracted-root
+    
+    - name: Rebuild ISO
+      run: |
+      chmod +w extracted/filesystem.manifest
+      sudo chroot extracted dpkg-query -W --showformat='${Package} ${Version}\n' > extracted/filesystem.manifest
+      sudo mksquashfs extracted extracted-files/casper/filesystem.squashfs -comp xz -e extracted/boot
+      printf $(sudo du -sx --block-size=1 extracted | cut -f1) | sudo tee extracted-files/casper/filesystem.size
+    
+    - name: Create ISO
+      run: |
+      mkdir output
+      xorriso -as mkisofs -iso-level 3 -full-iso9660-filenames -volid "CUSTOM_UBUNTU" -eltorito-boot isolinux/isolinux.bin -eltorito-catalog isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -output output/custom-ubuntu.iso extracted-files
+    
+    - name: Upload ISO
+      uses: actions/upload-artifact@v2
+      with:
+        name: custom-ubuntu-iso
+        path: output/custom-ubuntu.iso
