@@ -12,37 +12,37 @@ jobs:
     
     - name: Install dependencies
       run: |
-      sudo apt-get update
-      sudo apt-get install -y xorriso
+        sudo apt-get update
+        sudo apt-get install -y xorriso
     
     - name: Download Ubuntu Server ISO
       run: |
-      wget -O ubuntu-server.iso https://releases.ubuntu.com/22.04/ubuntu-22.04-live-server-amd64.iso
+        wget -O ubuntu-server.iso https://releases.ubuntu.com/22.04/ubuntu-22.04-live-server-amd64.iso
     
     - name: Extract ISO contents
       run: |
-      mkdir extracted
-      sudo mount -o loop ubuntu-server.iso extracted
-      sudo rsync -a --exclude=casper/filesystem.squashfs extracted/ extracted-files/
-      sudo umount extracted
+        mkdir extracted
+        sudo mount -o loop ubuntu-server.iso extracted
+        sudo rsync -a --exclude=casper/filesystem.squashfs extracted/ extracted-files/
+        sudo umount extracted
     
     - name: Customize ISO
       run: |
-      sudo mount -o loop extracted-files/casper/filesystem.squashfs extracted-root
-      sudo chroot extracted-root /bin/bash -c "apt-get update && apt-get install -y wget curl nano vi parted resize2fs"
-      sudo umount extracted-root
+        sudo mount -o loop extracted-files/casper/filesystem.squashfs extracted-root
+        sudo chroot extracted-root /bin/bash -c "apt-get update && apt-get install -y wget curl nano vi parted resize2fs"
+        sudo umount extracted-root
     
     - name: Rebuild ISO
       run: |
-      chmod +w extracted/filesystem.manifest
-      sudo chroot extracted dpkg-query -W --showformat='${Package} ${Version}\n' > extracted/filesystem.manifest
-      sudo mksquashfs extracted extracted-files/casper/filesystem.squashfs -comp xz -e extracted/boot
-      printf $(sudo du -sx --block-size=1 extracted | cut -f1) | sudo tee extracted-files/casper/filesystem.size
+        chmod +w extracted/filesystem.manifest
+        sudo chroot extracted dpkg-query -W --showformat='${Package} ${Version}\n' > extracted/filesystem.manifest
+        sudo mksquashfs extracted extracted-files/casper/filesystem.squashfs -comp xz -e extracted/boot
+        printf $(sudo du -sx --block-size=1 extracted | cut -f1) | sudo tee extracted-files/casper/filesystem.size
     
     - name: Create ISO
       run: |
-      mkdir output
-      xorriso -as mkisofs -iso-level 3 -full-iso9660-filenames -volid "CUSTOM_UBUNTU" -eltorito-boot isolinux/isolinux.bin -eltorito-catalog isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -output output/custom-ubuntu.iso extracted-files
+        mkdir output
+        xorriso -as mkisofs -iso-level 3 -full-iso9660-filenames -volid "CUSTOM_UBUNTU" -eltorito-boot isolinux/isolinux.bin -eltorito-catalog isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -output output/custom-ubuntu.iso extracted-files
     
     - name: Upload ISO
       uses: actions/upload-artifact@v2
