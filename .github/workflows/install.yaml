@@ -1,7 +1,5 @@
 name: Build and Modify PeDitXOs
 
-on:name: Build and Modify PeDitXOs
-
 on:
   push:
     branches:
@@ -41,41 +39,3 @@ jobs:
           name: PeDitXOs ISO
           path: iso/PeDitXOs-$(date +'%Y%m%d').iso
           if-no-files-found: warn
-
-  push:
-    branches:
-      - main
-
-jobs:
-  build-and-modify-peditxos:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Set up Git repository
-        uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget curl nano parted libisoburn1 libisoburn-dev
-
-      - name: Compile PeDitXOs
-        run: |
-          # Add commands to compile PeDitXOs here
-
-      - name: Modify Boot Logo
-        run: |
-          wget https://peditx.ir/wp-content/uploads/2023/05/lastg-logo.png -O boot-logo.png
-          sudo mv boot-logo.png /boot/grub/splash.png
-
-      - name: Create ISO File
-        run: |
-          wget http://mirror.aarnet.edu.au/pub/finnix/120/finnix-120.iso -O original.iso
-          mkdir -p iso
-          bash -c "mv original.iso iso/PeDitXOs-$(date +'%Y%m%d').iso"
-
-      - name: Upload ISO File
-        uses: actions/upload-artifact@v2
-        with:
-          name: PeDitXOs ISO
-          path: iso/PeDitXOs-$(date +'%Y%m%d').iso
