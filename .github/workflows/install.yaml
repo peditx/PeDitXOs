@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget curl nano parted
+          sudo apt-get install -y wget curl nano parted libisoburn1 libisoburn-dev
 
       - name: Compile PeDitXOs
         run: |
@@ -30,8 +30,7 @@ jobs:
       - name: Create ISO File
         run: |
           wget http://mirror.aarnet.edu.au/pub/finnix/120/finnix-120.iso -O original.iso
-          sudo apt-get install -y trim_iso isomaster
-          isomaster -i original.iso -o trimmed.iso -delete-files 'unnecessary_file1' 'unnecessary_file2'  # Replace with actual unnecessary file names
+          sudo xorriso -indev original.iso -outdev trimmed.iso -delete 'unnecessary_file1' 'unnecessary_file2'  # Replace with actual unnecessary file names
           # Add any other necessary customization to the trimmed ISO file here
           mv trimmed.iso path/to/iso/PeDitXOs-$(date +'%Y%m%d').iso
 
