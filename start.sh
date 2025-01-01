@@ -34,6 +34,12 @@ CHOICE=$(whiptail --title "PeDitXrt Installer" --menu "Please select the OS you 
 "5" "Resizing Partition" \
 "6" "MikroTik" 3>&1 1>&2 2>&3)
 
+# Check if the user pressed Cancel or entered an invalid option
+if [ $? -ne 0 ]; then
+    echo "You have canceled the installation or selected an invalid option."
+    exit 1
+fi
+
 # Handle the user's choice
 case $CHOICE in
     1)
