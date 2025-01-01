@@ -1,0 +1,49 @@
+name: Build PeDitXOS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y curl gzip dd dialog mkisofs plymouth
+
+    - name: Create Live Image with Banner
+      run: |
+        # Set up directories
+        mkdir -p /tmp/live-iso
+        mkdir -p /tmp/live-iso/usr/local/bin
+        mkdir -p /tmp/live-iso/etc/systemd/system
+        mkdir -p /tmp/live-iso/usr/share/plymouth/themes/mytheme
+
+        # Copy the installer script from the repository
+        cp ./scripts/PeDitXrt_installer.sh /tmp/live-iso/usr/local/bin/PeDitXrt_installer.sh
+        chmod +x /tmp/live-iso/usr/local/bin/PeDitXrt_installer.sh
+
+        # Add systemd service to run script
+        echo -e '[Unit]\nDescription=PeDitXrt Installer\nAfter=network.target\n\n[Service]\nExecStart=/usr/local/bin/PeDitXrt_installer.sh\nRestart=always\nUser=root\nStandardOutput=journal\nStandardError=journal\n\n[Install]\nWantedBy=multi-user.target' > /tmp/live-iso/etc/systemd/system/PeDitXrt_installer.service
+
+        # Download the banner image
+        curl -L -o /tmp/live-iso/usr/share/plymouth/themes/mytheme/banner.png https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/luasrc/style/brand.png
+
+        # Add Plymouth theme configuration
+        echo -e 'theme="mytheme"\n' > /tmp/live-iso/etc/plymouth/plymouthd.conf
+
+        # Create the ISO image
+        mkisofs -o /tmp/live-image.iso -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table /tmp/live-iso
+
+    - name: Upload Live Image to Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: live-image
+        path: /tmp/live-image.iso
