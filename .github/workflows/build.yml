@@ -21,10 +21,6 @@ jobs:
       with:
         python-version: '3.x'
 
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt
-
     - name: Run maker.py
       run: |
         python scripts/maker.py
