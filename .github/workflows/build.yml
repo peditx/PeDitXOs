@@ -21,21 +21,17 @@ jobs:
 
       - name: Build ISO in Docker container
         run: |
-          docker run --rm -v $(pwd):/workspace -w /workspace ubuntu:20.04 bash -c "
-            apt-get update &&
-            apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server &&
-            # Remove held packages (if any)
-            apt-mark unhold $(dpkg --get-selections | grep hold | cut -f1) &&
-            apt-get upgrade -y &&
-            # Fix broken packages
-            apt-get install -f &&
+          docker run --rm -v $(pwd):/workspace -w /workspace alpine:latest sh -c "
+            # Update and install necessary tools
+            apk update &&
+            apk add --no-cache squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server &&
             # Create working directory
             mkdir -p /workspace/live-iso &&
-            # Download Ubuntu minimal ISO
-            curl -L -o /workspace/ubuntu.iso https://releases.ubuntu.com/20.04/ubuntu-20.04.3-live-server-amd64.iso &&
+            # Download Alpine minimal ISO
+            curl -L -o /workspace/alpine.iso https://dl-cdn.alpinelinux.org/alpine/v3.14/releases/x86_64/alpine-standard-3.14.0-x86_64.iso &&
             # Mount the base ISO (in Docker, this is a virtualized filesystem)
             mkdir -p /workspace/mnt &&
-            mount -o loop /workspace/ubuntu.iso /workspace/mnt &&
+            mount -o loop /workspace/alpine.iso /workspace/mnt &&
             # Copy the content to the working directory
             cp -a /workspace/mnt/. /workspace/live-iso/ &&
             # Install necessary tools
@@ -51,7 +47,7 @@ jobs:
             mkdir -p /workspace/live-iso/etc/ssh &&
             cp /etc/ssh/sshd_config /workspace/live-iso/etc/ssh/ &&
             mkdir -p /workspace/live-iso/etc/init.d &&
-            echo -e '#!/bin/bash\nservice ssh start' > /workspace/live-iso/etc/init.d/start_ssh &&
+            echo -e '#!/bin/sh\nservice ssh start' > /workspace/live-iso/etc/init.d/start_ssh &&
             chmod +x /workspace/live-iso/etc/init.d/start_ssh &&
             # Enable SSH service to start on boot
             chroot /workspace/live-iso update-rc.d start_ssh defaults &&
