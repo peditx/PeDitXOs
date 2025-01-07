@@ -28,6 +28,7 @@ jobs:
           curl -L -o alpine.iso https://dl-cdn.alpinelinux.org/alpine/v3.16/releases/x86_64/alpine-standard-3.16.0-x86_64.iso
           
           # Mount the base ISO to a different directory
+          sudo mkdir -p /tmp/mnt
           sudo mount -o loop alpine.iso /tmp/mnt
           
           # Copy the content to the working directory
