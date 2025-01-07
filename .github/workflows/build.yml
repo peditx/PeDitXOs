@@ -17,7 +17,8 @@ jobs:
       - name: Set up environment
         run: |
           sudo apt-get update
-          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils dd nano unzip gzip openssh-server
+          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server
+
       - name: Create live ISO with custom banner, scripts, and OpenSSH
         run: |
           # Create working directory
@@ -47,7 +48,6 @@ jobs:
           sudo cp /usr/bin/wget /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/nano /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/parted /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/dd /tmp/live-iso/usr/bin/
           # Install OpenSSH Server
           mkdir -p /tmp/live-iso/etc/ssh
           sudo cp /etc/ssh/sshd_config /tmp/live-iso/etc/ssh/
@@ -58,6 +58,7 @@ jobs:
           sudo chroot /tmp/live-iso update-rc.d start_ssh defaults
           # Create the live ISO
           sudo xorriso -as mkisofs -o PeDitXOS.iso -r -J -V "PeDitXOS" /tmp/live-iso
+
       - name: Upload PeDitXOS ISO to GitHub Artifacts
         uses: actions/upload-artifact@v3
         with:
