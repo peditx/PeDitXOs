@@ -1,4 +1,4 @@
-name: Run maker.py
+name: Run maker.py on Alpine
 
 on:
   push:
@@ -16,11 +16,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
+    - name: Set up Alpine container
+      uses: docker://python:3.9-alpine
+
+    - name: Install dependencies
+      run: |
+        apk update
+        apk add --no-cache python3 py3-pip
 
     - name: Run maker.py
       run: |
-        python scripts/maker.py
+        python3 scripts/maker.py
