@@ -24,6 +24,11 @@ jobs:
           docker run --rm -v $(pwd):/workspace -w /workspace ubuntu:20.04 bash -c "
             apt-get update &&
             apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server &&
+            # Remove held packages (if any)
+            apt-mark unhold $(dpkg --get-selections | grep hold | cut -f1) &&
+            apt-get upgrade -y &&
+            # Fix broken packages
+            apt-get install -f &&
             # Create working directory
             mkdir -p /workspace/live-iso &&
             # Download Ubuntu minimal ISO
