@@ -66,7 +66,7 @@ jobs:
           sudo chmod +x /tmp/live-iso/etc/init.d/start_ssh
           
           # Enable SSH service to start on boot
-          sudo chroot /tmp/live-iso/mnt /bin/sh -c "update-rc.d start_ssh defaults"
+          sudo chroot /tmp/live-iso/mnt /bin/sh -c "apk add openrc && rc-update add sshd default"
           
           # Create the live ISO
           sudo xorriso -as mkisofs -o PeDitXOS.iso -r -J -V "PeDitXOS" /tmp/live-iso
