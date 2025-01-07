@@ -34,7 +34,9 @@ jobs:
           # Create necessary directories
           sudo mkdir -p /tmp/live-iso/etc/plymouth
           sudo mkdir -p /tmp/live-iso/usr/share/plymouth/themes/mytheme
-          curl -L -o /tmp/live-iso/usr/share/plymouth/themes/mytheme/banner.png https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/luasrc/style/brand.png
+          # Download banner and write it to the correct location
+          sudo curl -L -o /tmp/live-iso/usr/share/plymouth/themes/mytheme/banner.png https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/luasrc/style/brand.png
+          # Set theme configuration
           echo -e 'theme="mytheme"\n' | sudo tee /tmp/live-iso/etc/plymouth/plymouthd.conf
           # Copy the script to the live system
           sudo cp ./scripts/PeDitXrt_installer.sh /tmp/live-iso/root/
