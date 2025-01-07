@@ -1,82 +1,62 @@
+import subprocess
 import os
 import urllib.request
-import subprocess
-import shutil
 
-# URLs for required files
+# URLs for the necessary files
 iso_url = "https://dl-cdn.alpinelinux.org/alpine/v3.16/releases/x86_64/alpine-standard-3.16.0-x86_64.iso"
 script_url = "https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/scripts/PeDitXrt_installer.sh"
 banner_url = "https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/luasrc/style/brand.png"
 
-# Paths for the working directories and files
-work_dir = "/tmp/live-iso"
-mount_dir = "/mnt"
+# Paths
 iso_path = "/tmp/debian.iso"
-script_path = os.path.join(work_dir, "root", "PeDitXrt_installer.sh")
-banner_path = os.path.join(work_dir, "usr", "share", "plymouth", "themes", "mytheme", "banner.png")
+work_dir = "/tmp/debian_work"
+output_dir = "/tmp"
 iso_output_path = "/tmp/PeDitXOs.iso"
 
-# Download ISO, script, and banner
-def download_file(url, dest_path):
-    print(f"Downloading {url} to {dest_path}")
-    urllib.request.urlretrieve(url, dest_path)
+# Function to download a file from a URL
+def download_file(url, path):
+    print(f"Downloading {url} to {path}...")
+    urllib.request.urlretrieve(url, path)
 
-# Setup environment
-def setup_environment():
-    print("Setting up environment...")
-    os.makedirs(work_dir, exist_ok=True)
-    os.makedirs(os.path.dirname(script_path), exist_ok=True)
-    os.makedirs(os.path.dirname(banner_path), exist_ok=True)
+# Function to extract the ISO using 7z
+def extract_iso():
+    print("Extracting the ISO contents...")
+    subprocess.run(["7z", "x", iso_path, "-o" + work_dir], check=True)
 
-# Mount the ISO
-def mount_iso():
-    print("Mounting the ISO...")
-    subprocess.run(["mount", "-o", "loop", iso_path, mount_dir], check=True)
-
-# Copy the content from the mounted ISO to the working directory
-def copy_iso_contents():
-    print("Copying contents from ISO to working directory...")
-    for item in os.listdir(mount_dir):
-        s = os.path.join(mount_dir, item)
-        d = os.path.join(work_dir, item)
-        if os.path.isdir(s):
-            shutil.copytree(s, d, dirs_exist_ok=True)
-        else:
-            shutil.copy2(s, d)
-
-# Copy the script to the live system
+# Function to copy the script to the live system
 def copy_script():
-    print("Copying the installer script...")
-    download_file(script_url, script_path)
-    os.chmod(script_path, 0o755)
+    print("Copying the script to the live system...")
+    script_path = os.path.join(work_dir, "root", "PeDitXrt_installer.sh")
+    urllib.request.urlretrieve(script_url, script_path)
+    subprocess.run(["chmod", "+x", script_path], check=True)
 
-# Install required packages
+# Function to install required packages
 def install_packages():
-    print("Installing required packages...")
+    print("Installing necessary packages...")
     packages = ["unzip", "parted", "gzip", "nano", "fdisk"]
     for package in packages:
         subprocess.run(["apk", "add", package], check=True)
 
-# Set up the banner
+# Function to set up the banner
 def setup_banner():
-    print("Setting up banner...")
+    print("Setting up the custom banner...")
+    banner_path = os.path.join(work_dir, "usr", "share", "plymouth", "themes", "mytheme", "banner.png")
     os.makedirs(os.path.dirname(banner_path), exist_ok=True)
-    download_file(banner_url, banner_path)
+    urllib.request.urlretrieve(banner_url, banner_path)
 
-# Create the new ISO
+# Function to create the new ISO
 def create_iso():
-    print("Creating new ISO...")
+    print("Creating the new ISO...")
     subprocess.run(["xorriso", "-as", "mkisofs", "-o", iso_output_path, "-r", "-J", "-V", "PeDitXOs", work_dir], check=True)
 
 # Main function to execute all steps
 def main():
     # Setup environment and download necessary files
-    setup_environment()
+    os.makedirs(work_dir, exist_ok=True)
     download_file(iso_url, iso_path)
     
-    # Mount the ISO, copy contents, and setup the environment
-    mount_iso()
-    copy_iso_contents()
+    # Extract contents from the ISO
+    extract_iso()
     
     # Copy the script, install packages, and set up the banner
     copy_script()
