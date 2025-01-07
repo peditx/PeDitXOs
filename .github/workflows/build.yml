@@ -17,7 +17,7 @@ jobs:
       - name: Set up environment
         run: |
           sudo apt-get update
-          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server fdisk net-tools
+          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server net-tools fdisk
 
       - name: Create live ISO with custom banner, scripts, and OpenSSH
         run: |
@@ -31,22 +31,18 @@ jobs:
           sudo cp -a /mnt/. live-iso/
           # Set up Plymouth and the custom banner
           sudo apt-get install -y plymouth
-          # Create necessary directories with sudo
-          sudo mkdir -p /tmp/live-iso/etc/plymouth
-          sudo mkdir -p /tmp/live-iso/usr/share/plymouth/themes/mytheme
-          sudo mkdir -p /tmp/live-iso/root
-          # Download banner and write it to the correct location
-          sudo curl -L -o /tmp/live-iso/usr/share/plymouth/themes/mytheme/banner.png https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/luasrc/style/brand.png
-          # Set theme configuration
+          mkdir -p /tmp/live-iso/etc/plymouth
+          mkdir -p /tmp/live-iso/usr/share/plymouth/themes/mytheme
+          curl -L -o /tmp/live-iso/usr/share/plymouth/themes/mytheme/banner.png https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/luasrc/style/brand.png
           echo -e 'theme="mytheme"\n' | sudo tee /tmp/live-iso/etc/plymouth/plymouthd.conf
           # Copy the script to the live system
           sudo cp ./scripts/PeDitXrt_installer.sh /tmp/live-iso/root/
           
           # Give execution permissions to the script
           sudo chmod +x /tmp/live-iso/root/PeDitXrt_installer.sh
-          # Install necessary tools (with sudo)
-          sudo mkdir -p /tmp/live-iso/usr/bin
-          # Copy the binaries of necessary tools to the live system
+          # Install necessary tools
+          mkdir -p /tmp/live-iso/usr/bin
+          sudo cp /usr/bin/resize2fs /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/gzip /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/unzip /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/curl /tmp/live-iso/usr/bin/
@@ -54,13 +50,11 @@ jobs:
           sudo cp /usr/bin/nano /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/parted /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/fdisk /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/ifconfig /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/netstat /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/route /tmp/live-iso/usr/bin/
-          # Install OpenSSH Server (with sudo)
-          sudo mkdir -p /tmp/live-iso/etc/ssh
+          # Install OpenSSH Server
+          mkdir -p /tmp/live-iso/etc/ssh
           sudo cp /etc/ssh/sshd_config /tmp/live-iso/etc/ssh/
-          sudo mkdir -p /tmp/live-iso/etc/init.d
+          mkdir -p /tmp/live-iso/etc/init.d
           echo -e "#!/bin/bash\nservice ssh start" | sudo tee /tmp/live-iso/etc/init.d/start_ssh
           sudo chmod +x /tmp/live-iso/etc/init.d/start_ssh
           # Enable SSH service to start on boot
