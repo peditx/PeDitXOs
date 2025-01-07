@@ -16,25 +16,19 @@ jobs:
 
       - name: Set up environment
         run: |
-          # نصب ابزارهای مورد نیاز برای ساخت ISO
           sudo apt-get update
-          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server
+          sudo apt-get install -y python3 squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server
 
       - name: Create live ISO with custom banner, scripts, and OpenSSH
         run: |
-          # ایجاد دایرکتوری کاری
-          mkdir -p live-iso
-
-          # دانلود و نصب Debian netinst ISO
+          # دانلود فایل ISO
           curl -L -o debian.iso https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-11.7.0-amd64-netinst.iso
           
-          # ماؤن کردن ISO به صورت مستقیم
-          sudo mount -o loop debian.iso /mnt
+          # استفاده از اسکریپت پایتون برای ماؤن کردن ISO
+          python3 mount_iso.py
           
-          # کپی کردن محتویات ISO به دایرکتوری کاری
+          # ادامه عملیات‌ها
           sudo cp -a /mnt/. live-iso/
-          
-          # نصب Plymouth و بنر سفارشی
           sudo apt-get install -y plymouth
           sudo mkdir -p /tmp/live-iso/usr/share/plymouth/themes/mytheme
           curl -L -o /tmp/live-iso/usr/share/plymouth/themes/mytheme/banner.png https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/luasrc/style/brand.png
