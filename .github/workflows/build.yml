@@ -25,11 +25,11 @@ jobs:
           # ایجاد دایرکتوری کاری
           mkdir -p live-iso
 
-          # دانلود و نصب Alpine Linux ISO
-          curl -L -o alpine.iso https://dl-cdn.alpinelinux.org/alpine/v3.16/releases/x86_64/alpine-standard-3.16.0-x86_64.iso
+          # دانلود و نصب Debian netinst ISO
+          curl -L -o debian.iso https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-11.7.0-amd64-netinst.iso
           
           # ماؤن کردن ISO
-          sudo mount -o loop alpine.iso /mnt
+          sudo mount -o loop debian.iso /mnt
           
           # کپی کردن محتویات ISO به دایرکتوری کاری
           sudo cp -a /mnt/. live-iso/
