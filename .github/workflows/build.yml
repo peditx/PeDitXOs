@@ -50,7 +50,7 @@ jobs:
             echo -e '#!/bin/sh\nservice ssh start' > /workspace/live-iso/etc/init.d/start_ssh &&
             chmod +x /workspace/live-iso/etc/init.d/start_ssh &&
             # Enable SSH service to start on boot
-            chroot /workspace/live-iso update-rc.d start_ssh defaults &&
+            chroot /workspace/live-iso /bin/sh -c 'update-rc.d start_ssh defaults' &&
             # Create the live ISO
             xorriso -as mkisofs -o /workspace/PeDitXOS.iso -r -J -V "PeDitXOS" /workspace/live-iso
           "
