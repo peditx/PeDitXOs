@@ -37,7 +37,7 @@ def install_packages():
     print("Installing necessary packages...")
     packages = ["unzip", "parted", "gzip", "nano", "fdisk"]
     for package in packages:
-        subprocess.run(["apk", "add", package], check=True)
+        subprocess.run(["apt", "install", "-y", package], check=True)  # Using apt for Debian/Ubuntu
 
 # Function to set up the banner
 def setup_banner():
@@ -68,7 +68,4 @@ def main():
     # Create the new ISO
     create_iso()
     
-    print(f"ISO created successfully at {iso_output_path}")
-
-if __name__ == "__main__":
-    main()
+    print(f"ISO created successfully at {
