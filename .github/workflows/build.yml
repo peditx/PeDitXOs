@@ -1,4 +1,4 @@
-name: Build PeDitXOS
+name: Build Custom Live ISO
 
 on:
   workflow_dispatch:
@@ -14,66 +14,45 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up environment
+      - name: Set up Docker
         run: |
           sudo apt-get update
-          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server
+          sudo apt-get install -y docker.io
 
-      - name: Create live ISO with custom banner, scripts, and OpenSSH
+      - name: Build ISO in Docker container
         run: |
-          # Create working directory
-          mkdir -p live-iso
-          
-          # Download Ubuntu minimal ISO (small version)
-          curl -L -o ubuntu-minimal.iso https://cdimage.ubuntu.com/ubuntu-base/releases/22.04/release/ubuntu-base-22.04.1-base-arm64.iso
-          
-          # Mount the Ubuntu base ISO
-          sudo mount -o loop ubuntu-minimal.iso /mnt
-          
-          # Copy the content to the working directory
-          sudo cp -a /mnt/. live-iso/
-          
-          # Set up Plymouth and the custom banner
-          sudo apt-get install -y plymouth
-          mkdir -p /tmp/live-iso/etc/plymouth
-          mkdir -p /tmp/live-iso/usr/share/plymouth/themes/mytheme
-          curl -L -o /tmp/live-iso/usr/share/plymouth/themes/mytheme/banner.png https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/luasrc/style/brand.png
-          echo -e 'theme="mytheme"\n' | sudo tee /tmp/live-iso/etc/plymouth/plymouthd.conf
-          
-          # Create necessary directories for init.d
-          sudo mkdir -p /tmp/live-iso/etc/init.d
-          
-          # Copy the script to the live system
-          sudo cp ./scripts/PeDitXrt_installer.sh /tmp/live-iso/etc/init.d/
-          
-          # Give execution permissions to the script
-          sudo chmod +x /tmp/live-iso/etc/init.d/PeDitXrt_installer.sh
-          
-          # Enable the script to run at boot
-          sudo chroot /tmp/live-iso /bin/sh -c "rc-update add PeDitXrt_installer.sh default"
-          
-          # Install necessary tools
-          mkdir -p /tmp/live-iso/usr/bin
-          sudo cp /usr/bin/resize2fs /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/gzip /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/unzip /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/curl /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/wget /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/nano /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/parted /tmp/live-iso/usr/bin/
-          
-          # Install OpenSSH Server
-          mkdir -p /tmp/live-iso/etc/ssh
-          sudo cp /etc/ssh/sshd_config /tmp/live-iso/etc/ssh/
-          mkdir -p /tmp/live-iso/etc/init.d
-          echo -e "#!/bin/bash\nservice ssh start" | sudo tee /tmp/live-iso/etc/init.d/start_ssh
-          sudo chmod +x /tmp/live-iso/etc/init.d/start_ssh
-          
-          # Enable SSH service to start on boot
-          sudo chroot /tmp/live-iso update-rc.d start_ssh defaults
-          
-          # Create the live ISO
-          sudo xorriso -as mkisofs -o PeDitXOS.iso -r -J -V "PeDitXOS" /tmp/live-iso
+          docker run --rm -v $(pwd):/workspace -w /workspace ubuntu:20.04 bash -c "
+            apt-get update &&
+            apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server &&
+            # Create working directory
+            mkdir -p /workspace/live-iso &&
+            # Download Ubuntu minimal ISO
+            curl -L -o /workspace/ubuntu.iso https://releases.ubuntu.com/20.04/ubuntu-20.04.3-live-server-amd64.iso &&
+            # Mount the base ISO (in Docker, this is a virtualized filesystem)
+            mkdir -p /workspace/mnt &&
+            mount -o loop /workspace/ubuntu.iso /workspace/mnt &&
+            # Copy the content to the working directory
+            cp -a /workspace/mnt/. /workspace/live-iso/ &&
+            # Install necessary tools
+            mkdir -p /workspace/live-iso/usr/bin &&
+            cp /usr/bin/resize2fs /workspace/live-iso/usr/bin/ &&
+            cp /usr/bin/gzip /workspace/live-iso/usr/bin/ &&
+            cp /usr/bin/unzip /workspace/live-iso/usr/bin/ &&
+            cp /usr/bin/curl /workspace/live-iso/usr/bin/ &&
+            cp /usr/bin/wget /workspace/live-iso/usr/bin/ &&
+            cp /usr/bin/nano /workspace/live-iso/usr/bin/ &&
+            cp /usr/bin/parted /workspace/live-iso/usr/bin/ &&
+            # Install OpenSSH Server
+            mkdir -p /workspace/live-iso/etc/ssh &&
+            cp /etc/ssh/sshd_config /workspace/live-iso/etc/ssh/ &&
+            mkdir -p /workspace/live-iso/etc/init.d &&
+            echo -e '#!/bin/bash\nservice ssh start' > /workspace/live-iso/etc/init.d/start_ssh &&
+            chmod +x /workspace/live-iso/etc/init.d/start_ssh &&
+            # Enable SSH service to start on boot
+            chroot /workspace/live-iso update-rc.d start_ssh defaults &&
+            # Create the live ISO
+            xorriso -as mkisofs -o /workspace/PeDitXOS.iso -r -J -V "PeDitXOS" /workspace/live-iso
+          "
 
       - name: Upload PeDitXOS ISO to GitHub Artifacts
         uses: actions/upload-artifact@v3
