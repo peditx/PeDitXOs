@@ -25,7 +25,7 @@ jobs:
         run: |
           # Install necessary packages inside the container
           docker exec my_container apk update
-          docker exec my_container apk add resize2fs parted fdisk curl unzip nano
+          docker exec my_container apk add parted util-linux curl unzip nano bash
 
       - name: Copy files and run script inside Docker container
         run: |
