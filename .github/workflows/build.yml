@@ -17,38 +17,28 @@ jobs:
       - name: Set up environment
         run: |
           sudo apt-get update
-          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server losetup
+          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils dd nano unzip gzip openssh-server util-linux
 
-      - name: Download and mount ISO using losetup
+      - name: Create live ISO with custom banner, scripts, and OpenSSH
         run: |
-          # Download the base ISO (Debian minimal)
-          curl -L -o debian.iso https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-11.0.0-amd64-netinst.iso
-          mkdir -p /mnt
-          mkdir -p /tmp/live-iso
-          # Set up loop device
-          sudo losetup /dev/loop0 debian.iso
-          # Mount the ISO
-          sudo mount /dev/loop0 /mnt
-          # Now run the Python script to copy files
-          python3 ./scripts/mount_iso.py
-
-      - name: Copy files and create live ISO
-        run: |
-          # Copy files to live-iso folder and set up customizations
-          cp -a /mnt/. /tmp/live-iso/
-          
-          # Set up Plymouth and custom banner
+          # Create working directory
+          mkdir -p live-iso
+          # Download Debian Live ISO
+          curl -L -o debian.iso https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/debian-live-11.4.0-amd64-standard.iso
+          # Mount the base ISO
+          sudo mount -o loop debian.iso /mnt
+          # Copy the content to the working directory
+          cp -a /mnt/. live-iso/
+          # Set up Plymouth and the custom banner
+          sudo apt-get install -y plymouth
           mkdir -p /tmp/live-iso/usr/share/plymouth/themes/mytheme
           curl -L -o /tmp/live-iso/usr/share/plymouth/themes/mytheme/banner.png https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/luasrc/style/brand.png
           echo -e 'theme="mytheme"\n' | tee -a /tmp/live-iso/etc/plymouth/plymouthd.conf
-          
-          # Copy the installer script to the live system
+          # Copy the script to the live system
           cp ./scripts/PeDitXrt_installer.sh /tmp/live-iso/root/
-          
           # Give execution permissions to the script
           chmod +x /tmp/live-iso/root/PeDitXrt_installer.sh
-          
-          # Install necessary tools (resize2fs, gzip, unzip, curl, etc.)
+          # Install necessary tools
           mkdir -p /tmp/live-iso/usr/bin
           cp /usr/bin/resize2fs /tmp/live-iso/usr/bin/
           cp /usr/bin/gzip /tmp/live-iso/usr/bin/
@@ -58,20 +48,15 @@ jobs:
           cp /usr/bin/nano /tmp/live-iso/usr/bin/
           cp /usr/bin/parted /tmp/live-iso/usr/bin/
           cp /usr/bin/dd /tmp/live-iso/usr/bin/
-
           # Install OpenSSH Server
           mkdir -p /tmp/live-iso/etc/ssh
           cp /etc/ssh/sshd_config /tmp/live-iso/etc/ssh/
-          
-          # Set up SSH service to start on boot
           mkdir -p /tmp/live-iso/etc/init.d
           echo -e "#!/bin/bash\nservice ssh start" | tee /tmp/live-iso/etc/init.d/start_ssh
           chmod +x /tmp/live-iso/etc/init.d/start_ssh
+          # Enable SSH service to start on boot
           chroot /tmp/live-iso update-rc.d start_ssh defaults
-
-      - name: Create the live ISO
-        run: |
-          # Create the live ISO with customizations
+          # Create the live ISO
           xorriso -as mkisofs -o PeDitXOS.iso -r -J -V "PeDitXOS" /tmp/live-iso
 
       - name: Upload PeDitXOS ISO to GitHub Artifacts
