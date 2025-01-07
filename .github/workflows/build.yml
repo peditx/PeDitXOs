@@ -27,11 +27,11 @@ jobs:
           # Download Alpine Linux or other base ISO
           curl -L -o alpine.iso https://dl-cdn.alpinelinux.org/alpine/v3.16/releases/x86_64/alpine-standard-3.16.0-x86_64.iso
           
-          # Mount the base ISO
-          sudo mount -o loop alpine.iso /mnt
+          # Mount the base ISO to a different directory
+          sudo mount -o loop alpine.iso /tmp/mnt
           
           # Copy the content to the working directory
-          sudo cp -a /mnt/. live-iso/
+          sudo cp -a /tmp/mnt/. live-iso/
           
           # Set up Plymouth and the custom banner
           sudo apt-get install -y plymouth
@@ -51,9 +51,9 @@ jobs:
           sudo chmod +x /tmp/live-iso/root/PeDitXrt_installer.sh
           
           # Install necessary tools directly on the Alpine system
-          sudo mkdir -p /mnt/live-iso
-          sudo mount --bind /tmp/live-iso /mnt/live-iso
-          sudo chroot /mnt/live-iso /bin/sh -c "apk update && apk add resize2fs parted fdisk curl unzip nano"
+          sudo mkdir -p /tmp/live-iso/mnt
+          sudo mount --bind /tmp/live-iso /tmp/live-iso/mnt
+          sudo chroot /tmp/live-iso/mnt /bin/sh -c "apk update && apk add resize2fs parted fdisk curl unzip nano"
           
           # Install OpenSSH Server
           mkdir -p /tmp/live-iso/etc/ssh
@@ -63,7 +63,7 @@ jobs:
           sudo chmod +x /tmp/live-iso/etc/init.d/start_ssh
           
           # Enable SSH service to start on boot
-          sudo chroot /mnt/live-iso /bin/sh -c "update-rc.d start_ssh defaults"
+          sudo chroot /tmp/live-iso/mnt /bin/sh -c "update-rc.d start_ssh defaults"
           
           # Create the live ISO
           sudo xorriso -as mkisofs -o PeDitXOS.iso -r -J -V "PeDitXOS" /tmp/live-iso
