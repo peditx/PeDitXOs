@@ -14,35 +14,59 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Docker container
+      - name: Set up environment
         run: |
-          # Pull the Alpine image
-          docker pull alpine:3.16
-          # Run a container in the background
-          docker run -d --name my_container alpine:3.16 tail -f /dev/null
+          sudo apt-get update
+          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server
 
-      - name: Install packages in Docker container
+      - name: Create live ISO with custom banner, scripts, and OpenSSH
         run: |
-          # Install necessary packages inside the container
-          docker exec my_container apk update
-          docker exec my_container apk add parted util-linux curl unzip nano bash
+          # Create working directory
+          mkdir -p live-iso
+          # Download Alpine Linux or other base ISO
+          curl -L -o alpine.iso https://dl-cdn.alpinelinux.org/alpine/v3.16/releases/x86_64/alpine-standard-3.16.0-x86_64.iso
+          # Mount the base ISO
+          sudo mount -o loop alpine.iso /mnt
+          # Copy the content to the working directory
+          sudo cp -a /mnt/. live-iso/
+          # Set up Plymouth and the custom banner
+          sudo apt-get install -y plymouth
+          mkdir -p /tmp/live-iso/etc/plymouth
+          mkdir -p /tmp/live-iso/usr/share/plymouth/themes/mytheme
+          curl -L -o /tmp/live-iso/usr/share/plymouth/themes/mytheme/banner.png https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/luasrc/style/brand.png
+          echo -e 'theme="mytheme"\n' | sudo tee /tmp/live-iso/etc/plymouth/plymouthd.conf
+          
+          # Copy the script to the live system
+          sudo cp ./scripts/PeDitXrt_installer.sh /tmp/live-iso/etc/init.d/
+          
+          # Give execution permissions to the script
+          sudo chmod +x /tmp/live-iso/etc/init.d/PeDitXrt_installer.sh
+          
+          # Enable the script to run at boot
+          sudo chroot /tmp/live-iso /bin/sh -c "rc-update add PeDitXrt_installer.sh default"
+          
+          # Install necessary tools
+          mkdir -p /tmp/live-iso/usr/bin
+          sudo cp /usr/bin/resize2fs /tmp/live-iso/usr/bin/
+          sudo cp /usr/bin/gzip /tmp/live-iso/usr/bin/
+          sudo cp /usr/bin/unzip /tmp/live-iso/usr/bin/
+          sudo cp /usr/bin/curl /tmp/live-iso/usr/bin/
+          sudo cp /usr/bin/wget /tmp/live-iso/usr/bin/
+          sudo cp /usr/bin/nano /tmp/live-iso/usr/bin/
+          sudo cp /usr/bin/parted /tmp/live-iso/usr/bin/
+          # Install OpenSSH Server
+          mkdir -p /tmp/live-iso/etc/ssh
+          sudo cp /etc/ssh/sshd_config /tmp/live-iso/etc/ssh/
+          mkdir -p /tmp/live-iso/etc/init.d
+          echo -e "#!/bin/bash\nservice ssh start" | sudo tee /tmp/live-iso/etc/init.d/start_ssh
+          sudo chmod +x /tmp/live-iso/etc/init.d/start_ssh
+          # Enable SSH service to start on boot
+          sudo chroot /tmp/live-iso update-rc.d start_ssh defaults
+          # Create the live ISO
+          sudo xorriso -as mkisofs -o PeDitXOS.iso -r -J -V "PeDitXOS" /tmp/live-iso
 
-      - name: Copy files and run script inside Docker container
-        run: |
-          # Copy necessary files into the container
-          docker cp ./scripts/PeDitXrt_installer.sh my_container:/root/
-          # Give execute permission to the script
-          docker exec my_container chmod +x /root/PeDitXrt_installer.sh
-          # Run the script inside the container
-          docker exec my_container /root/PeDitXrt_installer.sh
-
-      - name: Create live ISO
-        run: |
-          # Create the live ISO from inside the container
-          docker exec my_container sh -c "xorriso -as mkisofs -o /tmp/PeDitXOS.iso -r -J -V 'PeDitXOS' /root"
-        
       - name: Upload PeDitXOS ISO to GitHub Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: PeDitXOS
-          path: /tmp/PeDitXOS.iso
+          path: PeDitXOS.iso
