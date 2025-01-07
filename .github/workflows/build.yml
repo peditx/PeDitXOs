@@ -1,4 +1,4 @@
-name: Build Custom Live ISO
+name: Build PeDitXOS
 
 on:
   workflow_dispatch:
@@ -14,46 +14,62 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Docker
+      - name: Set up environment
         run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
+          apt-get update
+          apt-get install -y squashfs-tools xorriso curl dialog parted coreutils dd nano unzip gzip openssh-server
 
-      - name: Build ISO in Docker container
+      - name: Create live ISO with custom banner, scripts, and OpenSSH
         run: |
-          docker run --rm -v $(pwd):/workspace -w /workspace alpine:latest sh -c "
-            # Update and install necessary tools
-            apk update &&
-            apk add --no-cache squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server &&
-            # Create working directory
-            mkdir -p /workspace/live-iso &&
-            # Download Alpine minimal ISO
-            curl -L -o /workspace/alpine.iso https://dl-cdn.alpinelinux.org/alpine/v3.14/releases/x86_64/alpine-standard-3.14.0-x86_64.iso &&
-            # Mount the base ISO (in Docker, this is a virtualized filesystem)
-            mkdir -p /workspace/mnt &&
-            mount -o loop /workspace/alpine.iso /workspace/mnt &&
-            # Copy the content to the working directory
-            cp -a /workspace/mnt/. /workspace/live-iso/ &&
-            # Install necessary tools
-            mkdir -p /workspace/live-iso/usr/bin &&
-            cp /usr/bin/resize2fs /workspace/live-iso/usr/bin/ &&
-            cp /usr/bin/gzip /workspace/live-iso/usr/bin/ &&
-            cp /usr/bin/unzip /workspace/live-iso/usr/bin/ &&
-            cp /usr/bin/curl /workspace/live-iso/usr/bin/ &&
-            cp /usr/bin/wget /workspace/live-iso/usr/bin/ &&
-            cp /usr/bin/nano /workspace/live-iso/usr/bin/ &&
-            cp /usr/bin/parted /workspace/live-iso/usr/bin/ &&
-            # Install OpenSSH Server
-            mkdir -p /workspace/live-iso/etc/ssh &&
-            cp /etc/ssh/sshd_config /workspace/live-iso/etc/ssh/ &&
-            mkdir -p /workspace/live-iso/etc/init.d &&
-            echo -e '#!/bin/sh\nservice ssh start' > /workspace/live-iso/etc/init.d/start_ssh &&
-            chmod +x /workspace/live-iso/etc/init.d/start_ssh &&
-            # Enable SSH service to start on boot
-            chroot /workspace/live-iso /bin/sh -c 'update-rc.d start_ssh defaults' &&
-            # Create the live ISO
-            xorriso -as mkisofs -o /workspace/PeDitXOS.iso -r -J -V "PeDitXOS" /workspace/live-iso
-          "
+          # Create working directory
+          mkdir -p live-iso
+          
+          # Download Alpine Linux or other base ISO
+          curl -L -o alpine.iso https://dl-cdn.alpinelinux.org/alpine/v3.16/releases/x86_64/alpine-standard-3.16.0-x86_64.iso
+          
+          # Mount the base ISO
+          mount -o loop alpine.iso /mnt
+          
+          # Copy the content to the working directory
+          cp -a /mnt/. live-iso/
+          
+          # Set up Plymouth and the custom banner
+          apk add plymouth
+          mkdir -p /tmp/live-iso/usr/share/plymouth/themes/mytheme
+          curl -L -o /tmp/live-iso/usr/share/plymouth/themes/mytheme/banner.png https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/luasrc/style/brand.png
+          echo -e 'theme="mytheme"\n' | tee -a /tmp/live-iso/etc/plymouth/plymouthd.conf
+          
+          # Copy the script to the live system
+          cp ./PeDitXrt_installer.sh /tmp/live-iso/root/
+          
+          # Give execution permissions to the script
+          chmod +x /tmp/live-iso/root/PeDitXrt_installer.sh
+          
+          # Install necessary tools
+          mkdir -p /tmp/live-iso/usr/bin
+          cp /usr/bin/resize2fs /tmp/live-iso/usr/bin/
+          cp /usr/bin/gzip /tmp/live-iso/usr/bin/
+          cp /usr/bin/unzip /tmp/live-iso/usr/bin/
+          cp /usr/bin/curl /tmp/live-iso/usr/bin/
+          cp /usr/bin/wget /tmp/live-iso/usr/bin/
+          cp /usr/bin/nano /tmp/live-iso/usr/bin/
+          cp /usr/bin/parted /tmp/live-iso/usr/bin/
+          cp /usr/bin/dd /tmp/live-iso/usr/bin/
+          
+          # Install OpenSSH Server
+          mkdir -p /tmp/live-iso/etc/ssh
+          cp /etc/ssh/sshd_config /tmp/live-iso/etc/ssh/
+          
+          # Create init.d script for SSH
+          mkdir -p /tmp/live-iso/etc/init.d
+          echo -e "#!/bin/bash\nservice ssh start" | tee /tmp/live-iso/etc/init.d/start_ssh
+          chmod +x /tmp/live-iso/etc/init.d/start_ssh
+          
+          # Enable SSH service to start on boot
+          chroot /tmp/live-iso rc-update add ssh default
+          
+          # Create the live ISO
+          xorriso -as mkisofs -o PeDitXOS.iso -r -J -V "PeDitXOS" /tmp/live-iso
 
       - name: Upload PeDitXOS ISO to GitHub Artifacts
         uses: actions/upload-artifact@v3
