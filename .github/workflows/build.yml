@@ -31,7 +31,7 @@ jobs:
           sudo cp -a /mnt/. live-iso/
           # Set up Plymouth and the custom banner
           sudo apt-get install -y plymouth
-          # Create necessary directories
+          # Create necessary directories with sudo
           sudo mkdir -p /tmp/live-iso/etc/plymouth
           sudo mkdir -p /tmp/live-iso/usr/share/plymouth/themes/mytheme
           sudo mkdir -p /tmp/live-iso/root
@@ -44,18 +44,18 @@ jobs:
           
           # Give execution permissions to the script
           sudo chmod +x /tmp/live-iso/root/PeDitXrt_installer.sh
-          # Install necessary tools
-          mkdir -p /tmp/live-iso/usr/bin
+          # Install necessary tools (with sudo)
+          sudo mkdir -p /tmp/live-iso/usr/bin
           sudo cp /usr/bin/gzip /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/unzip /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/curl /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/wget /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/nano /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/parted /tmp/live-iso/usr/bin/
-          # Install OpenSSH Server
-          mkdir -p /tmp/live-iso/etc/ssh
+          # Install OpenSSH Server (with sudo)
+          sudo mkdir -p /tmp/live-iso/etc/ssh
           sudo cp /etc/ssh/sshd_config /tmp/live-iso/etc/ssh/
-          mkdir -p /tmp/live-iso/etc/init.d
+          sudo mkdir -p /tmp/live-iso/etc/init.d
           echo -e "#!/bin/bash\nservice ssh start" | sudo tee /tmp/live-iso/etc/init.d/start_ssh
           sudo chmod +x /tmp/live-iso/etc/init.d/start_ssh
           # Enable SSH service to start on boot
