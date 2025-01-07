@@ -16,54 +16,39 @@ jobs:
 
       - name: Set up environment
         run: |
-          sudo apt-get update
-          sudo apt-get install -y python3 squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server
+          apt-get update
+          apt-get install -y squashfs-tools xorriso curl dialog parted coreutils dd nano unzip gzip openssh-server python3 python3-pip
 
-      - name: Create live ISO with custom banner, scripts, and OpenSSH
+      - name: Install dependencies for Python script
         run: |
-          # دانلود فایل ISO
-          curl -L -o debian.iso https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-11.7.0-amd64-netinst.iso
-          
-          # استفاده از اسکریپت پایتون برای ماؤن کردن ISO
-          python3 mount_iso.py
-          
-          # ادامه عملیات‌ها
-          sudo cp -a /mnt/. live-iso/
-          sudo apt-get install -y plymouth
-          sudo mkdir -p /tmp/live-iso/usr/share/plymouth/themes/mytheme
-          curl -L -o /tmp/live-iso/usr/share/plymouth/themes/mytheme/banner.png https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/luasrc/style/brand.png
-          echo -e 'theme="mytheme"\n' | sudo tee -a /tmp/live-iso/etc/plymouth/plymouthd.conf
-          
-          # کپی کردن اسکریپت به سیستم زنده
-          sudo cp ./PeDitXrt_installer.sh /tmp/live-iso/root/
-          
-          # اعطای مجوز اجرایی به اسکریپت
-          sudo chmod +x /tmp/live-iso/root/PeDitXrt_installer.sh
-          
-          # نصب ابزارهای ضروری
-          sudo mkdir -p /tmp/live-iso/usr/bin
-          sudo cp /usr/bin/resize2fs /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/gzip /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/unzip /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/curl /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/wget /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/nano /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/parted /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/dd /tmp/live-iso/usr/bin/
+          pip3 install subprocess
 
-          # نصب OpenSSH Server
-          sudo mkdir -p /tmp/live-iso/etc/ssh
-          sudo cp /etc/ssh/sshd_config /tmp/live-iso/etc/ssh/
-          sudo mkdir -p /tmp/live-iso/etc/init.d
-          echo -e "#!/bin/bash\nservice ssh start" | sudo tee /tmp/live-iso/etc/init.d/start_ssh
-          sudo chmod +x /tmp/live-iso/etc/init.d/start_ssh
+      - name: Download and mount ISO using Python script
+        run: |
+          curl -L -o debian.iso https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-11.0.0-amd64-netinst.iso
+          mkdir -p /mnt
+          mkdir -p /tmp/live-iso
+          python3 ./scripts/mount_iso.py
+
+      - name: Copy PeDitXrt_installer.sh and add it to startup
+        run: |
+          # Copy the installer script to the live system
+          cp ./scripts/PeDitXrt_installer.sh /tmp/live-iso/root/
+          chmod +x /tmp/live-iso/root/PeDitXrt_installer.sh
           
-          # فعال کردن سرویس SSH برای شروع در بوت
-          sudo chroot /tmp/live-iso update-rc.d start_ssh defaults
+          # Add the script to init.d
+          mkdir -p /tmp/live-iso/etc/init.d
+          echo -e "#!/bin/bash\n/tmp/live-iso/root/PeDitXrt_installer.sh" | tee /tmp/live-iso/etc/init.d/pe_dit_x_installer
+          chmod +x /tmp/live-iso/etc/init.d/pe_dit_x_installer
           
-          # ساخت ISO نهایی
-          sudo xorriso -as mkisofs -o PeDitXOS.iso -r -J -V "PeDitXOS" /tmp/live-iso
-          
+          # Enable the script to run at startup
+          chroot /tmp/live-iso update-rc.d pe_dit_x_installer defaults
+
+      - name: Create the live ISO
+        run: |
+          # Create the live ISO after mounting and copying the content
+          xorriso -as mkisofs -o PeDitXOS.iso -r -J -V "PeDitXOS" /tmp/live-iso
+
       - name: Upload PeDitXOS ISO to GitHub Artifacts
         uses: actions/upload-artifact@v3
         with:
