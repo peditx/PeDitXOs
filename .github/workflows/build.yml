@@ -17,7 +17,7 @@ jobs:
       - name: Set up environment
         run: |
           sudo apt-get update
-          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server
+          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server fdisk net-tools
 
       - name: Create live ISO with custom banner, scripts, and OpenSSH
         run: |
@@ -46,12 +46,17 @@ jobs:
           sudo chmod +x /tmp/live-iso/root/PeDitXrt_installer.sh
           # Install necessary tools (with sudo)
           sudo mkdir -p /tmp/live-iso/usr/bin
+          # Copy the binaries of necessary tools to the live system
           sudo cp /usr/bin/gzip /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/unzip /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/curl /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/wget /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/nano /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/parted /tmp/live-iso/usr/bin/
+          sudo cp /usr/bin/fdisk /tmp/live-iso/usr/bin/
+          sudo cp /usr/bin/ifconfig /tmp/live-iso/usr/bin/
+          sudo cp /usr/bin/netstat /tmp/live-iso/usr/bin/
+          sudo cp /usr/bin/route /tmp/live-iso/usr/bin/
           # Install OpenSSH Server (with sudo)
           sudo mkdir -p /tmp/live-iso/etc/ssh
           sudo cp /etc/ssh/sshd_config /tmp/live-iso/etc/ssh/
