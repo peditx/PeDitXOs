@@ -18,33 +18,26 @@ jobs:
         run: |
           apt-get update
           apt-get install -y squashfs-tools xorriso curl dialog parted coreutils dd nano unzip gzip openssh-server
-
       - name: Create live ISO with custom banner, scripts, and OpenSSH
         run: |
           # Create working directory
           mkdir -p live-iso
-
           # Download Alpine Linux or other base ISO
           curl -L -o alpine.iso https://dl-cdn.alpinelinux.org/alpine/v3.16/releases/x86_64/alpine-standard-3.16.0-x86_64.iso
-
           # Mount the base ISO
           mount -o loop alpine.iso /mnt
-
           # Copy the content to the working directory
           cp -a /mnt/. live-iso/
-
           # Set up Plymouth and the custom banner
           apt-get install -y plymouth
           mkdir -p /tmp/live-iso/usr/share/plymouth/themes/mytheme
           curl -L -o /tmp/live-iso/usr/share/plymouth/themes/mytheme/banner.png https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/luasrc/style/brand.png
           echo -e 'theme="mytheme"\n' | tee -a /tmp/live-iso/etc/plymouth/plymouthd.conf
-
           # Copy the script to the live system
           cp ./PeDitXrt_installer.sh /tmp/live-iso/root/
           
           # Give execution permissions to the script
           chmod +x /tmp/live-iso/root/PeDitXrt_installer.sh
-
           # Install necessary tools
           mkdir -p /tmp/live-iso/usr/bin
           cp /usr/bin/resize2fs /tmp/live-iso/usr/bin/
@@ -55,22 +48,18 @@ jobs:
           cp /usr/bin/nano /tmp/live-iso/usr/bin/
           cp /usr/bin/parted /tmp/live-iso/usr/bin/
           cp /usr/bin/dd /tmp/live-iso/usr/bin/
-
           # Install OpenSSH Server
           mkdir -p /tmp/live-iso/etc/ssh
           cp /etc/ssh/sshd_config /tmp/live-iso/etc/ssh/
           mkdir -p /tmp/live-iso/etc/init.d
           echo -e "#!/bin/bash\nservice ssh start" | tee /tmp/live-iso/etc/init.d/start_ssh
           chmod +x /tmp/live-iso/etc/init.d/start_ssh
-
           # Enable SSH service to start on boot
           chroot /tmp/live-iso update-rc.d start_ssh defaults
-
           # Create the live ISO
           xorriso -as mkisofs -o PeDitXOS.iso -r -J -V "PeDitXOS" /tmp/live-iso
-
       - name: Upload PeDitXOS ISO to GitHub Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: PeDitXOS
           path: PeDitXOS.iso
