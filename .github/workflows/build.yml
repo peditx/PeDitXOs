@@ -18,7 +18,7 @@ jobs:
         run: |
           # نصب ابزارهای مورد نیاز برای ساخت ISO
           sudo apt-get update
-          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils dd nano unzip gzip openssh-server
+          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server
 
       - name: Create live ISO with custom banner, scripts, and OpenSSH
         run: |
