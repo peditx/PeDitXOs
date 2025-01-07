@@ -17,7 +17,7 @@ jobs:
       - name: Set up environment
         run: |
           sudo apt-get update
-          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server e2fsprogs
+          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server
 
       - name: Create live ISO with custom banner, scripts, and OpenSSH
         run: |
@@ -31,40 +31,30 @@ jobs:
           sudo cp -a /mnt/. live-iso/
           # Set up Plymouth and the custom banner
           sudo apt-get install -y plymouth
-          mkdir -p /tmp/live-iso/etc/plymouth
           mkdir -p /tmp/live-iso/usr/share/plymouth/themes/mytheme
           curl -L -o /tmp/live-iso/usr/share/plymouth/themes/mytheme/banner.png https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/luasrc/style/brand.png
           echo -e 'theme="mytheme"\n' | sudo tee /tmp/live-iso/etc/plymouth/plymouthd.conf
-          
-          # Ensure the /tmp/live-iso/root directory exists
-          sudo mkdir -p /tmp/live-iso/root
-          
           # Copy the script to the live system
           sudo cp ./scripts/PeDitXrt_installer.sh /tmp/live-iso/root/
           
           # Give execution permissions to the script
           sudo chmod +x /tmp/live-iso/root/PeDitXrt_installer.sh
-          
           # Install necessary tools
           mkdir -p /tmp/live-iso/usr/bin
-          sudo cp /usr/bin/resize2fs /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/gzip /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/unzip /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/curl /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/wget /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/nano /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/parted /tmp/live-iso/usr/bin/
-          
           # Install OpenSSH Server
           mkdir -p /tmp/live-iso/etc/ssh
           sudo cp /etc/ssh/sshd_config /tmp/live-iso/etc/ssh/
           mkdir -p /tmp/live-iso/etc/init.d
           echo -e "#!/bin/bash\nservice ssh start" | sudo tee /tmp/live-iso/etc/init.d/start_ssh
           sudo chmod +x /tmp/live-iso/etc/init.d/start_ssh
-          
           # Enable SSH service to start on boot
           sudo chroot /tmp/live-iso update-rc.d start_ssh defaults
-          
           # Create the live ISO
           sudo xorriso -as mkisofs -o PeDitXOS.iso -r -J -V "PeDitXOS" /tmp/live-iso
 
