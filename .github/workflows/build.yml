@@ -51,16 +51,16 @@ jobs:
           sudo chmod +x /tmp/live-iso/root/PeDitXrt_installer.sh
           
           # Install necessary tools
-          mkdir -p /tmp/live-iso/usr/bin
-          sudo cp /usr/bin/resize2fs /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/gzip /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/unzip /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/curl /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/wget /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/nano /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/parted /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/fdisk /tmp/live-iso/usr/bin/
-          sudo cp /usr/bin/netstat /tmp/live-iso/usr/bin/
+          sudo mkdir -p /tmp/live-iso/usr/bin
+          sudo cp /usr/bin/resize2fs /tmp/live-iso/usr/bin/ || echo "resize2fs not found"
+          sudo cp /usr/bin/gzip /tmp/live-iso/usr/bin/ || echo "gzip not found"
+          sudo cp /usr/bin/unzip /tmp/live-iso/usr/bin/ || echo "unzip not found"
+          sudo cp /usr/bin/curl /tmp/live-iso/usr/bin/ || echo "curl not found"
+          sudo cp /usr/bin/wget /tmp/live-iso/usr/bin/ || echo "wget not found"
+          sudo cp /usr/bin/nano /tmp/live-iso/usr/bin/ || echo "nano not found"
+          sudo cp /usr/bin/parted /tmp/live-iso/usr/bin/ || echo "parted not found"
+          sudo cp /usr/bin/fdisk /tmp/live-iso/usr/bin/ || echo "fdisk not found"
+          sudo cp /usr/bin/netstat /tmp/live-iso/usr/bin/ || echo "netstat not found"
           
           # Install OpenSSH Server
           mkdir -p /tmp/live-iso/etc/ssh
