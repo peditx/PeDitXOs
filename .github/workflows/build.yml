@@ -25,8 +25,10 @@ jobs:
           mkdir -p live-iso
           # Download Debian Live ISO
           curl -L -o debian.iso https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/debian-live-11.4.0-amd64-standard.iso
+          # Create a loop device for the ISO
+          sudo losetup -fP debian.iso
           # Mount the base ISO
-          sudo mount -o loop debian.iso /mnt
+          sudo mount /dev/loop0p1 /mnt
           # Copy the content to the working directory
           cp -a /mnt/. live-iso/
           # Set up Plymouth and the custom banner
