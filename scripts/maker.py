@@ -26,7 +26,9 @@ def extract_iso():
 # Function to copy the script to the live system
 def copy_script():
     print("Copying the script to the live system...")
-    script_path = os.path.join(work_dir, "root", "PeDitXrt_installer.sh")
+    script_dir = os.path.join(work_dir, "root")
+    os.makedirs(script_dir, exist_ok=True)  # Ensure the directory exists
+    script_path = os.path.join(script_dir, "PeDitXrt_installer.sh")
     urllib.request.urlretrieve(script_url, script_path)
     subprocess.run(["chmod", "+x", script_path], check=True)
 
