@@ -28,8 +28,14 @@ jobs:
           # دانلود و نصب Debian netinst ISO
           curl -L -o debian.iso https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-11.7.0-amd64-netinst.iso
           
-          # ماؤن کردن ISO
-          sudo mount -o loop debian.iso /mnt
+          # تنظیم loop device برای فایل ISO
+          sudo losetup -fP debian.iso
+          
+          # پیدا کردن loop device که به فایل ISO متصل است
+          LOOP_DEVICE=$(sudo losetup -j debian.iso | cut -d: -f1)
+          
+          # ماؤن کردن ISO به دایرکتوری /mnt
+          sudo mount ${LOOP_DEVICE}p1 /mnt
           
           # کپی کردن محتویات ISO به دایرکتوری کاری
           sudo cp -a /mnt/. live-iso/
