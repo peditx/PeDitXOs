@@ -23,18 +23,25 @@ jobs:
         run: |
           # Create working directory
           mkdir -p live-iso
-          # Download Alpine Linux or other base ISO
-          curl -L -o alpine.iso https://dl-cdn.alpinelinux.org/alpine/v3.16/releases/x86_64/alpine-standard-3.16.0-x86_64.iso
-          # Mount the base ISO
-          sudo mount -o loop alpine.iso /mnt
+          
+          # Download Ubuntu minimal ISO (small version)
+          curl -L -o ubuntu-minimal.iso https://cdimage.ubuntu.com/ubuntu-base/releases/22.04/release/ubuntu-base-22.04.1-base-arm64.iso
+          
+          # Mount the Ubuntu base ISO
+          sudo mount -o loop ubuntu-minimal.iso /mnt
+          
           # Copy the content to the working directory
           sudo cp -a /mnt/. live-iso/
+          
           # Set up Plymouth and the custom banner
           sudo apt-get install -y plymouth
           mkdir -p /tmp/live-iso/etc/plymouth
           mkdir -p /tmp/live-iso/usr/share/plymouth/themes/mytheme
           curl -L -o /tmp/live-iso/usr/share/plymouth/themes/mytheme/banner.png https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/luasrc/style/brand.png
           echo -e 'theme="mytheme"\n' | sudo tee /tmp/live-iso/etc/plymouth/plymouthd.conf
+          
+          # Create necessary directories for init.d
+          sudo mkdir -p /tmp/live-iso/etc/init.d
           
           # Copy the script to the live system
           sudo cp ./scripts/PeDitXrt_installer.sh /tmp/live-iso/etc/init.d/
@@ -54,14 +61,17 @@ jobs:
           sudo cp /usr/bin/wget /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/nano /tmp/live-iso/usr/bin/
           sudo cp /usr/bin/parted /tmp/live-iso/usr/bin/
+          
           # Install OpenSSH Server
           mkdir -p /tmp/live-iso/etc/ssh
           sudo cp /etc/ssh/sshd_config /tmp/live-iso/etc/ssh/
           mkdir -p /tmp/live-iso/etc/init.d
           echo -e "#!/bin/bash\nservice ssh start" | sudo tee /tmp/live-iso/etc/init.d/start_ssh
           sudo chmod +x /tmp/live-iso/etc/init.d/start_ssh
+          
           # Enable SSH service to start on boot
           sudo chroot /tmp/live-iso update-rc.d start_ssh defaults
+          
           # Create the live ISO
           sudo xorriso -as mkisofs -o PeDitXOS.iso -r -J -V "PeDitXOS" /tmp/live-iso
 
