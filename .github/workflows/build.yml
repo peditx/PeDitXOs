@@ -50,13 +50,10 @@ jobs:
           # Give execution permissions to the script
           sudo chmod +x /tmp/live-iso/root/PeDitXrt_installer.sh
           
-          # Install necessary tools
-          sudo mkdir -p /tmp/live-iso/usr/bin
+          # Install necessary tools directly on the Alpine system
+          sudo mount --bind /tmp/live-iso /mnt/live-iso
+          sudo chroot /mnt/live-iso /bin/sh -c "apk update && apk add resize2fs parted fdisk curl unzip nano"
           
-          # Use apk to install tools on Alpine
-          sudo chroot /tmp/live-iso apk update
-          sudo chroot /tmp/live-iso apk add resize2fs parted fdisk curl unzip nano
-
           # Install OpenSSH Server
           mkdir -p /tmp/live-iso/etc/ssh
           sudo cp /etc/ssh/sshd_config /tmp/live-iso/etc/ssh/
@@ -65,7 +62,7 @@ jobs:
           sudo chmod +x /tmp/live-iso/etc/init.d/start_ssh
           
           # Enable SSH service to start on boot
-          sudo chroot /tmp/live-iso update-rc.d start_ssh defaults
+          sudo chroot /mnt/live-iso /bin/sh -c "update-rc.d start_ssh defaults"
           
           # Create the live ISO
           sudo xorriso -as mkisofs -o PeDitXOS.iso -r -J -V "PeDitXOS" /tmp/live-iso
