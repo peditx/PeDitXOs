@@ -17,7 +17,7 @@ jobs:
       - name: Set up environment
         run: |
           sudo apt-get update
-          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server net-tools fdisk e2fsprogs
+          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server net-tools fdisk e2fsprogs init-system-helpers
 
       - name: Create live ISO with custom banner, scripts, and OpenSSH
         run: |
@@ -70,6 +70,7 @@ jobs:
           sudo chmod +x /tmp/live-iso/etc/init.d/start_ssh
           
           # Enable SSH service to start on boot
+          sudo chroot /tmp/live-iso apt-get install -y init-system-helpers
           sudo chroot /tmp/live-iso update-rc.d start_ssh defaults
           
           # Create the live ISO
