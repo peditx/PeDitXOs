@@ -17,7 +17,7 @@ jobs:
       - name: Set up environment
         run: |
           sudo apt-get update
-          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server
+          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server e2fsprogs
 
       - name: Create live ISO with custom banner, scripts, and OpenSSH
         run: |
