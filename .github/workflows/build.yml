@@ -17,7 +17,7 @@ jobs:
       - name: Set up environment
         run: |
           sudo apt-get update
-          sudo apt-get install -y squashfs-tools xorriso curl dialog parted coreutils nano unzip gzip openssh-server net-tools fdisk e2fsprogs init-system-helpers
+          sudo apt-get install -y squashfs-tools xorriso curl dialog coreutils nano unzip gzip openssh-server net-tools fdisk e2fsprogs
 
       - name: Create live ISO with custom banner, scripts, and OpenSSH
         run: |
@@ -52,16 +52,11 @@ jobs:
           
           # Install necessary tools
           sudo mkdir -p /tmp/live-iso/usr/bin
-          sudo cp /usr/bin/resize2fs /tmp/live-iso/usr/bin/ || echo "resize2fs not found"
-          sudo cp /usr/bin/gzip /tmp/live-iso/usr/bin/ || echo "gzip not found"
-          sudo cp /usr/bin/unzip /tmp/live-iso/usr/bin/ || echo "unzip not found"
-          sudo cp /usr/bin/curl /tmp/live-iso/usr/bin/ || echo "curl not found"
-          sudo cp /usr/bin/wget /tmp/live-iso/usr/bin/ || echo "wget not found"
-          sudo cp /usr/bin/nano /tmp/live-iso/usr/bin/ || echo "nano not found"
-          sudo cp /usr/bin/parted /tmp/live-iso/usr/bin/ || echo "parted not found"
-          sudo cp /usr/bin/fdisk /tmp/live-iso/usr/bin/ || echo "fdisk not found"
-          sudo cp /usr/bin/netstat /tmp/live-iso/usr/bin/ || echo "netstat not found"
           
+          # Use apk to install tools on Alpine
+          sudo chroot /tmp/live-iso apk update
+          sudo chroot /tmp/live-iso apk add resize2fs parted fdisk curl unzip nano
+
           # Install OpenSSH Server
           mkdir -p /tmp/live-iso/etc/ssh
           sudo cp /etc/ssh/sshd_config /tmp/live-iso/etc/ssh/
@@ -70,7 +65,6 @@ jobs:
           sudo chmod +x /tmp/live-iso/etc/init.d/start_ssh
           
           # Enable SSH service to start on boot
-          sudo chroot /tmp/live-iso apt-get install -y init-system-helpers
           sudo chroot /tmp/live-iso update-rc.d start_ssh defaults
           
           # Create the live ISO
