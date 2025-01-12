@@ -28,9 +28,9 @@ jobs:
         sudo chroot ./PeDitXOs-rootfs apt-get update
         sudo chroot ./PeDitXOs-rootfs apt-get install -y nano parted gzip curl wget fdisk whiptail dialog systemd grub-efi efibootmgr linux-image-amd64 linux-headers-amd64 live-boot
 
-    - name: Install xz-utils for compression
+    - name: Install gzip for compression
       run: |
-        sudo chroot ./PeDitXOs-rootfs apt-get install -y xz-utils
+        sudo chroot ./PeDitXOs-rootfs apt-get install -y gzip
 
     - name: Download installer script
       run: |
@@ -72,18 +72,18 @@ jobs:
         sudo chroot ./PeDitXOs-rootfs grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=PeDitXOs --removable
         sudo chroot ./PeDitXOs-rootfs update-grub
 
-    - name: Create initrd.img with xz compression
+    - name: Create initrd.img with gzip compression
       run: |
         KERNEL_VERSION=$(ls ./PeDitXOs-rootfs/boot/vmlinuz* | grep -oP 'vmlinuz-\d+\.\d+\.\d+.*' | head -n 1)
         if [ -z "$KERNEL_VERSION" ]; then
           echo "Error: Kernel version not found!"
           exit 1
         fi
-        sudo chroot ./PeDitXOs-rootfs mkinitramfs -c xz -o /boot/initrd.img $KERNEL_VERSION
+        sudo chroot ./PeDitXOs-rootfs mkinitramfs -c gzip -o /boot/initrd.img $KERNEL_VERSION
 
     - name: Create SquashFS filesystem
       run: |
-        sudo mksquashfs ./PeDitXOs-rootfs ./PeDitXOs-rootfs/live/filesystem.squashfs -comp xz
+        sudo mksquashfs ./PeDitXOs-rootfs ./PeDitXOs-rootfs/live/filesystem.squashfs -comp gzip
 
     - name: Create EFI image
       run: |
