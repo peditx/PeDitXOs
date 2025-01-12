@@ -68,6 +68,12 @@ jobs:
         sudo chroot ./PeDitXOs-rootfs grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=PeDitXOs --removable
         sudo chroot ./PeDitXOs-rootfs update-grub
 
+    - name: Download kernel config file
+      run: |
+        sudo wget https://deb.debian.org/debian/pool/main/l/linux/linux-config-6.1.0-29-amd64_6.1.0-29_amd64.deb -O /tmp/linux-config.deb
+        sudo dpkg -x /tmp/linux-config.deb /tmp/linux-config
+        sudo cp /tmp/linux-config/boot/config-6.1.0-29-amd64 ./PeDitXOs-rootfs/boot/config-6.1.0-29-amd64
+
     - name: Create initrd.img with fallback compression methods
       run: |
         KERNEL_VERSION=$(ls ./PeDitXOs-rootfs/boot/vmlinuz* | grep -oP 'vmlinuz-\d+\.\d+\.\d+.*' | head -n 1)
