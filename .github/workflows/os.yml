@@ -26,7 +26,7 @@ jobs:
     - name: Install additional software
       run: |
         sudo chroot ./PeDitXOs-rootfs apt-get update
-        sudo chroot ./PeDitXOs-rootfs apt-get install -y nano parted gzip curl wget fdisk whiptail dialog systemd grub-efi efibootmgr linux-image-amd64 live-boot
+        sudo chroot ./PeDitXOs-rootfs apt-get install -y nano parted gzip curl wget fdisk whiptail dialog systemd grub-efi efibootmgr linux-image-amd64 linux-headers-amd64 live-boot
 
     - name: Download installer script
       run: |
@@ -70,7 +70,7 @@ jobs:
 
     - name: Create initrd.img
       run: |
-        sudo chroot ./PeDitXOs-rootfs mkinitramfs -o /boot/initrd.img
+        sudo chroot ./PeDitXOs-rootfs mkinitramfs --compress lz4 -o /boot/initrd.img $(ls ./PeDitXOs-rootfs/boot/vmlinuz* | grep -oP 'vmlinuz-\d+\.\d+\.\d+.*' | head -n 1)
 
     - name: Create SquashFS filesystem
       run: |
