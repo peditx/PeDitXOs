@@ -1,0 +1,97 @@
+name: Build PeDitXOs ISO (UEFI)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y debootstrap xorriso squashfs-tools grub-efi grub-common efibootmgr isolinux syslinux-common
+
+    - name: Create minimal Linux filesystem
+      run: |
+        sudo debootstrap --variant=minbase --include=nano,parted,gzip,curl,wget,fdisk,whiptail,dialog,systemd,grub-efi,efibootmgr stable ./PeDitXOs-rootfs http://deb.debian.org/debian
+
+    - name: Install additional software
+      run: |
+        sudo chroot ./PeDitXOs-rootfs apt-get update
+        sudo chroot ./PeDitXOs-rootfs apt-get install -y nano parted gzip curl wget fdisk whiptail dialog systemd grub-efi efibootmgr
+
+    - name: Set up EFI directory structure
+      run: |
+        sudo mkdir -p ./PeDitXOs-rootfs/boot/efi
+        sudo mkdir -p ./PeDitXOs-rootfs/boot/grub
+
+    - name: Create and mount EFI partition
+      run: |
+        sudo dd if=/dev/zero of=./efi_partition.img bs=1M count=100
+        sudo mkfs.vfat ./efi_partition.img
+        sudo mount ./efi_partition.img ./PeDitXOs-rootfs/boot/efi
+
+    - name: Mount necessary filesystems
+      run: |
+        sudo mount --bind /dev ./PeDitXOs-rootfs/dev
+        sudo mount --bind /proc ./PeDitXOs-rootfs/proc
+        sudo mount --bind /sys ./PeDitXOs-rootfs/sys
+
+    - name: Download and set boot logo
+      run: |
+        sudo wget https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/luasrc/brand.png -O ./PeDitXOs-rootfs/boot/grub/brand.png
+        echo 'GRUB_BACKGROUND="/boot/grub/brand.png"' | sudo tee -a ./PeDitXOs-rootfs/etc/default/grub
+
+    - name: Install GRUB for UEFI
+      run: |
+        sudo chroot ./PeDitXOs-rootfs grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=PeDitXOs --removable
+        sudo chroot ./PeDitXOs-rootfs update-grub
+
+    - name: Unmount filesystems
+      run: |
+        sudo umount ./PeDitXOs-rootfs/boot/efi
+        sudo umount ./PeDitXOs-rootfs/dev
+        sudo umount ./PeDitXOs-rootfs/proc
+        sudo umount ./PeDitXOs-rootfs/sys
+
+    - name: Create ISOLINUX directory and copy files
+      run: |
+        sudo mkdir -p ./PeDitXOs-rootfs/isolinux
+        sudo cp /usr/lib/ISOLINUX/isohdpfx.bin ./PeDitXOs-rootfs/isolinux/
+        sudo cp /usr/lib/ISOLINUX/isolinux.bin ./PeDitXOs-rootfs/isolinux/
+        sudo cp /usr/lib/syslinux/modules/bios/ldlinux.c32 ./PeDitXOs-rootfs/isolinux/
+
+    - name: Create ISO image for UEFI
+      run: |
+        sudo mkdir -p ./PeDitXOs-rootfs/boot/grub
+        echo 'set timeout=0' | sudo tee ./PeDitXOs-rootfs/boot/grub/grub.cfg
+        echo 'menuentry "PeDitXOs" {' | sudo tee -a ./PeDitXOs-rootfs/boot/grub/grub.cfg
+        echo '  linux /vmlinuz root=/dev/sda1 quiet splash' | sudo tee -a ./PeDitXOs-rootfs/boot/grub/grub.cfg
+        echo '  initrd /initrd.img' | sudo tee -a ./PeDitXOs-rootfs/boot/grub/grub.cfg
+        echo '}' | sudo tee -a ./PeDitXOs-rootfs/boot/grub/grub.cfg
+
+        sudo xorriso -as mkisofs \
+          -o PeDitXOs.iso \
+          -isohybrid-mbr ./PeDitXOs-rootfs/isolinux/isohdpfx.bin \
+          -c isolinux/boot.cat \
+          -b isolinux/isolinux.bin \
+          -no-emul-boot -boot-load-size 4 -boot-info-table \
+          -eltorito-alt-boot \
+          -e boot/grub/efi.img \
+          -no-emul-boot \
+          -isohybrid-gpt-basdat \
+          ./PeDitXOs-rootfs
+
+    - name: Upload ISO as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: PeDitXOs.iso
+        path: PeDitXOs.iso
