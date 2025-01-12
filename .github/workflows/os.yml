@@ -75,7 +75,7 @@ jobs:
 
     - name: Create initrd.img
       run: |
-        sudo chroot ./PeDitXOs-rootfs mkinitramfs -c lz4 -o /boot/initrd.img $(ls ./PeDitXOs-rootfs/boot/vmlinuz* | grep -oP 'vmlinuz-\d+\.\d+\.\d+.*' | head -n 1)
+        sudo chroot ./PeDitXOs-rootfs mkinitramfs -c xz -o /boot/initrd.img $(ls ./PeDitXOs-rootfs/boot/vmlinuz* | grep -oP 'vmlinuz-\d+\.\d+\.\d+.*' | head -n 1)
 
     - name: Create SquashFS filesystem
       run: |
