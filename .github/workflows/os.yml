@@ -28,6 +28,11 @@ jobs:
         sudo chroot ./PeDitXOs-rootfs apt-get update
         sudo chroot ./PeDitXOs-rootfs apt-get install -y nano parted gzip curl wget fdisk whiptail dialog systemd grub-efi efibootmgr linux-image-amd64 linux-headers-amd64 live-boot
 
+    - name: Install lz4 tool
+      run: |
+        sudo chroot ./PeDitXOs-rootfs apt-get update
+        sudo chroot ./PeDitXOs-rootfs apt-get install -y lz4
+
     - name: Download installer script
       run: |
         sudo wget https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/scripts/PeDitXrt_installer.sh -O ./PeDitXOs-rootfs/root/PeDitXrt_installer.sh
