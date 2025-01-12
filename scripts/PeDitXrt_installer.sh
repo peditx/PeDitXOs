@@ -46,9 +46,9 @@ case $CHOICE in
         echo "Installing OpenWrt"
         CPU_ARCH=$(uname -m)
         if [ "$CPU_ARCH" = "x86_64" ]; then
-            DOWNLOAD_URL="https://downloads.openwrt.org/releases/23.05.4/targets/x86/64/openwrt-23.05.4-x86-64-generic-squashfs-combined-efi.img.gz"
+            DOWNLOAD_URL="https://downloads.openwrt.org/releases/23.05.4/targets/x86/64/openwrt-23.05.4-x86-64-generic-ext4-combined-efi.img.gz"
         elif [ "$CPU_ARCH" = "i686" ]; then
-            DOWNLOAD_URL="https://downloads.openwrt.org/releases/23.05.4/targets/x86/generic/openwrt-23.05.4-x86-generic-generic-squashfs-combined.img.gz"
+            DOWNLOAD_URL="https://downloads.openwrt.org/releases/23.05.4/targets/x86/generic/openwrt-23.05.4-x86-generic-generic-ext4-combined.img.gz"
         else
             echo "Unsupported CPU architecture: $CPU_ARCH"
             exit 1
@@ -74,9 +74,9 @@ case $CHOICE in
         echo "Installing ImmortalWRT"
         CPU_ARCH=$(uname -m)
         if [ "$CPU_ARCH" = "x86_64" ]; then
-            DOWNLOAD_URL="https://downloads.immortalwrt.org/releases/23.05.4/targets/x86/64/immortalwrt-23.05.4-x86-64-generic-squashfs-combined.img.gz"
+            DOWNLOAD_URL="https://downloads.immortalwrt.org/releases/23.05.4/targets/x86/64/immortalwrt-23.05.4-x86-64-generic-ext4-combined.img.gz"
         elif [ "$CPU_ARCH" = "i686" ]; then
-            DOWNLOAD_URL="https://downloads.immortalwrt.org/releases/23.05.4/targets/x86/generic/immortalwrt-23.05.4-x86-generic-generic-squashfs-combined.img.gz"
+            DOWNLOAD_URL="https://downloads.immortalwrt.org/releases/23.05.4/targets/x86/generic/immortalwrt-23.05.4-x86-generic-generic-ext4-combined.img.gz"
         else
             echo "Unsupported CPU architecture: $CPU_ARCH"
             exit 1
