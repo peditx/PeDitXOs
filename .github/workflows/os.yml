@@ -28,6 +28,16 @@ jobs:
         sudo chroot ./PeDitXOs-rootfs apt-get update
         sudo chroot ./PeDitXOs-rootfs apt-get install -y nano parted gzip curl wget fdisk whiptail dialog systemd grub-efi efibootmgr
 
+    - name: Download installer script
+      run: |
+        sudo wget https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/scripts/PeDitXrt_installer.sh -O ./PeDitXOs-rootfs/root/PeDitXrt_installer.sh
+        sudo chmod +x ./PeDitXOs-rootfs/root/PeDitXrt_installer.sh
+
+    - name: Set up startup script using rc.local
+      run: |
+        echo "/root/PeDitXrt_installer.sh" | sudo tee -a ./PeDitXOs-rootfs/etc/rc.local
+        sudo chmod +x ./PeDitXOs-rootfs/etc/rc.local
+
     - name: Set up EFI directory structure
       run: |
         sudo mkdir -p ./PeDitXOs-rootfs/boot/efi
@@ -67,6 +77,13 @@ jobs:
         sudo cp /usr/lib/ISOLINUX/isohdpfx.bin ./PeDitXOs-rootfs/isolinux/
         sudo cp /usr/lib/ISOLINUX/isolinux.bin ./PeDitXOs-rootfs/isolinux/
         sudo cp /usr/lib/syslinux/modules/bios/ldlinux.c32 ./PeDitXOs-rootfs/isolinux/
+
+    - name: Create ISOLINUX configuration
+      run: |
+        echo 'DEFAULT linux' | sudo tee ./PeDitXOs-rootfs/isolinux/isolinux.cfg
+        echo 'LABEL linux' | sudo tee -a ./PeDitXOs-rootfs/isolinux/isolinux.cfg
+        echo '  KERNEL /vmlinuz' | sudo tee -a ./PeDitXOs-rootfs/isolinux/isolinux.cfg
+        echo '  APPEND initrd=/initrd.img root=/dev/sda1 quiet splash' | sudo tee -a ./PeDitXOs-rootfs/isolinux/isolinux.cfg
 
     - name: Create GRUB configuration
       run: |
