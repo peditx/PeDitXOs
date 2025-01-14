@@ -17,7 +17,7 @@ jobs:
     - name: Set up environment
       run: |
         sudo apt-get update
-        sudo apt-get install -y debootstrap xorriso squashfs-tools grub-efi grub-common efibootmgr isolinux syslinux-common
+        sudo apt-get install -y debootstrap xorriso squashfs-tools grub-efi grub-common efibootmgr isolinux syslinux-common zstd
 
     - name: Create minimal Linux filesystem
       run: |
@@ -26,7 +26,16 @@ jobs:
     - name: Install additional software
       run: |
         sudo chroot ./PeDitXOs-rootfs apt-get update
-        sudo chroot ./PeDitXOs-rootfs apt-get install -y nano parted gzip curl wget fdisk whiptail dialog systemd grub-efi efibootmgr linux-image-amd64 linux-headers-amd64 live-boot
+        sudo chroot ./PeDitXOs-rootfs apt-get install -y nano parted gzip curl wget fdisk whiptail dialog systemd grub-efi efibootmgr linux-image-amd64 linux-headers-amd64 live-boot zstd
+
+    - name: Verify Kernel Installation
+      run: |
+        KERNEL_VERSION=$(sudo chroot ./PeDitXOs-rootfs dpkg --list | grep 'linux-image' | awk '{print $3}' | head -n 1)
+        if [ -z "$KERNEL_VERSION" ]; then
+          echo "Error: Kernel not installed!"
+          exit 1
+        fi
+        echo "Kernel version: $KERNEL_VERSION"
 
     - name: Download installer script
       run: |
@@ -70,67 +79,33 @@ jobs:
 
     - name: Create kernel config file
       run: |
-        echo "CONFIG_RD_GZIP=y" | sudo tee ./PeDitXOs-rootfs/boot/config-6.1.0-29-amd64
-        echo "CONFIG_RD_XZ=y" | sudo tee -a ./PeDitXOs-rootfs/boot/config-6.1.0-29-amd64
-        echo "CONFIG_RD_LZ4=y" | sudo tee -a ./PeDitXOs-rootfs/boot/config-6.1.0-29-amd64
-        echo "CONFIG_RD_LZO=y" | sudo tee -a ./PeDitXOs-rootfs/boot/config-6.1.0-29-amd64
-        echo "CONFIG_RD_ZSTD=y" | sudo tee -a ./PeDitXOs-rootfs/boot/config-6.1.0-29-amd64
+        KERNEL_VERSION=$(sudo chroot ./PeDitXOs-rootfs dpkg --list | grep 'linux-image' | awk '{print $3}' | head -n 1)
+        if [ -z "$KERNEL_VERSION" ]; then
+          echo "Error: Kernel version not found!"
+          exit 1
+        fi
+        echo "CONFIG_RD_GZIP=y" | sudo tee ./PeDitXOs-rootfs/boot/config-$KERNEL_VERSION
+        echo "CONFIG_RD_ZSTD=y" | sudo tee -a ./PeDitXOs-rootfs/boot/config-$KERNEL_VERSION
 
-    - name: Create initrd.img with fallback compression methods
+    - name: Create initrd.img with Zstandard compression
       run: |
-        KERNEL_VERSION=$(ls ./PeDitXOs-rootfs/boot/vmlinuz* | grep -oP 'vmlinuz-\d+\.\d+\.\d+.*' | head -n 1)
+        KERNEL_VERSION=$(sudo chroot ./PeDitXOs-rootfs dpkg --list | grep 'linux-image' | awk '{print $3}' | head -n 1)
         if [ -z "$KERNEL_VERSION" ]; then
           echo "Error: Kernel version not found!"
           exit 1
         fi
 
-        # List of compression methods to try
-        COMPRESSION_METHODS=("gzip" "xz" "lz4" "lzo" "zstd")
-
-        # Flag to check if any method succeeded
-        SUCCESS=false
-
-        for METHOD in "${COMPRESSION_METHODS[@]}"; do
-          echo "Trying compression method: $METHOD"
-
-          # Install necessary tools for the compression method
-          case $METHOD in
-            gzip)
-              sudo chroot ./PeDitXOs-rootfs apt-get install -y gzip
-              ;;
-            xz)
-              sudo chroot ./PeDitXOs-rootfs apt-get install -y xz-utils
-              ;;
-            lz4)
-              sudo chroot ./PeDitXOs-rootfs apt-get install -y lz4
-              ;;
-            lzo)
-              sudo chroot ./PeDitXOs-rootfs apt-get install -y lzop
-              ;;
-            zstd)
-              sudo chroot ./PeDitXOs-rootfs apt-get install -y zstd
-              ;;
-          esac
-
-          # Attempt to create initrd.img with the current method
-          if sudo chroot ./PeDitXOs-rootfs mkinitramfs -c $METHOD -o /boot/initrd.img $KERNEL_VERSION; then
-            echo "Success: initrd.img created using $METHOD compression."
-            SUCCESS=true
-            break
-          else
-            echo "Failed: initrd.img creation using $METHOD compression."
-          fi
-        done
-
-        # If no method succeeded, exit with an error
-        if [ "$SUCCESS" = false ]; then
-          echo "Error: All compression methods failed. initrd.img could not be created."
-          exit 1
+        # Try zstd first
+        if sudo chroot ./PeDitXOs-rootfs mkinitramfs -c zstd -o /boot/initrd.img $KERNEL_VERSION; then
+          echo "Success: initrd.img created using zstd compression."
+        else
+          echo "Failed: initrd.img creation using zstd compression. Falling back to gzip."
+          sudo chroot ./PeDitXOs-rootfs mkinitramfs -c gzip -o /boot/initrd.img $KERNEL_VERSION
         fi
 
     - name: Create SquashFS filesystem
       run: |
-        sudo mksquashfs ./PeDitXOs-rootfs ./PeDitXOs-rootfs/live/filesystem.squashfs -comp xz
+        sudo mksquashfs ./PeDitXOs-rootfs ./PeDitXOs-rootfs/live/filesystem.squashfs -comp zstd
 
     - name: Create EFI image
       run: |
