@@ -25,10 +25,10 @@ jobs:
         mkdir -p ./PeDitXOs-rootfs
         sudo tar -xzf alpine-minirootfs-3.18.0-x86_64.tar.gz -C ./PeDitXOs-rootfs
 
-    - name: Set up Alpine repositories
+    - name: Set up Alpine repositories (Yandex Mirror)
       run: |
-        echo "https://dl-cdn.alpinelinux.org/alpine/v3.18/main" | sudo tee ./PeDitXOs-rootfs/etc/apk/repositories
-        echo "https://dl-cdn.alpinelinux.org/alpine/v3.18/community" | sudo tee -a ./PeDitXOs-rootfs/etc/apk/repositories
+        echo "https://mirror.yandex.ru/mirrors/alpine/v3.18/main" | sudo tee ./PeDitXOs-rootfs/etc/apk/repositories
+        echo "https://mirror.yandex.ru/mirrors/alpine/v3.18/community" | sudo tee -a ./PeDitXOs-rootfs/etc/apk/repositories
 
     - name: Install additional software
       run: |
