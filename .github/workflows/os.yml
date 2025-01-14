@@ -19,11 +19,16 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y xorriso squashfs-tools grub-efi grub-common efibootmgr isolinux syslinux-common zstd curl
 
-    - name: Download Alpine minirootfs (3.21.0 RC7)
+    - name: Download Alpine minirootfs (3.19.0 Stable)
       run: |
-        wget https://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/x86_64/alpine-minirootfs-3.21.0_rc7-x86_64.tar.gz
+        wget https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-minirootfs-3.19.0-x86_64.tar.gz
         mkdir -p ./PeDitXOs-rootfs
-        sudo tar -xzf alpine-minirootfs-3.21.0_rc7-x86_64.tar.gz -C ./PeDitXOs-rootfs
+        sudo tar -xzf alpine-minirootfs-3.19.0-x86_64.tar.gz -C ./PeDitXOs-rootfs
+
+    - name: Set up Alpine repositories
+      run: |
+        echo "https://mirror.leaseweb.com/alpine/v3.19/main" | sudo tee ./PeDitXOs-rootfs/etc/apk/repositories
+        echo "https://mirror.leaseweb.com/alpine/v3.19/community" | sudo tee -a ./PeDitXOs-rootfs/etc/apk/repositories
 
     - name: Install additional software
       run: |
