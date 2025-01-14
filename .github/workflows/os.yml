@@ -17,13 +17,13 @@ jobs:
     - name: Set up environment
       run: |
         sudo apt-get update
-        sudo apt-get install -y xorriso squashfs-tools grub-efi grub-common efibootmgr isolinux syslinux-common zstd
+        sudo apt-get install -y xorriso squashfs-tools grub-efi grub-common efibootmgr isolinux syslinux-common zstd curl
 
-    - name: Create minimal Alpine filesystem
+    - name: Download latest Alpine minirootfs
       run: |
-        wget http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/x86_64/alpine-minirootfs-3.18.0-x86_64.tar.gz
+        wget http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/x86_64/alpine-minirootfs-$(curl -s http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/x86_64/ | grep -oP 'alpine-minirootfs-\d+\.\d+\.\d+-x86_64\.tar\.gz' | head -n 1)
         mkdir -p ./PeDitXOs-rootfs
-        sudo tar -xzf alpine-minirootfs-3.18.0-x86_64.tar.gz -C ./PeDitXOs-rootfs
+        sudo tar -xzf alpine-minirootfs-*.tar.gz -C ./PeDitXOs-rootfs
 
     - name: Install additional software
       run: |
