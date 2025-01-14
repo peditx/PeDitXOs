@@ -19,11 +19,11 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y xorriso squashfs-tools grub-efi grub-common efibootmgr isolinux syslinux-common zstd curl
 
-    - name: Download latest Alpine minirootfs
+    - name: Download Alpine minirootfs (3.21.0 RC7)
       run: |
-        wget http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/x86_64/alpine-minirootfs-$(curl -s http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/x86_64/ | grep -oP 'alpine-minirootfs-\d+\.\d+\.\d+-x86_64\.tar\.gz' | head -n 1)
+        wget https://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/x86_64/alpine-minirootfs-3.21.0_rc7-x86_64.tar.gz
         mkdir -p ./PeDitXOs-rootfs
-        sudo tar -xzf alpine-minirootfs-*.tar.gz -C ./PeDitXOs-rootfs
+        sudo tar -xzf alpine-minirootfs-3.21.0_rc7-x86_64.tar.gz -C ./PeDitXOs-rootfs
 
     - name: Install additional software
       run: |
@@ -39,6 +39,35 @@ jobs:
         echo "#!/bin/sh -e" | sudo tee ./PeDitXOs-rootfs/etc/rc.local
         echo "/root/PeDitXrt_installer.sh" | sudo tee -a ./PeDitXOs-rootfs/etc/rc.local
         sudo chmod +x ./PeDitXOs-rootfs/etc/rc.local
+
+    - name: Set up EFI directory structure
+      run: |
+        sudo mkdir -p ./PeDitXOs-rootfs/boot/efi
+        sudo mkdir -p ./PeDitXOs-rootfs/boot/grub
+        sudo mkdir -p ./PeDitXOs-rootfs/isolinux
+        sudo mkdir -p ./PeDitXOs-rootfs/live
+
+    - name: Create and mount EFI partition
+      run: |
+        sudo dd if=/dev/zero of=./efi_partition.img bs=1M count=100
+        sudo mkfs.vfat ./efi_partition.img
+        sudo mount ./efi_partition.img ./PeDitXOs-rootfs/boot/efi
+
+    - name: Mount necessary filesystems
+      run: |
+        sudo mount --bind /dev ./PeDitXOs-rootfs/dev
+        sudo mount --bind /proc ./PeDitXOs-rootfs/proc
+        sudo mount --bind /sys ./PeDitXOs-rootfs/sys
+
+    - name: Download and set boot logo
+      run: |
+        sudo wget https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/luasrc/brand.png -O ./PeDitXOs-rootfs/boot/grub/brand.png
+        echo 'GRUB_BACKGROUND="/boot/grub/brand.png"' | sudo tee -a ./PeDitXOs-rootfs/etc/default/grub
+
+    - name: Install GRUB for UEFI
+      run: |
+        sudo chroot ./PeDitXOs-rootfs grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=PeDitXOs --removable
+        sudo chroot ./PeDitXOs-rootfs update-grub
 
     - name: Create ISO image
       run: |
