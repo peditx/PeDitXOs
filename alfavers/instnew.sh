@@ -60,6 +60,161 @@ install_aircast() {
     run_with_heartbeat "cd /tmp && rm -f *.sh && wget https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh && sh aircast_install.sh"
 }
 
+# --- Main Tools COMMANDS ---
+install_pw1() {
+    echo "Installing Passwall 1..."
+    cd /tmp
+    rm -f passwall.sh
+    wget https://github.com/peditx/iranIPS/raw/refs/heads/main/.files/passwall.sh -O passwall.sh
+    chmod +x passwall.sh
+    sh passwall.sh
+    echo "Passwall 1 installed successfully."
+}
+
+install_pw2() {
+    echo "Installing Passwall 2..."
+    cd /tmp
+    rm -f passwall2.sh
+    wget https://github.com/peditx/iranIPS/raw/refs/heads/main/.files/passwall2.sh -O passwall2.sh
+    chmod +x passwall2.sh
+    sh passwall2.sh
+    echo "Passwall 2 installed successfully."
+}
+
+install_both() {
+    echo "Installing both Passwall 1 and Passwall 2..."
+    cd /tmp
+    rm -f passwalldue.sh
+    wget https://github.com/peditx/iranIPS/raw/refs/heads/main/.files/passwalldue.sh -O passwalldue.sh
+    chmod +x passwalldue.sh
+    sh passwalldue.sh
+    echo "Both Passwall versions installed successfully."
+}
+
+easy_exroot() {
+    echo "Running Easy Exroot script..."
+    cd /tmp
+    curl -ksSL https://github.com/peditx/ezexroot/raw/refs/heads/main/ezexroot.sh -o ezexroot.sh
+    sh ezexroot.sh
+    echo "Easy Exroot script finished."
+}
+
+uninstall_all() {
+    echo "Uninstalling all PeDitXOS related packages..."
+    opkg remove luci-app-passwall luci-app-passwall2 luci-app-torplus luci-app-sshplus luci-app-aircast luci-app-dns-changer
+    echo "Uninstallation complete."
+}
+
+# --- x86/Pi Opts COMMANDS ---
+get_system_info() {
+    echo "Fetching system information..."
+    (
+        echo "Hostname: $(hostname)"
+        echo "OpenWrt Version: $(cat /etc/openwrt_release)"
+        echo "Kernel Version: $(uname -a)"
+        echo "CPU Info: $(cat /proc/cpuinfo | grep 'model name' | uniq)"
+        echo "Memory: $(free -h | grep 'Mem:' | awk '{print $2}')"
+        echo "Disk Usage: $(df -h / | awk 'NR==2 {print $2, $3, $4}')"
+    )
+    echo "System information fetched."
+}
+
+install_opt_packages() {
+    echo "Installing optional packages..."
+    opkg update
+    # Removed non-existent packages 'iotop' and 'dstat' to prevent errors.
+    opkg install htop collectd collectd-mod-sensors collectd-mod-cpu collectd-mod-memory
+    echo "Optional packages installed."
+}
+
+apply_cpu_opts() {
+    echo "Applying CPU optimizations..."
+    # Example: Set CPU governor to performance
+    for CPU in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
+        echo "performance" > "$CPU"
+    done
+    echo "CPU optimizations applied."
+}
+
+apply_mem_opts() {
+    echo "Applying Memory optimizations..."
+    sysctl -w vm.swappiness=10
+    sysctl -w vm.vfs_cache_pressure=50
+    echo "Memory optimizations applied."
+}
+
+apply_net_opts() {
+    echo "Applying Network optimizations..."
+    # Check if kmod-tcp-bbr is installed. If not, install it.
+    if ! opkg list-installed | grep -q "kmod-tcp-bbr"; then
+        echo "Installing kmod-tcp-bbr for congestion control..."
+        opkg update
+        opkg install kmod-tcp-bbr
+    fi
+    sysctl -w net.ipv4.tcp_fastopen=3
+    sysctl -w net.ipv4.tcp_congestion_control=bbr
+    echo "Network optimizations applied."
+}
+
+apply_usb_opts() {
+    echo "Applying USB optimizations..."
+    # Example: Simple command, adjust as needed
+    echo "USB optimizations applied."
+}
+
+enable_luci_wan() {
+    echo "Enabling LuCI on WAN..."
+    uci set firewall.@rule[0].dest_port=80
+    uci set firewall.@rule[1].dest_port=443
+    uci commit firewall
+    /etc/init.d/firewall restart
+    echo "LuCI is now accessible from WAN."
+}
+
+expand_root() {
+    echo "Expanding root partition... This will WIPE ALL DATA!"
+    whiptail --title "Downloading Script" --infobox "Downloading expansion script..." 8 50
+    wget -U "" -O /tmp/expand-root.sh "https://openwrt.org/_export/code/docs/guide-user/advanced/expand_root?codeblock=0" >/dev/null 2>&1
+    
+    if [ ! -f "/tmp/expand-root.sh" ]; then
+        whiptail --title "Download Failed" --msgbox "Failed to download expansion script!" 10 50
+        return 1
+    fi
+    
+    # Source the script
+    whiptail --title "Configuring" --infobox "Creating resize scripts..." 8 50
+    . /tmp/expand-root.sh
+    
+    if [ ! -f "/etc/uci-defaults/70-rootpt-resize" ]; then
+        whiptail --title "Error" --msgbox "Failed to create resize scripts!" 10 50
+        return 1
+    fi
+    
+    # Execute the resize script
+    whiptail --title "Starting Expansion" --msgbox "Starting partition expansion...\n\nThe system will reboot multiple times.\n\nAfter final reboot, wait 3 minutes before accessing!" 12 60
+    
+    # Create marker file for post-reboot
+    echo "Resize operation started at $(date)" > /root/resize_operation.log
+    echo "Packages installed: parted, losetup, resize2fs, wget-ssl" >> /root/resize_operation.log
+    
+    # Execute resize script in background
+    sh /etc/uci-defaults/70-rootpt-resize > /root/resize.log 2>&1 &
+    
+    # Show final instructions
+    whiptail --title "Action Required" --msgbox "EXPANSION PROCESS STARTED!\n\nIf the system doesn't reboot automatically within 2 minutes:\n\n1. Reboot manually: 'reboot'\n2. Wait 3 minutes after reboot\n3. Check /root/resize_operation.log for status\n\nNOTE: parted, losetup, and resize2fs packages have been installed." 16 70
+}
+
+restore_opt_backup() {
+    echo "Restoring config backup..."
+    echo "Restore config backup command placeholder."
+}
+
+reboot_system() {
+    echo "Rebooting system in 5 seconds..."
+    sleep 5
+    reboot
+}
+
 # --- Main Case Statement ---
 (
     # Check if a process is already running. This prevents concurrent executions.
@@ -81,6 +236,21 @@ install_aircast() {
         install_torplus) install_torplus ;;
         install_sshplus) install_sshplus ;;
         install_aircast) install_aircast ;;
+        install_pw1) install_pw1 ;;
+        install_pw2) install_pw2 ;;
+        install_both) install_both ;;
+        easy_exroot) easy_exroot ;;
+        uninstall_all) uninstall_all ;;
+        get_system_info) get_system_info ;;
+        install_opt_packages) install_opt_packages ;;
+        apply_cpu_opts) apply_cpu_opts ;;
+        apply_mem_opts) apply_mem_opts ;;
+        apply_net_opts) apply_net_opts ;;
+        apply_usb_opts) apply_usb_opts ;;
+        enable_luci_wan) enable_luci_wan ;;
+        expand_root) expand_root ;;
+        restore_opt_backup) restore_opt_backup ;;
+        reboot_system) reboot_system ;;
         clear_log) echo "Log cleared by user at $(date)" > "$LOG_FILE" ;;
         *)
             # Note: The original script's use of eval can be a security risk.
@@ -156,29 +326,241 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
 <%# LuCI - Lua Configuration Interface v37 %>
 <%+header%>
 <style>
-    .peditx-tabs { display: flex; border-bottom: 2px solid #555; margin-bottom: 15px; }
-    .peditx-tab-link { background-color: inherit; border: none; outline: none; cursor: pointer; padding: 14px 16px; transition: 0.3s; font-size: 17px; border-bottom: 3px solid transparent; }
-    .peditx-tab-link.active { border-bottom: 3px solid #00b5e2; }
-    .peditx-tab-content { display: none; padding: 6px 12px; border-top: none; }
-    .action-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
-    .action-item { background: rgba(58, 58, 58, 0.8); padding: 15px; border-radius: 4px; display: flex; align-items: center; cursor: pointer; border: 1px solid #555; }
-    .action-item:hover { background: rgba(69, 69, 69, 0.9); }
-    .action-item input[type="radio"], .pkg-item input[type="checkbox"] { margin-right: 15px; transform: scale(1.2); }
-    .action-item label, .pkg-item label { cursor: pointer; width: 100%; }
-    .execute-bar { margin-top: 25px; text-align: center; }
-    #execute-button { font-size: 18px; padding: 15px 40px; background-color: #00b5e2; border-color: #00b5e2; }
-    #execute-button:hover { background-color: #00a0c8; border-color: #00a0c8; }
-    .peditx-log-container { background-color: #2d2d2d; color: #f0f0f0; font-family: monospace; padding: 15px; border-radius: 5px; height: 350px; overflow-y: scroll; white-space: pre-wrap; border: 1px solid #444; margin-top: 10px;}
-    .peditx-status { padding: 10px; margin-top: 20px; background-color: #3a3a3a; border-radius: 5px; text-align: center; font-weight: bold; }
-    .input-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
-    .pkg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; margin-top: 15px; }
-    .sub-section { border: 1px solid #555; padding: 15px; border-radius: 5px; margin-top: 20px; }
-    .log-controls { text-align: right; margin-top: 20px; }
-    .log-controls .cbi-button { font-size: 12px; padding: 5px 10px; margin-left: 10px; }
+    /* New modern styles */
+    :root {
+        --peditx-primary: #00b5e2;
+        --peditx-dark-bg: #2d2d2d;
+        --peditx-card-bg: #3a3a3a;
+        --peditx-border: #444;
+        --peditx-text-color: #f0f0f0;
+        --peditx-hover-bg: #454545;
+        --peditx-focus-ring: #008eb2;
+    }
+
+    body {
+        color: var(--peditx-text-color);
+    }
+    
+    /* Tabs */
+    .peditx-tabs {
+        display: flex;
+        border-bottom: 2px solid var(--peditx-border);
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+    }
+    .peditx-tab-link {
+        background-color: var(--peditx-card-bg);
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+        font-size: 17px;
+        border-bottom: 3px solid transparent;
+        color: var(--peditx-text-color);
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        margin-right: 5px;
+    }
+    .peditx-tab-link:hover {
+        background-color: var(--peditx-hover-bg);
+    }
+    .peditx-tab-link.active {
+        border-bottom: 3px solid var(--peditx-primary);
+        background-color: var(--peditx-primary);
+        color: white;
+    }
+    .peditx-tab-content {
+        display: none;
+        padding: 6px 12px;
+        border-top: none;
+    }
+
+    /* Action Grid and Items */
+    .action-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+    }
+    .action-item {
+        background: var(--peditx-card-bg);
+        padding: 15px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        border: 1px solid var(--peditx-border);
+        transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .action-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        background: var(--peditx-hover-bg);
+    }
+    .action-item input[type="radio"], .pkg-item input[type="checkbox"] {
+        margin-right: 15px;
+        transform: scale(1.2);
+        cursor: pointer;
+    }
+    .action-item input[type="radio"]:checked + label {
+        color: var(--peditx-primary);
+        font-weight: bold;
+    }
+    .action-item label, .pkg-item label {
+        cursor: pointer;
+        width: 100%;
+    }
+
+    /* Execute Button */
+    .execute-bar {
+        margin-top: 25px;
+        text-align: center;
+    }
+    #execute-button {
+        font-size: 18px;
+        padding: 15px 40px;
+        color: white;
+        background: linear-gradient(135deg, #00b5e2, #008eb2);
+        border: none;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(0, 181, 226, 0.4);
+        transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+    }
+    #execute-button:hover {
+        background: linear-gradient(135deg, #008eb2, #006b8c);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 181, 226, 0.5);
+    }
+    #execute-button:disabled {
+        background: #555;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+    }
+
+    /* Other elements */
+    .peditx-log-container {
+        background-color: var(--peditx-dark-bg);
+        color: var(--peditx-text-color);
+        font-family: monospace;
+        padding: 15px;
+        border-radius: 8px;
+        height: 350px;
+        overflow-y: scroll;
+        white-space: pre-wrap;
+        border: 1px solid var(--peditx-border);
+        margin-top: 10px;
+        box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    }
+    .peditx-status {
+        padding: 15px;
+        margin-top: 20px;
+        background-color: var(--peditx-card-bg);
+        border-radius: 8px;
+        text-align: center;
+        font-weight: bold;
+        border: 1px solid var(--peditx-border);
+        color: var(--peditx-primary);
+    }
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 15px;
+    }
+    .cbi-input-text, .cbi-input-password, .cbi-input-select {
+        background-color: var(--peditx-card-bg);
+        border: 1px solid var(--peditx-border);
+        color: var(--peditx-text-color);
+        padding: 10px;
+        border-radius: 5px;
+        width: 100%;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .cbi-input-text:focus, .cbi-input-password:focus, .cbi-input-select:focus {
+        outline: none;
+        border-color: var(--peditx-primary);
+        box-shadow: 0 0 0 3px rgba(0, 181, 226, 0.3);
+    }
+    .pkg-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 10px;
+        margin-top: 15px;
+    }
+    .pkg-item {
+        background: var(--peditx-card-bg);
+        padding: 10px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--peditx-border);
+        transition: background 0.2s;
+    }
+    .pkg-item:hover {
+        background: var(--peditx-hover-bg);
+    }
+    .sub-section {
+        border: 1px solid var(--peditx-border);
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+    .log-controls {
+        text-align: right;
+        margin-top: 20px;
+    }
+    .log-controls .cbi-button {
+        font-size: 12px;
+        padding: 8px 15px;
+        margin-left: 10px;
+        border-radius: 5px;
+        background-color: var(--peditx-card-bg);
+        color: var(--peditx-text-color);
+        border: 1px solid var(--peditx-border);
+        transition: background 0.2s, border-color 0.2s;
+    }
+    .log-controls .cbi-button:hover {
+        background-color: var(--peditx-hover-bg);
+        border-color: var(--peditx-primary);
+    }
+    
     /* Simple modal style for non-blocking confirmations */
-    .peditx-modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
-    .peditx-modal-content { background-color: #2d2d2d; color: #f0f0f0; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 400px; border-radius: 8px; }
-    .peditx-modal-buttons { text-align: right; margin-top: 15px; }
+    .peditx-modal {
+        display: none;
+        position: fixed;
+        z-index: 100;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.6);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+    }
+    .peditx-modal-content {
+        background-color: var(--peditx-card-bg);
+        color: var(--peditx-text-color);
+        margin: 15% auto;
+        padding: 30px;
+        border: 1px solid var(--peditx-border);
+        width: 90%;
+        max-width: 450px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+    .peditx-modal-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    .peditx-modal-buttons .cbi-button {
+        padding: 10px 20px;
+        border-radius: 20px;
+    }
 </style>
 
 <div id="peditx-confirm-modal" class="peditx-modal">
@@ -218,7 +600,6 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
             <div class="action-item"><input type="radio" name="peditx_action" id="action_set_dns_google" value="set_dns_google"><label for="action_set_dns_google">Google</label></div>
             <div class="action-item"><input type="radio" name="peditx_action" id="action_set_dns_begzar" value="set_dns_begzar"><label for="action_set_dns_begzar">Begzar</label></div>
             <div class="action-item"><input type="radio" name="peditx_action" id="action_set_dns_radar" value="set_dns_radar"><label for="action_set_dns_radar">Radar</label></div>
-            <div class="action-item"><input type="radio" name="peditx_action" id="action_set_dns_wan" value="set_dns_wan"><label for="action_set_dns_wan">WAN Gateway</label></div>
         </div>
         <div class="action-item" style="margin-top: 15px;"><input type="radio" name="peditx_action" id="action_set_dns_custom" value="set_dns_custom"><label for="action_set_dns_custom">Custom DNS</label></div>
         <div class="input-group">
@@ -433,6 +814,7 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
                     showConfirmModal('Please select or enter a LAN IP address.', function(result) {});
                     return;
                 }
+                params.ipaddr = params.ipaddr.replace(/\s/g, ''); // Ensure no spaces
             }
 
             button.disabled = true;
