@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# PeDitXOS Tools - Simplified Installer Script v41 (Patched)
-# This version adjusts the position of the auto-refresh checkbox.
+# PeDitXOS Tools - Simplified Installer Script v42 (Patched)
+# This version fixes the logic for the LAN IP Changer.
 
 echo ">>> Step 1: Initial system configuration..."
 # Basic system setup
@@ -126,7 +126,7 @@ echo ">>> Step 2: Creating/Updating the LuCI application..."
 mkdir -p /usr/lib/lua/luci/controller /usr/lib/lua/luci/model/cbi /usr/lib/lua/luci/view
 echo "Application directories created."
 
-# Create the Runner Script (v41)
+# Create the Runner Script (v42)
 cat > /usr/bin/peditx_runner.sh << 'EOF'
 #!/bin/sh
 set -e
@@ -543,9 +543,9 @@ end
 EOF
 echo "Controller file created."
 
-# Create the View file (v41 - with UI Fix)
+# Create the View file (v42 - with LAN IP Fix)
 cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
-<%# LuCI - Lua Configuration Interface v41 %>
+<%# LuCI - Lua Configuration Interface v42 %>
 <%+header%>
 <style>
     :root {
@@ -612,7 +612,7 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
         <button class="peditx-tab-link" onclick="showTab(event, 'x86-pi-opts')">x86/Pi Opts</button>
     </div>
 
-    <!-- Main content tabs here, no changes needed in them -->
+    <!-- Main content tabs -->
     <div id="main-tools" class="peditx-tab-content" style="display:block;">
         <div class="action-grid">
             <div class="action-item"><input type="radio" name="peditx_action" id="action_install_pw1" value="install_pw1"><label for="action_install_pw1">Install Passwall 1</label></div>
@@ -889,12 +889,15 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
                 }
                 params.band = (band2g && band5g) ? 'Both' : (band2g ? '2G' : '5G');
             } else if (action === 'set_lan_ip') {
-                params.ipaddr = document.getElementById('custom_lan_ip').value.trim();
-                if (!params.ipaddr) {
-                    showConfirmModal('Please select or enter a LAN IP address.', function(result) {});
-                    return;
-                }
-                params.ipaddr = params.ipaddr.replace(/\s/g, '');
+				var presetIp = document.getElementById('lan_ip_preset').value;
+				var customIp = document.getElementById('custom_lan_ip').value.trim();
+				var finalIp = (presetIp !== "") ? presetIp : customIp;
+
+				if (!finalIp) {
+					showConfirmModal('Please select a preset or enter a custom LAN IP address.', function(result) {});
+					return;
+				}
+				params.ipaddr = finalIp.replace(/\s/g, '');
             }
 
             button.disabled = true;
@@ -925,6 +928,9 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
             startAction();
         }
     });
+
+	// Initial sync of LAN IP input on page load
+	document.getElementById('custom_lan_ip').value = document.getElementById('lan_ip_preset').value;
 </script>
 <%+footer%>
 EOF
