@@ -1,8 +1,7 @@
 #!/bin/sh
 
-# PeDitXOS Tools - Simplified Installer Script v39 (Patched)
-# This version fixes execution errors by replacing the generic 'eval' with specific function calls.
-# It also adds missing backend functions for UI actions like DNS, WiFi, and LAN changes.
+# PeDitXOS Tools - Simplified Installer Script v41 (Patched)
+# This version adjusts the position of the auto-refresh checkbox.
 
 echo ">>> Step 1: Initial system configuration..."
 # Basic system setup
@@ -127,7 +126,7 @@ echo ">>> Step 2: Creating/Updating the LuCI application..."
 mkdir -p /usr/lib/lua/luci/controller /usr/lib/lua/luci/model/cbi /usr/lib/lua/luci/view
 echo "Application directories created."
 
-# Create the Runner Script (v39 - Patched)
+# Create the Runner Script (v41)
 cat > /usr/bin/peditx_runner.sh << 'EOF'
 #!/bin/sh
 set -e
@@ -492,7 +491,7 @@ EOF
 chmod +x /usr/bin/peditx_runner.sh
 echo "Runner script created/updated."
 
-# Create the Controller file (Patched)
+# Create the Controller file
 cat > /usr/lib/lua/luci/controller/peditxos.lua << 'EOF'
 module("luci.controller.peditxos", package.seeall)
 function index()
@@ -519,7 +518,6 @@ function check_status()
 end
 function run_script()
     local action = luci.http.formvalue("action")
-    -- Ensure action is a safe string before using it in a command
     if not action or not action:match("^[a-zA-Z0-9_-]+$") then
         luci.http.prepare_content("application/json")
         luci.http.write_json({success = false, error = "Invalid action"})
@@ -528,7 +526,6 @@ function run_script()
 
     local cmd = "/usr/bin/peditx_runner.sh " .. action
     
-    -- Pass arguments securely
     if action == "set_dns_custom" then
         cmd = cmd .. " '" .. (luci.http.formvalue("dns1") or "") .. "' '" .. (luci.http.formvalue("dns2") or "") .. "'"
     elseif action == "install_extra_packages" or action == "install_opt_packages" then
@@ -546,9 +543,9 @@ end
 EOF
 echo "Controller file created."
 
-# Create the View file (No changes needed for this fix, but included for completeness)
+# Create the View file (v41 - with UI Fix)
 cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
-<%# LuCI - Lua Configuration Interface v39 %>
+<%# LuCI - Lua Configuration Interface v41 %>
 <%+header%>
 <style>
     :root {
@@ -585,9 +582,11 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
     .pkg-item { background: var(--peditx-card-bg); padding: 10px; border-radius: 8px; display: flex; align-items: center; border: 1px solid var(--peditx-border); transition: background 0.2s; }
     .pkg-item:hover { background: var(--peditx-hover-bg); }
     .sub-section { border: 1px solid var(--peditx-border); padding: 20px; border-radius: 8px; margin-top: 20px; }
-    .log-controls { text-align: right; margin-top: 20px; }
+    .log-controls { display: flex; justify-content: flex-end; align-items: center; margin-top: 20px; }
     .log-controls .cbi-button { font-size: 12px; padding: 8px 15px; margin-left: 10px; border-radius: 5px; background-color: var(--peditx-card-bg); color: var(--peditx-text-color); border: 1px solid var(--peditx-border); transition: background 0.2s, border-color 0.2s; }
     .log-controls .cbi-button:hover { background-color: var(--peditx-hover-bg); border-color: var(--peditx-primary); }
+    .log-controls label { margin-right: 10px; cursor: pointer; user-select: none; }
+    .log-controls input[type="checkbox"] { vertical-align: middle; margin-right: 5px; }
     .peditx-modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
     .peditx-modal-content { background-color: var(--peditx-card-bg); color: var(--peditx-text-color); margin: 15% auto; padding: 30px; border: 1px solid var(--peditx-border); width: 90%; max-width: 450px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
     .peditx-modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
@@ -613,6 +612,7 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
         <button class="peditx-tab-link" onclick="showTab(event, 'x86-pi-opts')">x86/Pi Opts</button>
     </div>
 
+    <!-- Main content tabs here, no changes needed in them -->
     <div id="main-tools" class="peditx-tab-content" style="display:block;">
         <div class="action-grid">
             <div class="action-item"><input type="radio" name="peditx_action" id="action_install_pw1" value="install_pw1"><label for="action_install_pw1">Install Passwall 1</label></div>
@@ -622,7 +622,6 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
             <div class="action-item"><input type="radio" name="peditx_action" id="action_uninstall_all" value="uninstall_all" data-confirm="This will remove all related packages and PeDitXOS Tools itself. Are you sure?"><label for="action_uninstall_all">Uninstall All Tools</label></div>
         </div>
     </div>
-
     <div id="dns-changer" class="peditx-tab-content">
         <div class="action-grid">
             <div class="action-item"><input type="radio" name="peditx_action" id="action_set_dns_shecan" value="set_dns_shecan"><label for="action_set_dns_shecan">Shecan</label></div>
@@ -638,7 +637,6 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
             <input class="cbi-input-text" type="text" id="custom_dns2" placeholder="Custom DNS 2 (Optional)">
         </div>
     </div>
-
     <div id="extra-tools" class="peditx-tab-content">
         <div class="sub-section">
             <h4>WiFi Settings</h4>
@@ -652,7 +650,6 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
                 </div>
             </div>
         </div>
-
         <div class="sub-section">
             <h4>LAN IP Changer</h4>
             <div class="action-item"><input type="radio" name="peditx_action" id="action_set_lan_ip" value="set_lan_ip"><label for="action_set_lan_ip">Set LAN IP Address Below</label></div>
@@ -667,7 +664,6 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
                 <input class="cbi-input-text" type="text" id="custom_lan_ip" placeholder="Custom LAN IP">
             </div>
         </div>
-
         <div class="sub-section">
             <h4>Extra Package Installer</h4>
             <div class="action-item"><input type="radio" name="peditx_action" id="action_install_extra_packages" value="install_extra_packages"><label for="action_install_extra_packages">Install Selected Packages Below</label></div>
@@ -687,7 +683,6 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
                 <div class="pkg-item"><input type="checkbox" name="extra_pkg" id="pkg_btop" value="btop"><label for="pkg_btop">btop</label></div>
             </div>
         </div>
-        
         <div class="sub-section">
             <h4>Service Installers</h4>
             <div class="action-grid">
@@ -701,7 +696,6 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
             </div>
         </div>
     </div>
-    
     <div id="x86-pi-opts" class="peditx-tab-content">
         <div class="action-grid">
             <div class="action-item"><input type="radio" name="peditx_action" id="action_get_system_info" value="get_system_info"><label for="action_get_system_info">Get System Info</label></div>
@@ -723,6 +717,7 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
 
     <div id="peditx-status" class="peditx-status">Ready. Select an action and press Start.</div>
     <div class="log-controls">
+		<label for="auto-refresh-toggle"><input type="checkbox" id="auto-refresh-toggle"> Auto Refresh</label>
         <button class="cbi-button" onclick="pollLog(document.getElementById('execute-button'))">Refresh Log</button>
         <button class="cbi-button" onclick="clearLog()">Clear Log</button>
     </div>
@@ -730,6 +725,7 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
 </div>
 <script type="text/javascript">
     var monitorInterval;
+    var autoRefreshInterval;
     var modalCallback;
     var modal = document.getElementById('peditx-confirm-modal');
     var modalText = document.getElementById('peditx-modal-text');
@@ -774,12 +770,21 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
                 }
 
                 if (logContent.includes(">>> SCRIPT FINISHED <<<")) {
-                    clearInterval(monitorInterval);
-                    monitorInterval = null;
+                    if (monitorInterval) {
+						clearInterval(monitorInterval);
+						monitorInterval = null;
+					}
                     var statusDiv = document.getElementById('peditx-status');
                     button.disabled = false;
                     button.innerText = 'Start';
                     statusDiv.innerText = 'Action completed. Check log for details.';
+					
+					var autoRefreshToggle = document.getElementById('auto-refresh-toggle');
+					if (autoRefreshToggle.checked && !autoRefreshInterval) {
+						 autoRefreshInterval = setInterval(function() {
+							pollLog(document.getElementById('execute-button'));
+						}, 5000);
+					}
                 }
             }
         });
@@ -810,6 +815,23 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
             }
         });
     }
+	
+	document.getElementById('auto-refresh-toggle').addEventListener('change', function() {
+		if (this.checked) {
+			if (!monitorInterval) {
+				autoRefreshInterval = setInterval(function() {
+					pollLog(document.getElementById('execute-button'));
+				}, 5000);
+				document.getElementById('peditx-status').innerText = 'Auto-refresh enabled.';
+			}
+		} else {
+			if (autoRefreshInterval) {
+				clearInterval(autoRefreshInterval);
+				autoRefreshInterval = null;
+			}
+			document.getElementById('peditx-status').innerText = 'Auto-refresh disabled.';
+		}
+	});
 
     document.getElementById('execute-button').addEventListener('click', function() {
         if (monitorInterval) {
@@ -828,6 +850,11 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
         var confirmationMessage = selectedActionInput.getAttribute('data-confirm');
         
         var startAction = function() {
+			if (autoRefreshInterval) {
+				clearInterval(autoRefreshInterval);
+				autoRefreshInterval = null;
+			}
+			
             var params = { action: action };
             if (action === 'set_dns_custom') {
                 var dns1 = document.getElementById('custom_dns1').value.trim();
