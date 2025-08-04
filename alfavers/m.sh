@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# PeDitXOS Tools - Simplified Installer Script v55 (Patched)
-# This version modifies the expand_root function to use a custom script.
+# PeDitXOS Tools - Simplified Installer Script v56 (Patched)
+# This version adds Stop and Logout buttons to the LuCI interface.
 
 # --- Banner and Profile Configuration ---
 cat > /etc/banner << "EOF"
@@ -18,7 +18,7 @@ EOF
 
 echo ">>> Configuring system profile and bash settings..."
 mkdir -p /etc/profile.d
-wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/profile -O /etc/profile
+wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/profile -O /etc/
 wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/30-sysinfo.sh -O /etc/profile.d/30-sysinfo.sh
 wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/sys_bashrc.sh -O /etc/profile.d/sys_bashrc.sh
 chmod +x /etc/profile.d/30-sysinfo.sh
@@ -497,7 +497,7 @@ EOF
 chmod +x /usr/bin/peditx_runner.sh
 echo "Runner script created/updated."
 
-# Create the Controller file (v53 - Final Menu Fix)
+# Create the Controller file (v56 - Added stop_process)
 cat > /usr/lib/lua/luci/controller/peditxos.lua << 'EOF'
 module("luci.controller.peditxos", package.seeall)
 function index()
@@ -546,6 +546,13 @@ function run_script()
         cmd = cmd .. " '" .. (luci.http.formvalue("ssid") or "") .. "' '" .. (luci.http.formvalue("key") or "") .. "' '" .. (luci.http.formvalue("band") or "") .. "'"
     elseif action == "set_lan_ip" then
         cmd = cmd .. " '" .. (luci.http.formvalue("ipaddr") or "") .. "'"
+    elseif action == "stop_process" then
+        -- This action is handled directly here, not in the runner script
+        luci.sys.exec("pkill -f /usr/bin/peditx_runner.sh; rm -f /tmp/peditx.lock")
+        luci.sys.exec("echo '>>> Process stopped by user at $(date) <<<' >> /tmp/peditxos_log.txt")
+        luci.http.prepare_content("application/json")
+        luci.http.write_json({success = true})
+        return
     end
     
     luci.sys.exec("nohup " .. cmd .. " >/dev/null 2>&1 &")
@@ -556,9 +563,9 @@ EOF
 chmod 644 /usr/lib/lua/luci/controller/peditxos.lua
 echo "Controller file created."
 
-# Create the View file (v53)
+# Create the View file (v56 - UI changes)
 cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
-<%# LuCI - Lua Configuration Interface v53 %>
+<%# LuCI - Lua Configuration Interface v56 %>
 <%+header%>
 <style>
     :root {
@@ -570,42 +577,17 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
         --peditx-text-color: #f0f0f0;
         --peditx-hover-bg: #454545;
         --peditx-focus-ring: #008eb2;
+        --peditx-red: #e74c3c;
+        --peditx-red-hover: #c0392b;
+        --peditx-pink: #ff79c6;
+        --peditx-pink-hover: #ff55b3;
     }
     body { color: var(--peditx-text-color); }
     
-    /* --- NEW Tab Styles --- */
-    .peditx-tabs {
-        display: flex;
-        border-bottom: 1px solid var(--peditx-border);
-        margin-bottom: 20px;
-        flex-wrap: wrap;
-    }
-    .peditx-tab-link {
-        background-color: var(--peditx-card-bg);
-        border: none;
-        border-bottom: 3px solid transparent;
-        outline: none;
-        cursor: pointer;
-        padding: 14px 20px;
-        transition: color 0.3s, background-color 0.3s, border-color 0.3s;
-        font-size: 16px;
-        font-weight: 500;
-        color: #bbb;
-        margin-right: 5px;
-        margin-bottom: -1px;
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-    }
-    .peditx-tab-link:hover {
-        color: var(--peditx-text-color);
-        background-color: var(--peditx-hover-bg);
-    }
-    .peditx-tab-link.active {
-        color: #1a1a1a;
-        background: linear-gradient(135deg, #ffae42, #ff8c00);
-        border-bottom: 3px solid transparent;
-        font-weight: 700;
-    }
+    .peditx-tabs { display: flex; border-bottom: 1px solid var(--peditx-border); margin-bottom: 20px; flex-wrap: wrap; }
+    .peditx-tab-link { background-color: var(--peditx-card-bg); border: none; border-bottom: 3px solid transparent; outline: none; cursor: pointer; padding: 14px 20px; transition: color 0.3s, background-color 0.3s, border-color 0.3s; font-size: 16px; font-weight: 500; color: #bbb; margin-right: 5px; margin-bottom: -1px; border-top-left-radius: 8px; border-top-right-radius: 8px; }
+    .peditx-tab-link:hover { color: var(--peditx-text-color); background-color: var(--peditx-hover-bg); }
+    .peditx-tab-link.active { color: #1a1a1a; background: linear-gradient(135deg, #ffae42, #ff8c00); border-bottom: 3px solid transparent; font-weight: 700; }
     .peditx-tab-content { display: none; padding: 6px 12px; border-top: none; }
 
     .action-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
@@ -614,54 +596,17 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
     .action-item input[type="radio"], .pkg-item input[type="checkbox"] { margin-right: 15px; transform: scale(1.2); cursor: pointer; }
     .action-item input[type="radio"]:checked + label { color: var(--peditx-orange); font-weight: bold; }
     .action-item label, .pkg-item label { cursor: pointer; width: 100%; }
-    .execute-bar { margin-top: 25px; text-align: center; }
+    .execute-bar { margin-top: 25px; text-align: center; display: flex; justify-content: center; gap: 20px; }
 
-    /* --- Keyframes for Pulse Animation --- */
-    @keyframes pulse {
-        0% {
-            transform: scale(1);
-            box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.7), 0 4px 15px rgba(0,0,0,0.3);
-        }
-        70% {
-            transform: scale(1.02);
-            box-shadow: 0 0 0 10px rgba(255, 140, 0, 0), 0 6px 25px rgba(0,0,0,0.4);
-        }
-        100% {
-            transform: scale(1);
-            box-shadow: 0 0 0 0 rgba(255, 140, 0, 0), 0 4px 15px rgba(0,0,0,0.3);
-        }
-    }
+    @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.7), 0 4px 15px rgba(0,0,0,0.3); } 70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(255, 140, 0, 0), 0 6px 25px rgba(0,0,0,0.4); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 0, 0), 0 4px 15px rgba(0,0,0,0.3); } }
 
-    /* --- Execute Button Style --- */
-    #execute-button {
-        font-size: 18px;
-        padding: 16px 45px;
-        color: #1a1a1a;
-        font-weight: bold;
-        background: linear-gradient(135deg, #ffae42, #ff8c00);
-        border: none;
-        border-radius: 50px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3); /* Base shadow */
-        transition: background 0.3s ease, transform 0.2s ease;
-        cursor: pointer;
-        animation: pulse 2.5s infinite;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        text-shadow: 0 1px 1px rgba(255,255,255,0.2);
-    }
-    #execute-button:hover {
-        background: linear-gradient(135deg, #ff8c00, #e87a00);
-        animation-play-state: paused;
-    }
-    #execute-button:disabled {
-        background: #555;
-        cursor: not-allowed;
-        box-shadow: none;
-        transform: none;
-        animation: none;
-        color: #999;
-    }
+    .peditx-main-button { font-size: 18px; padding: 16px 45px; color: #1a1a1a; font-weight: bold; border: none; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: background 0.3s ease, transform 0.2s ease; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; text-shadow: 0 1px 1px rgba(255,255,255,0.2); }
+    #execute-button { background: linear-gradient(135deg, var(--peditx-orange), #ff8c00); animation: pulse 2.5s infinite; }
+    #execute-button:hover { background: linear-gradient(135deg, #ff8c00, #e87a00); animation-play-state: paused; }
+    #execute-button:disabled { background: #555; cursor: not-allowed; box-shadow: none; transform: none; animation: none; color: #999; }
+    
+    #stop-button { background: linear-gradient(135deg, var(--peditx-red), var(--peditx-red-hover)); }
+    #stop-button:hover { background: linear-gradient(135deg, var(--peditx-red-hover), #a03228); }
 
     .peditx-log-container { background-color: var(--peditx-dark-bg); color: var(--peditx-text-color); font-family: monospace; padding: 15px; border-radius: 8px; height: 350px; overflow-y: scroll; white-space: pre-wrap; border: 1px solid var(--peditx-border); margin-top: 10px; box-shadow: inset 0 0 5px rgba(0,0,0,0.2); }
     .peditx-status { padding: 15px; margin-top: 20px; background-color: var(--peditx-card-bg); border-radius: 8px; text-align: center; font-weight: bold; border: 1px solid var(--peditx-border); color: var(--peditx-orange); }
@@ -672,9 +617,11 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
     .pkg-item { background: var(--peditx-card-bg); padding: 10px; border-radius: 8px; display: flex; align-items: center; border: 1px solid var(--peditx-border); transition: background 0.2s; }
     .pkg-item:hover { background: var(--peditx-hover-bg); }
     .sub-section { border: 1px solid var(--peditx-border); padding: 20px; border-radius: 8px; margin-top: 20px; }
-    .log-controls { display: flex; justify-content: flex-end; align-items: center; margin-top: 20px; }
-    .log-controls .cbi-button { font-size: 12px; padding: 8px 15px; margin-left: 10px; border-radius: 5px; background-color: var(--peditx-card-bg); color: var(--peditx-text-color); border: 1px solid var(--peditx-border); transition: background 0.2s, border-color 0.2s; }
+    .log-controls { display: flex; justify-content: flex-end; align-items: center; margin-top: 20px; gap: 10px; }
+    .log-controls .cbi-button { font-size: 12px; padding: 8px 15px; border-radius: 5px; background-color: var(--peditx-card-bg); color: var(--peditx-text-color); border: 1px solid var(--peditx-border); transition: background 0.2s, border-color 0.2s; cursor: pointer; }
     .log-controls .cbi-button:hover { background-color: var(--peditx-hover-bg); border-color: var(--peditx-orange); }
+    #logout-button { background: linear-gradient(135deg, var(--peditx-pink), var(--peditx-pink-hover)); color: #1a1a1a; border-color: var(--peditx-pink); }
+    #logout-button:hover { background: linear-gradient(135deg, var(--peditx-pink-hover), #f73ca8); border-color: var(--peditx-pink-hover); }
     .log-controls label { margin-right: 10px; cursor: pointer; user-select: none; }
     .log-controls input[type="checkbox"] { vertical-align: middle; margin-right: 5px; }
     .peditx-modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
@@ -802,14 +749,16 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
     </div>
 
     <div class="execute-bar">
-        <button id="execute-button" class="cbi-button cbi-button-apply">Start</button>
+        <button id="execute-button" class="peditx-main-button">Start</button>
+        <button id="stop-button" class="peditx-main-button" style="display:none;">Stop</button>
     </div>
 
     <div id="peditx-status" class="peditx-status">Ready. Select an action and press Start.</div>
     <div class="log-controls">
 		<label for="auto-refresh-toggle"><input type="checkbox" id="auto-refresh-toggle"> Auto Refresh</label>
-        <button class="cbi-button" onclick="pollLog(document.getElementById('execute-button'))">Refresh Log</button>
+        <button class="cbi-button" onclick="pollLog()">Refresh Log</button>
         <button class="cbi-button" onclick="clearLog()">Clear Log</button>
+        <button id="logout-button" class="cbi-button">Logout</button>
     </div>
     <pre id="log-output" class="peditx-log-container">Welcome to PeDitXOS Tools!</pre>
 </div>
@@ -821,6 +770,9 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
     var modalText = document.getElementById('peditx-modal-text');
     var modalYes = document.getElementById('peditx-modal-yes');
     var modalNo = document.getElementById('peditx-modal-no');
+    var startButton = document.getElementById('execute-button');
+    var stopButton = document.getElementById('stop-button');
+    var statusDiv = document.getElementById('peditx-status');
 
     function showTab(evt, tabName) {
         var i, tabcontent, tablinks;
@@ -848,7 +800,23 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
         if (modalCallback) modalCallback(false);
     };
 
-    function pollLog(button) {
+    function resetUI() {
+        if (monitorInterval) {
+            clearInterval(monitorInterval);
+            monitorInterval = null;
+        }
+        startButton.disabled = false;
+        startButton.style.display = 'inline-flex';
+        stopButton.style.display = 'none';
+        statusDiv.innerText = 'Action finished. Ready for next command.';
+
+        var autoRefreshToggle = document.getElementById('auto-refresh-toggle');
+        if (autoRefreshToggle.checked && !autoRefreshInterval) {
+             autoRefreshInterval = setInterval(pollLog, 5000);
+        }
+    }
+
+    function pollLog() {
         XHR.get('<%=luci.dispatcher.build_url("admin", "peditxos", "log")%>', null, function(x, data) {
             if (x && x.status === 200 && data.log) {
                 var logOutput = document.getElementById('log-output');
@@ -859,22 +827,8 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
                     logOutput.scrollTop = logOutput.scrollHeight;
                 }
 
-                if (logContent.includes(">>> SCRIPT FINISHED <<<")) {
-                    if (monitorInterval) {
-						clearInterval(monitorInterval);
-						monitorInterval = null;
-					}
-                    var statusDiv = document.getElementById('peditx-status');
-                    button.disabled = false;
-                    button.innerText = 'Start';
-                    statusDiv.innerText = 'Action completed. Check log for details.';
-					
-					var autoRefreshToggle = document.getElementById('auto-refresh-toggle');
-					if (autoRefreshToggle.checked && !autoRefreshInterval) {
-						 autoRefreshInterval = setInterval(function() {
-							pollLog(document.getElementById('execute-button'));
-						}, 5000);
-					}
+                if (logContent.includes(">>> SCRIPT FINISHED <<<") || logContent.includes(">>> Process stopped by user")) {
+                    resetUI();
                 }
             }
         });
@@ -882,7 +836,7 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
     
     function clearLog() {
         XHR.get('<%=luci.dispatcher.build_url("admin", "peditxos", "run")%>', { action: 'clear_log' }, function(x, data) {
-            pollLog(document.getElementById('execute-button'));
+            pollLog();
         });
     }
     
@@ -895,9 +849,7 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
 
         XHR.get('<%=luci.dispatcher.build_url("admin", "peditxos", "run")%>', { action: 'opkg_update' }, function(x, data) {
             if (x && x.status === 200 && data.success) {
-                monitorInterval = setInterval(function() {
-                    pollLog(button);
-                }, 2000);
+                monitorInterval = setInterval(pollLog, 2000);
             } else {
                 button.disabled = false;
                 button.innerText = 'Start';
@@ -909,27 +861,24 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
 	document.getElementById('auto-refresh-toggle').addEventListener('change', function() {
 		if (this.checked) {
 			if (!monitorInterval) {
-				autoRefreshInterval = setInterval(function() {
-					pollLog(document.getElementById('execute-button'));
-				}, 5000);
-				document.getElementById('peditx-status').innerText = 'Auto-refresh enabled.';
+				autoRefreshInterval = setInterval(pollLog, 5000);
+				statusDiv.innerText = 'Auto-refresh enabled.';
 			}
 		} else {
 			if (autoRefreshInterval) {
 				clearInterval(autoRefreshInterval);
 				autoRefreshInterval = null;
 			}
-			document.getElementById('peditx-status').innerText = 'Auto-refresh disabled.';
+			statusDiv.innerText = 'Auto-refresh disabled.';
 		}
 	});
 
-    document.getElementById('execute-button').addEventListener('click', function() {
+    startButton.addEventListener('click', function() {
         if (monitorInterval) {
             showConfirmModal('Another process is already running. Please wait for it to finish.', function(result) {});
             return;
         }
 
-        var button = this;
         var selectedActionInput = document.querySelector('input[name="peditx_action"]:checked');
         if (!selectedActionInput) {
             showConfirmModal('Please select an action first.', function(result) {});
@@ -990,20 +939,18 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
 				params.ipaddr = finalIp.replace(/\s/g, '');
             }
 
-            button.disabled = true;
-            button.innerText = 'Running...';
-            document.getElementById('peditx-status').innerText = 'Starting ' + action + '...';
+            startButton.disabled = true;
+            startButton.style.display = 'none';
+            stopButton.style.display = 'inline-flex';
+            statusDiv.innerText = 'Starting ' + action + '...';
             document.getElementById('log-output').textContent = 'Executing command...\n';
 
             XHR.get('<%=luci.dispatcher.build_url("admin", "peditxos", "run")%>', params, function(x, data) {
                 if (x && x.status === 200 && data.success) {
-                    monitorInterval = setInterval(function() {
-                        pollLog(button);
-                    }, 2000);
+                    monitorInterval = setInterval(pollLog, 2000);
                 } else {
-                    button.disabled = false;
-                    button.innerText = 'Start';
-                    document.getElementById('peditx-status').innerText = 'Error starting action.';
+                    resetUI();
+                    statusDiv.innerText = 'Error starting action.';
                 }
             });
         };
@@ -1017,6 +964,22 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
         } else {
             startAction();
         }
+    });
+
+    stopButton.addEventListener('click', function() {
+        statusDiv.innerText = 'Stopping process...';
+        XHR.get('<%=luci.dispatcher.build_url("admin", "peditxos", "run")%>', { action: 'stop_process' }, function(x, data) {
+            if (x && x.status === 200 && data.success) {
+                resetUI();
+                pollLog(); // Poll one last time to get the "stopped by user" message
+            } else {
+                statusDiv.innerText = 'Error stopping process.';
+            }
+        });
+    });
+
+    document.getElementById('logout-button').addEventListener('click', function() {
+        window.location.href = '<%=luci.dispatcher.build_url("admin", "logout")%>';
     });
 
 	// Initial sync of LAN IP input on page load
