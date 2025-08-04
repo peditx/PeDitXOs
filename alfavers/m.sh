@@ -18,7 +18,7 @@ EOF
 
 echo ">>> Configuring system profile and bash settings..."
 mkdir -p /etc/profile.d
-wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/profile -O /etc/
+wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/profile -O /etc/profile
 wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/30-sysinfo.sh -O /etc/profile.d/30-sysinfo.sh
 wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/sys_bashrc.sh -O /etc/profile.d/sys_bashrc.sh
 chmod +x /etc/profile.d/30-sysinfo.sh
