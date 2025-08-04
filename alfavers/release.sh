@@ -1,18 +1,18 @@
 #!/bin/sh
 
-# PeDitXOS Tools - Simplified Installer Script v46 (Patched)
-# This version updates the Warp+ installer command and improves button styling.
+# PeDitXOS Tools - Simplified Installer Script v47 (Patched)
+# This version fixes a critical bug where a necessary directory was not created.
 
 # --- Banner and Profile Configuration ---
 cat > /etc/banner << "EOF"
- ______      _____   _      _    _     _____       
-(_____ \    (____ \ (_)_   \ \  / /   / ___ \      
- _____) )___ _   \ \ _| |_  \ \/ /   | |   | | ___ 
-|  ____/ _  ) |   | | |  _)  )  (    | |   | |/___)
-| |   ( (/ /| |__/ /| | |__ / /\ \   | |___| |___ |
-|_|    \____)_____/ |_|\___)_/  \_\   \_____/(___/ 
+  ______     _____  _     _   _     _____      
+ (_____ \   (____ \(_)   \ \ / /   / ___ \     
+  _____) )___ _   \ \ _| |_  \ \/ /   | |   | | ___ 
+ |  ____/ _  ) |   | | |  _)  )  (    | |   | |/___)
+ | |   ( (/ /| |__/ /| | |__ / /\ \   | |___| |___ |
+ |_|    \____)_____/ |_|\___)_/  \_\   \_____/(___/ 
                                                    
-                                  HTTPS://PEDITX.IR                      
+                      HTTPS://PEDITX.IR                      
  telegram : @PeDitX
 EOF
 
@@ -146,10 +146,11 @@ echo "Installation completed successfully. 🎉"
 # --- End of Theme Installation ---
 
 echo ">>> Step 2: Creating/Updating the LuCI application..."
-mkdir -p /usr/lib/lua/luci/controller /usr/lib/lua/luci/model/cbi /usr/lib/lua/luci/view
+# CRITICAL FIX: Ensure the 'peditxos' subdirectory exists before creating files in it.
+mkdir -p /usr/lib/lua/luci/controller /usr/lib/lua/luci/model/cbi /usr/lib/lua/luci/view/peditxos
 echo "Application directories created."
 
-# Create the Runner Script (v46)
+# Create the Runner Script (v47)
 cat > /usr/bin/peditx_runner.sh << 'EOF'
 #!/bin/sh
 set -e
@@ -563,9 +564,9 @@ end
 EOF
 echo "Controller file created."
 
-# Create the View file (v46 - Warp & UI Fix)
+# Create the View file (v47)
 cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
-<%# LuCI - Lua Configuration Interface v46 %>
+<%# LuCI - Lua Configuration Interface v47 %>
 <%+header%>
 <style>
     :root {
@@ -579,7 +580,7 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
     }
     body { color: var(--peditx-text-color); }
     
-    /* --- NEW Tab Styles --- */
+    /* --- Tab Styles --- */
     .peditx-tabs {
         display: flex;
         border-bottom: 1px solid var(--peditx-border);
@@ -634,7 +635,7 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
         }
     }
 
-    /* --- NEW Execute Button Style --- */
+    /* --- Execute Button Style --- */
     #execute-button {
         font-size: 18px;
         padding: 16px 45px;
