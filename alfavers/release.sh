@@ -34,7 +34,7 @@ uci commit system
 sed -i 's/DISTRIB_ID=.*/DISTRIB_ID="PeDitXOS"/' /etc/openwrt_release
 sed -i 's/DISTRIB_DESCRIPTION=.*/DISTRIB_DESCRIPTION="PeDitX OS telegram:@peditx"/' /etc/openwrt_release
 opkg update
-opkg install curl luci-compat screen sshpass procps-ng-pkill luci-app-ttyd
+opkg install curl luci-compat screen sshpass procps-ng-pkill luci-app-ttyd coreutils coreutils-base64 coreutils-nohup
 echo "System configuration complete."
 
 # --- Theme Installation ---
