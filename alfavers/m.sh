@@ -1,24 +1,24 @@
 #!/bin/sh
 
-# PeDitXOS Tools - Simplified Installer Script v53 (Patched)
-# This version provides a definitive fix for the LuCI menu structure.
+# PeDitXOS Tools - Simplified Installer Script v55 (Patched)
+# This version modifies the expand_root function to use a custom script.
 
 # --- Banner and Profile Configuration ---
 cat > /etc/banner << "EOF"
-  ______     _____  _     _   _     _____      
- (_____ \   (____ \(_)   \ \ / /   / ___ \     
-  _____) )___ _   \ \ _| |_  \ \/ /   | |   | | ___ 
- |  ____/ _  ) |   | | |  _)  )  (    | |   | |/___)
- | |   ( (/ /| |__/ /| | |__ / /\ \   | |___| |___ |
- |_|    \____)_____/ |_|\___)_/  \_\   \_____/(___/ 
-                                                   
-                      HTTPS://PEDITX.IR                      
- telegram : @PeDitX
+ ______     _____   _     _   _    _____      
+(_____ \   (____ \ (_)_   \ \ / /   / ___ \      
+ _____) )___ _   \ \ _| |_  \ \/ /   | |   | | ___ 
+|  ____/ _  ) |   | | |  _)  )  (    | |   | |/___)
+| |   ( (/ /| |__/ /| | |__ / /\ \   | |___| |___ |
+|_|    \____)_____/ |_|\___)_/  \_\   \_____/(___/ 
+                                                  
+HTTPS://PEDITX.IR   
+telegram : @PeDitX
 EOF
 
 echo ">>> Configuring system profile and bash settings..."
 mkdir -p /etc/profile.d
-wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/profile -O /etc/profile
+wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/profile -O /etc/
 wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/30-sysinfo.sh -O /etc/profile.d/30-sysinfo.sh
 wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/sys_bashrc.sh -O /etc/profile.d/sys_bashrc.sh
 chmod +x /etc/profile.d/30-sysinfo.sh
@@ -34,7 +34,7 @@ uci commit system
 sed -i 's/DISTRIB_ID=.*/DISTRIB_ID="PeDitXOS"/' /etc/openwrt_release
 sed -i 's/DISTRIB_DESCRIPTION=.*/DISTRIB_DESCRIPTION="PeDitX OS telegram:@peditx"/' /etc/openwrt_release
 opkg update
-opkg install curl luci-compat screen sshpass procps-ng-pkill
+opkg install curl luci-compat screen sshpass procps-ng-pkill luci-app-ttyd coreutils coreutils-base64 coreutils-nohup
 echo "System configuration complete."
 
 # --- Theme Installation ---
@@ -150,7 +150,7 @@ echo ">>> Step 2: Creating/Updating the LuCI application..."
 mkdir -p /usr/lib/lua/luci/controller /usr/lib/lua/luci/model/cbi /usr/lib/lua/luci/view/peditxos
 echo "Application directories created."
 
-# Create the Runner Script (v52)
+# Create the Runner Script (v55)
 cat > /usr/bin/peditx_runner.sh << 'EOF'
 #!/bin/sh
 set -e
@@ -402,32 +402,17 @@ enable_luci_wan() {
     echo "LuCI is now accessible from WAN."
 }
 
+# --- MODIFIED: expand_root function ---
 expand_root() {
-    echo "Expanding root partition... This will WIPE ALL DATA!"
-    whiptail --title "Downloading Script" --infobox "Downloading expansion script..." 8 50
-    wget -U "" -O /tmp/expand-root.sh "https://openwrt.org/_export/code/docs/guide-user/advanced/expand_root?codeblock=0" >/dev/null 2>&1
-    
-    if [ ! -f "/tmp/expand-root.sh" ]; then
-        whiptail --title "Download Failed" --msgbox "Failed to download expansion script!" 10 50
-        return 1
-    fi
-    
-    whiptail --title "Configuring" --infobox "Creating resize scripts..." 8 50
-    . /tmp/expand-root.sh
-    
-    if [ ! -f "/etc/uci-defaults/70-rootpt-resize" ]; then
-        whiptail --title "Error" --msgbox "Failed to create resize scripts!" 10 50
-        return 1
-    fi
-    
-    whiptail --title "Starting Expansion" --msgbox "Starting partition expansion...\n\nThe system will reboot multiple times.\n\nAfter final reboot, wait 3 minutes before accessing!" 12 60
-    
-    echo "Resize operation started at $(date)" > /root/resize_operation.log
-    echo "Packages installed: parted, losetup, resize2fs, wget-ssl" >> /root/resize_operation.log
-    
-    sh /etc/uci-defaults/70-rootpt-resize > /root/resize.log 2>&1 &
-    
-    whiptail --title "Action Required" --msgbox "EXPANSION PROCESS STARTED!\n\nIf the system doesn't reboot automatically within 2 minutes:\n\n1. Reboot manually: 'reboot'\n2. Wait 3 minutes after reboot\n3. Check /root/resize_operation.log for status\n\nNOTE: parted, losetup, and resize2fs packages have been installed.' 16 70"
+    echo "---"
+    echo "CRITICAL WARNING: Expanding root partition... THIS WILL WIPE ALL DATA!"
+    echo "This operation is irreversible and will format the drive."
+    echo "Are you absolutely sure you want to continue?"
+    echo "---"
+    echo "Downloading and executing the expansion script from PeDitX repo..."
+    cd /tmp
+    wget https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/expand.sh -O expand.sh && chmod +x expand.sh && sh expand.sh
+    echo "Expansion script has been executed. Please follow any on-screen instructions from the script itself."
 }
 
 restore_opt_backup() {
@@ -512,7 +497,7 @@ EOF
 chmod +x /usr/bin/peditx_runner.sh
 echo "Runner script created/updated."
 
-# Create the Controller file (v52 - Final Menu Fix)
+# Create the Controller file (v53 - Final Menu Fix)
 cat > /usr/lib/lua/luci/controller/peditxos.lua << 'EOF'
 module("luci.controller.peditxos", package.seeall)
 function index()
@@ -571,9 +556,9 @@ EOF
 chmod 644 /usr/lib/lua/luci/controller/peditxos.lua
 echo "Controller file created."
 
-# Create the View file (v52 - Tab Redesign)
+# Create the View file (v53)
 cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
-<%# LuCI - Lua Configuration Interface v52 %>
+<%# LuCI - Lua Configuration Interface v53 %>
 <%+header%>
 <style>
     :root {
@@ -1047,5 +1032,5 @@ rm -f /tmp/luci-indexcache
 /etc/init.d/uhttpd restart
 echo ""
 echo "********************************************"
-echo "         Update Successful!          "
+echo "          Update Successful!           "
 echo "********************************************"
