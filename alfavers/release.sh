@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# PeDitXOS Tools - Simplified Installer Script v53 (Patched)
-# This version provides a definitive fix for the LuCI menu structure.
+# PeDitXOS Tools - Simplified Installer Script v54 (Patched)
+# This version removes whiptail dependency from the expand_root function.
 
 # --- Banner and Profile Configuration ---
 cat > /etc/banner << "EOF"
@@ -150,7 +150,7 @@ echo ">>> Step 2: Creating/Updating the LuCI application..."
 mkdir -p /usr/lib/lua/luci/controller /usr/lib/lua/luci/model/cbi /usr/lib/lua/luci/view/peditxos
 echo "Application directories created."
 
-# Create the Runner Script (v52)
+# Create the Runner Script (v54)
 cat > /usr/bin/peditx_runner.sh << 'EOF'
 #!/bin/sh
 set -e
@@ -403,31 +403,45 @@ enable_luci_wan() {
 }
 
 expand_root() {
-    echo "Expanding root partition... This will WIPE ALL DATA!"
-    whiptail --title "Downloading Script" --infobox "Downloading expansion script..." 8 50
+    echo "---"
+    echo "Expanding root partition... THIS WILL WIPE ALL DATA!"
+    echo "---"
+    echo "Downloading expansion script..."
     wget -U "" -O /tmp/expand-root.sh "https://openwrt.org/_export/code/docs/guide-user/advanced/expand_root?codeblock=0" >/dev/null 2>&1
     
     if [ ! -f "/tmp/expand-root.sh" ]; then
-        whiptail --title "Download Failed" --msgbox "Failed to download expansion script!" 10 50
+        echo "ERROR: Failed to download expansion script!"
         return 1
     fi
     
-    whiptail --title "Configuring" --infobox "Creating resize scripts..." 8 50
+    echo "Creating resize scripts..."
     . /tmp/expand-root.sh
     
     if [ ! -f "/etc/uci-defaults/70-rootpt-resize" ]; then
-        whiptail --title "Error" --msgbox "Failed to create resize scripts!" 10 50
+        echo "ERROR: Failed to create resize scripts!"
         return 1
     fi
     
-    whiptail --title "Starting Expansion" --msgbox "Starting partition expansion...\n\nThe system will reboot multiple times.\n\nAfter final reboot, wait 3 minutes before accessing!" 12 60
+    echo "--- IMPORTANT ---"
+    echo "Starting partition expansion..."
+    echo "The system will reboot multiple times."
+    echo "After the final reboot, wait at least 3 minutes before accessing!"
+    echo "-----------------"
     
     echo "Resize operation started at $(date)" > /root/resize_operation.log
     echo "Packages installed: parted, losetup, resize2fs, wget-ssl" >> /root/resize_operation.log
     
+    # Execute resize script in the background
     sh /etc/uci-defaults/70-rootpt-resize > /root/resize.log 2>&1 &
     
-    whiptail --title "Action Required" --msgbox "EXPANSION PROCESS STARTED!\n\nIf the system doesn't reboot automatically within 2 minutes:\n\n1. Reboot manually: 'reboot'\n2. Wait 3 minutes after reboot\n3. Check /root/resize_operation.log for status\n\nNOTE: parted, losetup, and resize2fs packages have been installed.' 16 70"
+    echo "--- ACTION REQUIRED ---"
+    echo "EXPANSION PROCESS STARTED!"
+    echo "If the system doesn't reboot automatically within 2 minutes:"
+    echo "1. Reboot manually by running the 'reboot' command."
+    echo "2. Wait 3 minutes after the system comes back up."
+    echo "3. Check /root/resize_operation.log for status."
+    echo "NOTE: parted, losetup, and resize2fs packages have been installed."
+    echo "-----------------------"
 }
 
 restore_opt_backup() {
@@ -512,7 +526,7 @@ EOF
 chmod +x /usr/bin/peditx_runner.sh
 echo "Runner script created/updated."
 
-# Create the Controller file (v52 - Final Menu Fix)
+# Create the Controller file (v53 - Final Menu Fix)
 cat > /usr/lib/lua/luci/controller/peditxos.lua << 'EOF'
 module("luci.controller.peditxos", package.seeall)
 function index()
@@ -571,9 +585,9 @@ EOF
 chmod 644 /usr/lib/lua/luci/controller/peditxos.lua
 echo "Controller file created."
 
-# Create the View file (v52 - Tab Redesign)
+# Create the View file (v53)
 cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
-<%# LuCI - Lua Configuration Interface v52 %>
+<%# LuCI - Lua Configuration Interface v53 %>
 <%+header%>
 <style>
     :root {
