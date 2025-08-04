@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# PeDitXOS Tools - Simplified Installer Script v47 (Patched)
-# This version fixes a critical bug where a necessary directory was not created.
+# PeDitXOS Tools - Simplified Installer Script v53 (Patched)
+# This version provides a definitive fix for the LuCI menu structure.
 
 # --- Banner and Profile Configuration ---
 cat > /etc/banner << "EOF"
@@ -150,7 +150,7 @@ echo ">>> Step 2: Creating/Updating the LuCI application..."
 mkdir -p /usr/lib/lua/luci/controller /usr/lib/lua/luci/model/cbi /usr/lib/lua/luci/view/peditxos
 echo "Application directories created."
 
-# Create the Runner Script (v47)
+# Create the Runner Script (v52)
 cat > /usr/bin/peditx_runner.sh << 'EOF'
 #!/bin/sh
 set -e
@@ -512,13 +512,19 @@ EOF
 chmod +x /usr/bin/peditx_runner.sh
 echo "Runner script created/updated."
 
-# Create the Controller file
+# Create the Controller file (v52 - Final Menu Fix)
 cat > /usr/lib/lua/luci/controller/peditxos.lua << 'EOF'
 module("luci.controller.peditxos", package.seeall)
 function index()
-    entry({"admin", "peditxos"}, firstchild(), "Dashboard", 40).dependent = false
-    entry({"admin", "peditxos", "main"}, template("peditxos/main"), "Dashboard", 1)
-    entry({"admin", "peditxos", "log"}, call("get_log"), nil, 2).json = true
+    -- This creates the main menu category "PeDitXOS Tools"
+    entry({"admin", "peditxos"}, firstchild(), "PeDitXOS Tools", 40).dependent = false
+    
+    -- This creates the "Dashboard" submenu item under "PeDitXOS Tools"
+    -- The path is /admin/peditxos/dashboard and it loads the main template.
+    entry({"admin", "peditxos", "dashboard"}, template("peditxos/main"), "Dashboard", 1)
+    
+    -- Hidden entries for API calls, their paths are relative to the controller root
+    entry({"admin", "peditxos", "log"}, call("get_log"), nil).json = true
     entry({"admin", "peditxos", "status"}, call("check_status")).json = true
     entry({"admin", "peditxos", "run"}, call("run_script")).json = true
 end
@@ -562,15 +568,17 @@ function run_script()
     luci.http.write_json({success = true})
 end
 EOF
+chmod 644 /usr/lib/lua/luci/controller/peditxos.lua
 echo "Controller file created."
 
-# Create the View file (v47)
+# Create the View file (v52 - Tab Redesign)
 cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
-<%# LuCI - Lua Configuration Interface v47 %>
+<%# LuCI - Lua Configuration Interface v52 %>
 <%+header%>
 <style>
     :root {
         --peditx-primary: #00b5e2;
+        --peditx-orange: #ffae42;
         --peditx-dark-bg: #2d2d2d;
         --peditx-card-bg: #3a3a3a;
         --peditx-border: #444;
@@ -580,7 +588,7 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
     }
     body { color: var(--peditx-text-color); }
     
-    /* --- Tab Styles --- */
+    /* --- NEW Tab Styles --- */
     .peditx-tabs {
         display: flex;
         border-bottom: 1px solid var(--peditx-border);
@@ -588,25 +596,29 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
         flex-wrap: wrap;
     }
     .peditx-tab-link {
-        background-color: transparent;
+        background-color: var(--peditx-card-bg);
         border: none;
         border-bottom: 3px solid transparent;
         outline: none;
         cursor: pointer;
-        padding: 14px 16px;
-        transition: color 0.3s, border-color 0.3s;
+        padding: 14px 20px;
+        transition: color 0.3s, background-color 0.3s, border-color 0.3s;
         font-size: 16px;
         font-weight: 500;
-        color: #aaa;
-        margin-right: 15px;
+        color: #bbb;
+        margin-right: 5px;
         margin-bottom: -1px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
     }
     .peditx-tab-link:hover {
         color: var(--peditx-text-color);
+        background-color: var(--peditx-hover-bg);
     }
     .peditx-tab-link.active {
-        color: var(--peditx-primary);
-        border-bottom: 3px solid var(--peditx-primary);
+        color: #1a1a1a;
+        background: linear-gradient(135deg, #ffae42, #ff8c00);
+        border-bottom: 3px solid transparent;
         font-weight: 700;
     }
     .peditx-tab-content { display: none; padding: 6px 12px; border-top: none; }
@@ -615,7 +627,7 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
     .action-item { background: var(--peditx-card-bg); padding: 15px; border-radius: 8px; display: flex; align-items: center; cursor: pointer; border: 1px solid var(--peditx-border); transition: transform 0.2s, box-shadow 0.2s, background 0.2s; }
     .action-item:hover { transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.3); background: var(--peditx-hover-bg); }
     .action-item input[type="radio"], .pkg-item input[type="checkbox"] { margin-right: 15px; transform: scale(1.2); cursor: pointer; }
-    .action-item input[type="radio"]:checked + label { color: var(--peditx-primary); font-weight: bold; }
+    .action-item input[type="radio"]:checked + label { color: var(--peditx-orange); font-weight: bold; }
     .action-item label, .pkg-item label { cursor: pointer; width: 100%; }
     .execute-bar { margin-top: 25px; text-align: center; }
 
@@ -667,17 +679,17 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
     }
 
     .peditx-log-container { background-color: var(--peditx-dark-bg); color: var(--peditx-text-color); font-family: monospace; padding: 15px; border-radius: 8px; height: 350px; overflow-y: scroll; white-space: pre-wrap; border: 1px solid var(--peditx-border); margin-top: 10px; box-shadow: inset 0 0 5px rgba(0,0,0,0.2); }
-    .peditx-status { padding: 15px; margin-top: 20px; background-color: var(--peditx-card-bg); border-radius: 8px; text-align: center; font-weight: bold; border: 1px solid var(--peditx-border); color: var(--peditx-primary); }
+    .peditx-status { padding: 15px; margin-top: 20px; background-color: var(--peditx-card-bg); border-radius: 8px; text-align: center; font-weight: bold; border: 1px solid var(--peditx-border); color: var(--peditx-orange); }
     .input-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
     .cbi-input-text, .cbi-input-password, .cbi-input-select { background-color: var(--peditx-card-bg); border: 1px solid var(--peditx-border); color: var(--peditx-text-color); padding: 10px; border-radius: 5px; width: 100%; box-sizing: border-box; transition: border-color 0.3s, box-shadow 0.3s; }
-    .cbi-input-text:focus, .cbi-input-password:focus, .cbi-input-select:focus { outline: none; border-color: var(--peditx-primary); box-shadow: 0 0 0 3px rgba(0, 181, 226, 0.3); }
+    .cbi-input-text:focus, .cbi-input-password:focus, .cbi-input-select:focus { outline: none; border-color: var(--peditx-orange); box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.3); }
     .pkg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; margin-top: 15px; }
     .pkg-item { background: var(--peditx-card-bg); padding: 10px; border-radius: 8px; display: flex; align-items: center; border: 1px solid var(--peditx-border); transition: background 0.2s; }
     .pkg-item:hover { background: var(--peditx-hover-bg); }
     .sub-section { border: 1px solid var(--peditx-border); padding: 20px; border-radius: 8px; margin-top: 20px; }
     .log-controls { display: flex; justify-content: flex-end; align-items: center; margin-top: 20px; }
     .log-controls .cbi-button { font-size: 12px; padding: 8px 15px; margin-left: 10px; border-radius: 5px; background-color: var(--peditx-card-bg); color: var(--peditx-text-color); border: 1px solid var(--peditx-border); transition: background 0.2s, border-color 0.2s; }
-    .log-controls .cbi-button:hover { background-color: var(--peditx-hover-bg); border-color: var(--peditx-primary); }
+    .log-controls .cbi-button:hover { background-color: var(--peditx-hover-bg); border-color: var(--peditx-orange); }
     .log-controls label { margin-right: 10px; cursor: pointer; user-select: none; }
     .log-controls input[type="checkbox"] { vertical-align: middle; margin-right: 5px; }
     .peditx-modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
@@ -1027,6 +1039,7 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
 </script>
 <%+footer%>
 EOF
+chmod 644 /usr/lib/lua/luci/view/peditxos/main.htm
 echo "View file created."
 
 echo ">>> Step 3: Finalizing..."
