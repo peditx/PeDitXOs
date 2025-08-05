@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# PeDitXOS Tools - Simplified Installer Script v56 (Patched)
-# This version adds Stop and Logout buttons to the LuCI interface.
+# PeDitXOS Tools - Simplified Installer Script v59 (Patched)
+# This version fixes the Start/Stop race condition and improves logging.
 
 # --- Banner and Profile Configuration ---
 cat > /etc/banner << "EOF"
@@ -18,7 +18,7 @@ EOF
 
 echo ">>> Configuring system profile and bash settings..."
 mkdir -p /etc/profile.d
-wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/profile -O /etc/profile
+wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/profile -O /etc/
 wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/30-sysinfo.sh -O /etc/profile.d/30-sysinfo.sh
 wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/sys_bashrc.sh -O /etc/profile.d/sys_bashrc.sh
 chmod +x /etc/profile.d/30-sysinfo.sh
@@ -69,7 +69,6 @@ install_theme() {
     echo "Installing $THEME_NAME..."
     if ! opkg install "$filename"; then
         echo "Error: Failed to install $THEME_NAME."
-        # Keep the file for debugging purposes if installation fails
         return 1
     fi
 
@@ -93,8 +92,7 @@ install_theme "luci-theme-carbonpx" "luci-theme-carbonpx"
 echo "Removing default luci-theme-bootstrap..."
 opkg remove luci-theme-bootstrap --force-depends
 
-# 4. Install themeswitch using the more robust logic from the original script
-echo "Getting download link for themeswitch..."
+# 4. Install themeswitch
 themeswitch_version=$(curl -s https://api.github.com/repos/peditx/luci-app-themeswitch/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
 if [ -z "$themeswitch_version" ]; then
     echo "Error: Failed to fetch the latest themeswitch version!"
@@ -146,14 +144,12 @@ echo "Installation completed successfully. 🎉"
 # --- End of Theme Installation ---
 
 echo ">>> Step 2: Creating/Updating the LuCI application..."
-# CRITICAL FIX: Ensure the 'peditxos' subdirectory exists before creating files in it.
 mkdir -p /usr/lib/lua/luci/controller /usr/lib/lua/luci/model/cbi /usr/lib/lua/luci/view/peditxos
 echo "Application directories created."
 
-# Create the Runner Script (v55)
+# Create the Runner Script (v59 - Synchronous execution)
 cat > /usr/bin/peditx_runner.sh << 'EOF'
 #!/bin/sh
-set -e
 
 ACTION="$1"
 ARG1="$2"
@@ -162,7 +158,16 @@ ARG3="$4"
 LOG_FILE="/tmp/peditxos_log.txt"
 LOCK_FILE="/tmp/peditx.lock"
 
-# --- SERVICE INSTALLER COMMANDS ---
+# --- Lock File and Logging Setup ---
+if [ -f "$LOCK_FILE" ]; then
+    echo ">>> Another process is already running. Please wait for it to finish." >> "$LOG_FILE"
+    exit 1
+fi
+touch "$LOCK_FILE"
+trap 'rm -f "$LOCK_FILE"' EXIT TERM INT
+exec >> "$LOG_FILE" 2>&1
+
+# --- Function Definitions ---
 install_torplus() {
     echo "Installing TORPlus via official script..."
     cd /tmp && rm -f *.sh && wget https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/install.sh && chmod +x install.sh && sh install.sh
@@ -185,7 +190,6 @@ install_warp() {
     echo "Warp+ installation script executed."
 }
 
-# --- Main Tools COMMANDS ---
 install_pw1() {
     echo "Installing Passwall 1..."
     cd /tmp
@@ -230,7 +234,6 @@ uninstall_all() {
     echo "Uninstallation complete."
 }
 
-# --- DNS Changer COMMANDS ---
 set_dns() {
     local provider="$1"
     local dns1="$2"
@@ -250,23 +253,22 @@ set_dns() {
     esac
 
     uci set network.wan.peerdns='0'
-    uci delete network.wan.dns
+    uci set network.wan.dns='' 
     for server in $servers; do
-        uci add_list network.wan.dns="$server"
+        if [ -n "$server" ]; then
+            uci add_list network.wan.dns="$server"
+        fi
     done
     uci commit network
     /etc/init.d/network restart
     echo "DNS servers updated successfully."
 }
 
-# --- Extra Tools COMMANDS ---
 set_wifi_config() {
     local ssid="$1"
     local key="$2"
-    local band="$3" # 2G, 5G, or Both
+    local band="$3"
     echo "Configuring WiFi (SSID: $ssid, Band: $band)..."
-    # This is a simplified example. A real implementation would be more complex,
-    # iterating through wifi-iface sections and checking for radio hardware.
     echo "WiFi configuration is a placeholder. Implement actual UCI commands here."
 }
 
@@ -296,8 +298,6 @@ cleanup_memory() {
     echo "Memory cleanup complete."
 }
 
-
-# --- x86/Pi Opts COMMANDS ---
 get_system_info() {
     echo "Fetching system information..."
     (
@@ -320,7 +320,6 @@ install_opt_packages() {
         return 0
     fi
 
-    # Check for whiptail
     if ! command -v whiptail >/dev/null 2>&1; then
         echo "Installing whiptail..."
         opkg update && opkg install whiptail
@@ -330,11 +329,9 @@ install_opt_packages() {
         fi
     fi
 
-    # Update opkg
     echo "Updating package lists..."
     opkg update
 
-    # Install selected packages
     for package_name in $packages_to_install; do
         echo "Installing $package_name..."
         opkg install "$package_name"
@@ -345,7 +342,6 @@ install_opt_packages() {
         fi
     done
 
-    # If SingBox is installed, configure the main shunt
     if opkg list-installed | grep -q "^sing-box "; then
         echo "Configuring SingBoX shunt..."
         uci set passwall2.MainShunt=nodes
@@ -402,17 +398,22 @@ enable_luci_wan() {
     echo "LuCI is now accessible from WAN."
 }
 
-# --- MODIFIED: expand_root function ---
 expand_root() {
     echo "---"
     echo "CRITICAL WARNING: Expanding root partition... THIS WILL WIPE ALL DATA!"
-    echo "This operation is irreversible and will format the drive."
-    echo "Are you absolutely sure you want to continue?"
     echo "---"
-    echo "Downloading and executing the expansion script from PeDitX repo..."
+    echo "Downloading and preparing the expansion script..."
     cd /tmp
-    wget https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/expand.sh -O expand.sh && chmod +x expand.sh && sh expand.sh
-    echo "Expansion script has been executed. Please follow any on-screen instructions from the script itself."
+    wget https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/expand.sh -O expand.sh
+    chmod +x expand.sh
+    echo "---"
+    echo "--- ACTION REQUIRED ---"
+    echo "The expansion script is about to run. The system will reboot automatically."
+    echo "After reboot, the process will continue. Please be patient."
+    echo "-----------------------"
+    sh expand.sh
+    # The script will likely not reach this point as a reboot is expected.
+    echo "Expansion script initiated. System should be rebooting now."
 }
 
 restore_opt_backup() {
@@ -426,116 +427,108 @@ reboot_system() {
     reboot
 }
 
-# --- Main Case Statement (Patched) ---
-(
-    if [ -f "$LOCK_FILE" ]; then
-        echo ">>> Another process is already running. Please wait for it to finish."
-        exit 1
-    fi
-    
-    touch "$LOCK_FILE"
-    trap 'rm -f "$LOCK_FILE"' EXIT INT TERM
-    
-    echo ">>> Starting action: $ACTION at $(date)"
-    echo "--------------------------------------"
-    
-    case "$ACTION" in
-        install_torplus) install_torplus ;;
-        install_sshplus) install_sshplus ;;
-        install_aircast) install_aircast ;;
-        install_warp) install_warp ;;
-        install_pw1) install_pw1 ;;
-        install_pw2) install_pw2 ;;
-        install_both) install_both ;;
-        easy_exroot) easy_exroot ;;
-        uninstall_all) uninstall_all ;;
-        
-        set_dns_shecan) set_dns "shecan" ;;
-        set_dns_electro) set_dns "electro" ;;
-        set_dns_cloudflare) set_dns "cloudflare" ;;
-        set_dns_google) set_dns "google" ;;
-        set_dns_begzar) set_dns "begzar" ;;
-        set_dns_radar) set_dns "radar" ;;
-        set_dns_custom) set_dns "custom" "$ARG1" "$ARG2" ;;
-        
-        set_wifi_config) set_wifi_config "$ARG1" "$ARG2" "$ARG3" ;;
-        set_lan_ip) set_lan_ip "$ARG1" ;;
-        change_repo) change_repo ;;
-        install_wol) install_wol ;;
-        cleanup_memory) cleanup_memory ;;
+# --- Main Execution Block ---
+echo ">>> Starting action: $ACTION at $(date)"
+echo "--------------------------------------"
 
-        get_system_info) get_system_info ;;
-        opkg_update) opkg update ;;
-        install_opt_packages | install_extra_packages) install_opt_packages "$ARG1" ;;
-        apply_cpu_opts) apply_cpu_opts ;;
-        apply_mem_opts) apply_mem_opts ;;
-        apply_net_opts) apply_net_opts ;;
-        apply_usb_opts) apply_usb_opts ;;
-        enable_luci_wan) enable_luci_wan ;;
-        expand_root) expand_root ;;
-        restore_opt_backup) restore_opt_backup ;;
-        reboot_system) reboot_system ;;
-        clear_log) echo "Log cleared by user at $(date)" > "$LOG_FILE" ;;
-        *)
-            echo "ERROR: Unknown or unsupported action '$ACTION'."
-            ;;
-    esac
-    
-    EXIT_CODE=$?
-    
-    echo "--------------------------------------"
-    if [ $EXIT_CODE -eq 0 ]; then
-        echo "Action completed successfully at $(date)."
-    else
-        echo "Action failed with exit code $EXIT_CODE at $(date)."
-    fi
-    echo ">>> SCRIPT FINISHED <<<"
+EXIT_CODE=0
+case "$ACTION" in
+    install_torplus) install_torplus ;;
+    install_sshplus) install_sshplus ;;
+    install_aircast) install_aircast ;;
+    install_warp) install_warp ;;
+    install_pw1) install_pw1 ;;
+    install_pw2) install_pw2 ;;
+    install_both) install_both ;;
+    easy_exroot) easy_exroot ;;
+    uninstall_all) uninstall_all ;;
+    set_dns_shecan) set_dns "shecan" ;;
+    set_dns_electro) set_dns "electro" ;;
+    set_dns_cloudflare) set_dns "cloudflare" ;;
+    set_dns_google) set_dns "google" ;;
+    set_dns_begzar) set_dns "begzar" ;;
+    set_dns_radar) set_dns "radar" ;;
+    set_dns_custom) set_dns "custom" "$ARG1" "$ARG2" ;;
+    set_wifi_config) set_wifi_config "$ARG1" "$ARG2" "$ARG3" ;;
+    set_lan_ip) set_lan_ip "$ARG1" ;;
+    change_repo) change_repo ;;
+    install_wol) install_wol ;;
+    cleanup_memory) cleanup_memory ;;
+    get_system_info) get_system_info ;;
+    opkg_update) opkg update ;;
+    install_opt_packages | install_extra_packages) install_opt_packages "$ARG1" ;;
+    apply_cpu_opts) apply_cpu_opts ;;
+    apply_mem_opts) apply_mem_opts ;;
+    apply_net_opts) apply_net_opts ;;
+    apply_usb_opts) apply_usb_opts ;;
+    enable_luci_wan) enable_luci_wan ;;
+    expand_root) expand_root ;;
+    restore_opt_backup) restore_opt_backup ;;
+    reboot_system) reboot_system ;;
+    clear_log) echo "Log cleared by user at $(date)" > "$LOG_FILE" ;;
+    *) echo "ERROR: Unknown or unsupported action '$ACTION'." ;;
+esac
+EXIT_CODE=$?
 
-) >> "$LOG_FILE" 2>&1
-
+echo "--------------------------------------"
+if [ $EXIT_CODE -eq 0 ]; then
+    echo "Action completed successfully at $(date)."
+else
+    echo "Action failed with exit code $EXIT_CODE at $(date)."
+fi
+echo ">>> SCRIPT FINISHED <<<"
+exit 0
 EOF
 chmod +x /usr/bin/peditx_runner.sh
 echo "Runner script created/updated."
 
-# Create the Controller file (v56 - Added stop_process)
+# Create the Controller file (v59 - Reworked backgrounding)
 cat > /usr/lib/lua/luci/controller/peditxos.lua << 'EOF'
 module("luci.controller.peditxos", package.seeall)
 function index()
-    -- This creates the main menu category "PeDitXOS Tools"
     entry({"admin", "peditxos"}, firstchild(), "PeDitXOS Tools", 40).dependent = false
-    
-    -- This creates the "Dashboard" submenu item under "PeDitXOS Tools"
-    -- The path is /admin/peditxos/dashboard and it loads the main template.
     entry({"admin", "peditxos", "dashboard"}, template("peditxos/main"), "Dashboard", 1)
-    
-    -- Hidden entries for API calls, their paths are relative to the controller root
-    entry({"admin", "peditxos", "log"}, call("get_log"), nil).json = true
-    entry({"admin", "peditxos", "status"}, call("check_status")).json = true
+    entry({"admin", "peditxos", "status"}, call("get_status")).json = true
     entry({"admin", "peditxos", "run"}, call("run_script")).json = true
 end
-function get_log()
+
+function get_status()
+    local nixio = require "nixio"
     local log_file = "/tmp/peditxos_log.txt"
+    local lock_file = "/tmp/peditx.lock"
+    
     local content = ""
     local f = io.open(log_file, "r")
     if f then content = f:read("*a"); f:close() end
-    luci.http.prepare_content("application/json")
-    luci.http.write_json({ log = content })
-end
-function check_status()
-    local nixio = require "nixio"
-    local lock_file = "/tmp/peditx.lock"
+    
     local is_running = nixio.fs.access(lock_file)
+    
     luci.http.prepare_content("application/json")
-    luci.http.write_json({ running = is_running })
+    luci.http.write_json({ running = is_running, log = content })
 end
+
 function run_script()
     local action = luci.http.formvalue("action")
-    if not action or not action:match("^[a-zA-Z0-9_-]+$") then
+    if not action or not action:match("^[a-zA-Z0-9_.-]+$") then
         luci.http.prepare_content("application/json")
         luci.http.write_json({success = false, error = "Invalid action"})
         return
     end
 
+    if action == "stop_process" then
+        luci.sys.exec("pkill -f '/usr/bin/peditx_runner.sh' >/dev/null 2>&1")
+        luci.sys.exec("rm -f /tmp/peditx.lock")
+        luci.sys.exec("echo '\n>>> Process stopped by user at $(date) <<<' >> /tmp/peditxos_log.txt")
+        luci.http.prepare_content("application/json")
+        luci.http.write_json({success = true})
+        return
+    elseif action == "clear_log" then
+        luci.sys.exec("echo 'Log cleared by user at $(date)' > /tmp/peditxos_log.txt")
+        luci.http.prepare_content("application/json")
+        luci.http.write_json({success = true})
+        return
+    end
+    
     local cmd = "/usr/bin/peditx_runner.sh " .. action
     
     if action == "set_dns_custom" then
@@ -546,16 +539,12 @@ function run_script()
         cmd = cmd .. " '" .. (luci.http.formvalue("ssid") or "") .. "' '" .. (luci.http.formvalue("key") or "") .. "' '" .. (luci.http.formvalue("band") or "") .. "'"
     elseif action == "set_lan_ip" then
         cmd = cmd .. " '" .. (luci.http.formvalue("ipaddr") or "") .. "'"
-    elseif action == "stop_process" then
-        -- This action is handled directly here, not in the runner script
-        luci.sys.exec("pkill -f /usr/bin/peditx_runner.sh; rm -f /tmp/peditx.lock")
-        luci.sys.exec("echo '>>> Process stopped by user at $(date) <<<' >> /tmp/peditxos_log.txt")
-        luci.http.prepare_content("application/json")
-        luci.http.write_json({success = true})
-        return
     end
     
-    luci.sys.exec("nohup " .. cmd .. " >/dev/null 2>&1 &")
+    -- Launch the runner script as a detached background process.
+    -- The runner script handles its own logging and lock file.
+    luci.sys.exec("nohup " .. cmd .. " &")
+    
     luci.http.prepare_content("application/json")
     luci.http.write_json({success = true})
 end
@@ -563,9 +552,9 @@ EOF
 chmod 644 /usr/lib/lua/luci/controller/peditxos.lua
 echo "Controller file created."
 
-# Create the View file (v56 - UI changes)
+# Create the View file (v58 - No changes needed from this version)
 cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
-<%# LuCI - Lua Configuration Interface v56 %>
+<%# LuCI - Lua Configuration Interface v58 %>
 <%+header%>
 <style>
     :root {
@@ -705,7 +694,7 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
             <h4>Extra Package Installer</h4>
             <div class="action-item"><input type="radio" name="peditx_action" id="action_install_extra_packages" value="install_extra_packages"><label for="action_install_extra_packages">Install Selected Packages Below</label></div>
             <div class="log-controls">
-                <button class="cbi-button cbi-button-action" onclick="runExtraPkgUpdate()">Update Package Lists</button>
+                <button class="cbi-button cbi-button-action" onclick="startActionByName('opkg_update')">Update Package Lists</button>
             </div>
             <div class="pkg-grid">
                 <div class="pkg-item"><input type="checkbox" name="extra_pkg" id="pkg_sing-box" value="sing-box"><label for="pkg_sing-box">Sing-Box</label></div>
@@ -755,17 +744,16 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
 
     <div id="peditx-status" class="peditx-status">Ready. Select an action and press Start.</div>
     <div class="log-controls">
-		<label for="auto-refresh-toggle"><input type="checkbox" id="auto-refresh-toggle"> Auto Refresh</label>
-        <button class="cbi-button" onclick="pollLog()">Refresh Log</button>
+		<label for="auto-refresh-toggle"><input type="checkbox" id="auto-refresh-toggle" checked> Auto Refresh</label>
+        <button class="cbi-button" onclick="pollStatus(true)">Refresh Log</button>
         <button class="cbi-button" onclick="clearLog()">Clear Log</button>
         <button id="logout-button" class="cbi-button">Logout</button>
     </div>
     <pre id="log-output" class="peditx-log-container">Welcome to PeDitXOS Tools!</pre>
 </div>
 <script type="text/javascript">
-    var monitorInterval;
-    var autoRefreshInterval;
     var modalCallback;
+    var isPolling = false;
     var modal = document.getElementById('peditx-confirm-modal');
     var modalText = document.getElementById('peditx-modal-text');
     var modalYes = document.getElementById('peditx-modal-yes');
@@ -773,6 +761,10 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
     var startButton = document.getElementById('execute-button');
     var stopButton = document.getElementById('stop-button');
     var statusDiv = document.getElementById('peditx-status');
+    var logOutput = document.getElementById('log-output');
+    var autoRefreshToggle = document.getElementById('auto-refresh-toggle');
+    var statusURL = '<%=luci.dispatcher.build_url("admin", "peditxos", "status")%>';
+    var runURL = '<%=luci.dispatcher.build_url("admin", "peditxos", "run")%>';
 
     function showTab(evt, tabName) {
         var i, tabcontent, tablinks;
@@ -800,85 +792,61 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
         if (modalCallback) modalCallback(false);
     };
 
-    function resetUI() {
-        if (monitorInterval) {
-            clearInterval(monitorInterval);
-            monitorInterval = null;
-        }
-        startButton.disabled = false;
-        startButton.style.display = 'inline-flex';
-        stopButton.style.display = 'none';
-        statusDiv.innerText = 'Action finished. Ready for next command.';
+    function pollStatus(force) {
+        if (isPolling && !force) return;
 
-        var autoRefreshToggle = document.getElementById('auto-refresh-toggle');
-        if (autoRefreshToggle.checked && !autoRefreshInterval) {
-             autoRefreshInterval = setInterval(pollLog, 5000);
-        }
-    }
+        XHR.poll(2, statusURL, null, function(x, data) {
+            if (!x || x.status !== 200 || !data) {
+                XHR.poll.stop();
+                isPolling = false;
+                return;
+            }
 
-    function pollLog() {
-        XHR.get('<%=luci.dispatcher.build_url("admin", "peditxos", "log")%>', null, function(x, data) {
-            if (x && x.status === 200 && data.log) {
-                var logOutput = document.getElementById('log-output');
-                var logContent = data.log;
-                
-                if (logOutput.textContent !== logContent) {
-                    logOutput.textContent = logContent;
-                    logOutput.scrollTop = logOutput.scrollHeight;
+            if (logOutput.textContent !== data.log) {
+                logOutput.textContent = data.log;
+                logOutput.scrollTop = logOutput.scrollHeight;
+            }
+            
+            if (data.running) {
+                isPolling = true;
+                startButton.disabled = true;
+                startButton.style.display = 'none';
+                stopButton.style.display = 'inline-flex';
+            } else {
+                if (!autoRefreshToggle.checked) {
+                    XHR.poll.stop();
                 }
-
-                if (logContent.includes(">>> SCRIPT FINISHED <<<") || logContent.includes(">>> Process stopped by user")) {
-                    resetUI();
-                }
+                isPolling = false;
+                startButton.disabled = false;
+                startButton.style.display = 'inline-flex';
+                stopButton.style.display = 'none';
             }
         });
     }
     
     function clearLog() {
-        XHR.get('<%=luci.dispatcher.build_url("admin", "peditxos", "run")%>', { action: 'clear_log' }, function(x, data) {
-            pollLog();
-        });
-    }
-    
-    function runExtraPkgUpdate() {
-        var button = document.getElementById('execute-button');
-        button.disabled = true;
-        button.innerText = 'Running...';
-        document.getElementById('peditx-status').innerText = 'Starting opkg update...';
-        document.getElementById('log-output').textContent = 'Executing command...\n';
-
-        XHR.get('<%=luci.dispatcher.build_url("admin", "peditxos", "run")%>', { action: 'opkg_update' }, function(x, data) {
-            if (x && x.status === 200 && data.success) {
-                monitorInterval = setInterval(pollLog, 2000);
-            } else {
-                button.disabled = false;
-                button.innerText = 'Start';
-                document.getElementById('peditx-status').innerText = 'Error starting action.';
+        XHR.get(runURL, { action: 'clear_log' }, function(x, data) {
+            if (x && x.status === 200) {
+                pollStatus(true);
             }
         });
     }
-	
-	document.getElementById('auto-refresh-toggle').addEventListener('change', function() {
-		if (this.checked) {
-			if (!monitorInterval) {
-				autoRefreshInterval = setInterval(pollLog, 5000);
-				statusDiv.innerText = 'Auto-refresh enabled.';
-			}
-		} else {
-			if (autoRefreshInterval) {
-				clearInterval(autoRefreshInterval);
-				autoRefreshInterval = null;
-			}
-			statusDiv.innerText = 'Auto-refresh disabled.';
-		}
-	});
+
+    function startActionByName(actionName, params) {
+        params = params || {};
+        params.action = actionName;
+
+        XHR.get(runURL, params, function(x, data) {
+            if (x && x.status === 200 && data.success) {
+                statusDiv.innerText = 'Starting ' + actionName + '...';
+                pollStatus(true);
+            } else {
+                statusDiv.innerText = 'Error starting action: ' + (data ? data.error : 'Unknown');
+            }
+        });
+    }
 
     startButton.addEventListener('click', function() {
-        if (monitorInterval) {
-            showConfirmModal('Another process is already running. Please wait for it to finish.', function(result) {});
-            return;
-        }
-
         var selectedActionInput = document.querySelector('input[name="peditx_action"]:checked');
         if (!selectedActionInput) {
             showConfirmModal('Please select an action first.', function(result) {});
@@ -888,13 +856,8 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
         var action = selectedActionInput.value;
         var confirmationMessage = selectedActionInput.getAttribute('data-confirm');
         
-        var startAction = function() {
-			if (autoRefreshInterval) {
-				clearInterval(autoRefreshInterval);
-				autoRefreshInterval = null;
-			}
-			
-            var params = { action: action };
+        var doStart = function() {
+            var params = {};
             if (action === 'set_dns_custom') {
                 var dns1 = document.getElementById('custom_dns1').value.trim();
                 if (!dns1) {
@@ -904,10 +867,7 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
                 params.dns1 = dns1;
                 params.dns2 = document.getElementById('custom_dns2').value.trim();
             } else if (action === 'install_extra_packages' || action === 'install_opt_packages') {
-                var selectedPkgs = [];
-                document.querySelectorAll('input[name="extra_pkg"]:checked').forEach(function(cb) {
-                    selectedPkgs.push(cb.value);
-                });
+                var selectedPkgs = Array.from(document.querySelectorAll('input[name="extra_pkg"]:checked')).map(cb => cb.value);
                 if (selectedPkgs.length === 0 && action === 'install_extra_packages') {
                     showConfirmModal('Please select at least one extra package to install.', function(result) {});
                     return;
@@ -938,52 +898,47 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
 				}
 				params.ipaddr = finalIp.replace(/\s/g, '');
             }
-
-            startButton.disabled = true;
-            startButton.style.display = 'none';
-            stopButton.style.display = 'inline-flex';
-            statusDiv.innerText = 'Starting ' + action + '...';
-            document.getElementById('log-output').textContent = 'Executing command...\n';
-
-            XHR.get('<%=luci.dispatcher.build_url("admin", "peditxos", "run")%>', params, function(x, data) {
-                if (x && x.status === 200 && data.success) {
-                    monitorInterval = setInterval(pollLog, 2000);
-                } else {
-                    resetUI();
-                    statusDiv.innerText = 'Error starting action.';
-                }
-            });
+            startActionByName(action, params);
         };
 
         if (confirmationMessage) {
             showConfirmModal(confirmationMessage, function(result) {
                 if (result) {
-                    startAction();
+                    doStart();
                 }
             });
         } else {
-            startAction();
+            doStart();
         }
     });
 
     stopButton.addEventListener('click', function() {
         statusDiv.innerText = 'Stopping process...';
-        XHR.get('<%=luci.dispatcher.build_url("admin", "peditxos", "run")%>', { action: 'stop_process' }, function(x, data) {
+        XHR.get(runURL, { action: 'stop_process' }, function(x, data) {
             if (x && x.status === 200 && data.success) {
-                resetUI();
-                pollLog(); // Poll one last time to get the "stopped by user" message
+                pollStatus(true);
             } else {
                 statusDiv.innerText = 'Error stopping process.';
             }
         });
     });
 
+    autoRefreshToggle.addEventListener('change', function() {
+		if (this.checked) {
+            statusDiv.innerText = 'Auto-refresh enabled.';
+			pollStatus(true);
+		} else {
+            statusDiv.innerText = 'Auto-refresh disabled.';
+			XHR.poll.stop();
+		}
+	});
+
     document.getElementById('logout-button').addEventListener('click', function() {
         window.location.href = '<%=luci.dispatcher.build_url("admin", "logout")%>';
     });
 
-	// Initial sync of LAN IP input on page load
 	document.getElementById('custom_lan_ip').value = document.getElementById('lan_ip_preset').value;
+    pollStatus(true);
 </script>
 <%+footer%>
 EOF
