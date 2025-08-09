@@ -6,8 +6,8 @@ include $(TOPDIR)/feeds/luci/luci.mk
 
 # --- Package Information ---
 PKG_NAME:=luci-app-peditxos
-PKG_VERSION:=66
-PKG_RELEASE:=5
+PKG_VERSION:=65
+PKG_RELEASE:=1
 PKG_MAINTAINER:=PeDitX <telegram: @PeDitX>
 
 # --- LuCI Configuration ---
@@ -49,11 +49,14 @@ define Package/luci-app-peditxos/install
 	# Install the main runner script as an executable file
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) ./root/usr/bin/peditx_runner.sh $(1)/usr/bin/
+
+	# --- FIX: Correctly package the post-install script ---
+	# This script will run once on first boot after install, then be deleted.
+	$(INSTALL_DIR) $(1)/etc/uci-defaults
+	$(INSTALL_BIN) ./control/postinst $(1)/etc/uci-defaults/99-luci-app-peditxos
 endef
 
-# By removing the 'define Package/.../postinst' and 'prerm' blocks,
-# the build system will automatically pick up the scripts from the 'control/' directory.
-# This is the standard and correct way to handle post-install scripts.
+# The build system will automatically handle the prerm script if it exists in control/prerm
 
 # --- Finalize Package ---
 $(eval $(call BuildPackage,$(PKG_NAME)))
