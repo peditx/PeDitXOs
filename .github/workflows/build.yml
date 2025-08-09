@@ -16,6 +16,10 @@ on:
     branches:
       - 'main'
 
+# --- *** FIX: Granting write permissions to the workflow *** ---
+permissions:
+  contents: write
+
 env:
   TZ: Asia/Tehran
   # نام پوشه پکیج شما
@@ -44,7 +48,7 @@ jobs:
             echo "Makefile not found at $MAKEFILE_PATH"
             exit 1
           fi
-          # --- *** FIX: Using awk instead of cut for multi-character delimiter *** ---
+          # Using awk instead of cut for multi-character delimiter
           PKG_VERSION=$(grep -m 1 'PKG_VERSION:=' "$MAKEFILE_PATH" | awk -F':=' '{print $2}' | xargs)
           PKG_RELEASE=$(grep -m 1 'PKG_RELEASE:=' "$MAKEFILE_PATH" | awk -F':=' '{print $2}' | xargs)
           CURRENT_TAG="v${PKG_VERSION}-${PKG_RELEASE}"
