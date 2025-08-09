@@ -1,0 +1,19 @@
+#!/bin/sh
+# This script runs before the package is removed.
+
+echo ">>> Removing PeDitXOS configuration files..."
+
+# Remove profile scripts
+rm -f /etc/profile.d/30-sysinfo.sh
+rm -f /etc/profile.d/sys_bashrc.sh
+
+# Remove the runner script
+rm -f /usr/bin/peditx_runner.sh
+
+# Remove log and lock files
+rm -f /tmp/peditxos_log.txt
+rm -f /tmp/peditx.lock
+
+echo "PeDitXOS cleanup complete."
+
+exit 0
