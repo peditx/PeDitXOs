@@ -1,0 +1,151 @@
+# نام ورک‌فلو
+name: Advanced Build and Release for PeDitXOS
+
+# تریگرها
+on:
+  # اجرای دستی با قابلیت دیباگ از طریق SSH
+  workflow_dispatch:
+    inputs:
+      ssh:
+        description: 'SSH connection to Actions for debugging'
+        required: false
+        default: 'false'
+        type: 'boolean'
+  # اجرا در زمان پوش به شاخه main
+  push:
+    branches:
+      - 'main'
+
+env:
+  TZ: Asia/Tehran
+  REPO_NAME: luci-app-peditxos
+
+jobs:
+  # --- جاب اول: بررسی نسخه و ساخت Release ---
+  check_and_release:
+    name: Check Version and Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      # خروجی‌ها برای استفاده در جاب بعدی
+      new_version_tag: ${{ steps.check_version.outputs.new_version_tag }}
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      run_build: ${{ steps.check_version.outputs.run_build }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for new version
+        id: check_version
+        run: |
+          # خواندن نسخه از Makefile
+          PKG_VERSION=$(grep -m 1 'PKG_VERSION:=' Makefile | cut -d':=' -f2)
+          PKG_RELEASE=$(grep -m 1 'PKG_RELEASE:=' Makefile | cut -d':=' -f2)
+          CURRENT_TAG="v${PKG_VERSION}-${PKG_RELEASE}"
+          echo "Current version from Makefile: ${CURRENT_TAG}"
+
+          # بررسی وجود تگ در ریپازیتوری
+          if git rev-parse "${CURRENT_TAG}" >/dev/null 2>&1; then
+            echo "Tag ${CURRENT_TAG} already exists. No new build needed."
+            echo "run_build=false" >> $GITHUB_OUTPUT
+          else
+            echo "New version detected: ${CURRENT_TAG}. Proceeding with build."
+            echo "run_build=true" >> $GITHUB_OUTPUT
+            echo "new_version_tag=${CURRENT_TAG}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create new release
+        id: create_release
+        # فقط در صورت وجود نسخه جدید اجرا شود
+        if: steps.check_version.outputs.run_build == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.check_version.outputs.new_version_tag }}
+          name: Release ${{ steps.check_version.outputs.new_version_tag }}
+          body: "Automated release for PeDitXOS Tools. IPK files for various architectures are attached."
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # --- جاب دوم: کامپایل پکیج برای معماری‌های مختلف ---
+  build_package:
+    name: Build for ${{ matrix.arch }}
+    # این جاب به جاب قبلی وابسته است
+    needs: check_and_release
+    # فقط زمانی اجرا شود که نسخه جدیدی وجود داشته باشد
+    if: needs.check_and_release.outputs.run_build == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # تعریف معماری و لینک SDK به صورت یکجا
+        include:
+          - arch: "x86_64"
+            sdk_url: "https://downloads.openwrt.org/releases/23.05.3/sdk/openwrt-sdk-23.05.3-x86-64_gcc-12.3.0_musl.Linux-x86_64.tar.xz"
+          - arch: "aarch64_cortex-a53"
+            sdk_url: "https://downloads.openwrt.org/releases/23.05.3/sdk/openwrt-sdk-23.05.3-aarch64_cortex-a53_gcc-12.3.0_musl.Linux-x86_64.tar.xz"
+          - arch: "aarch64_cortex-a72"
+            sdk_url: "https://downloads.openwrt.org/releases/23.05.3/sdk/openwrt-sdk-23.05.3-aarch64_cortex-a72_gcc-12.3.0_musl.Linux-x86_64.tar.xz"
+          - arch: "arm_cortex-a7_neon-vfpv4"
+            sdk_url: "https://downloads.openwrt.org/releases/23.05.3/sdk/openwrt-sdk-23.05.3-arm_cortex-a7+neon-vfpv4_gcc-12.3.0_musl_eabi.Linux-x86_64.tar.xz"
+          - arch: "mips_24kc"
+            sdk_url: "https://downloads.openwrt.org/releases/23.05.3/sdk/openwrt-sdk-23.05.3-mips_24kc_gcc-12.3.0_musl.Linux-x86_64.tar.xz"
+          - arch: "mipsel_24kc"
+            sdk_url: "https://downloads.openwrt.org/releases/23.05.3/sdk/openwrt-sdk-23.05.3-mipsel_24kc_gcc-12.3.0_musl.Linux-x86_64.tar.xz"
+          - arch: "mipsel_74kc"
+            sdk_url: "https://downloads.openwrt.org/releases/23.05.3/sdk/openwrt-sdk-23.05.3-mipsel_74kc_gcc-12.3.0_musl.Linux-x86_64.tar.xz"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential clang flex bison g++ gawk gcc-multilib g++-multilib \
+          gettext git libncurses5-dev libssl-dev python3 rsync unzip zlib1g-dev file wget
+          sudo apt-get -qq autoremove --purge && sudo apt-get -qq clean
+
+      - name: Cache OpenWrt SDK
+        id: cache-sdk
+        uses: actions/cache@v4
+        with:
+          path: openwrt-sdk
+          key: openwrt-sdk-23.05.3-${{ matrix.arch }}
+
+      - name: Download and setup OpenWrt SDK
+        if: steps.cache-sdk.outputs.cache-hit != 'true'
+        run: |
+          wget -q -O openwrt-sdk.tar.xz "${{ matrix.sdk_url }}"
+          mkdir -p openwrt-sdk
+          tar -xJf openwrt-sdk.tar.xz -C openwrt-sdk --strip-components=1
+
+      - name: SSH connection for debugging
+        if: github.event.inputs.ssh == 'true'
+        uses: mxschmitt/action-tmate@v3
+
+      - name: Compile the package
+        id: compile
+        run: |
+          SDK_PATH=$PWD/openwrt-sdk
+          cp -r $GITHUB_WORKSPACE $SDK_PATH/package/$REPO_NAME
+          cd $SDK_PATH
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+          make defconfig
+          make package/$REPO_NAME/compile -j$(nproc)
+          # پیدا کردن مسیر فایل ipk و ذخیره آن برای مرحله بعد
+          IPK_PATH=$(find $PWD/bin/packages -type f -name "${{ env.REPO_NAME }}*.ipk")
+          echo "ipk_path=${IPK_PATH}" >> $GITHUB_OUTPUT
+
+      - name: Upload IPK to the release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ needs.check_and_release.outputs.upload_url }}
+          asset_path: ${{ steps.compile.outputs.ipk_path }}
+          asset_name: ${{ env.REPO_NAME }}_${{ needs.check_and_release.outputs.new_version_tag }}_${{ matrix.arch }}.ipk
+          asset_content_type: application/vnd.debian.binary-package
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
