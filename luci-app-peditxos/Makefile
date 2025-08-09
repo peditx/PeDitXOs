@@ -6,8 +6,8 @@ include $(TOPDIR)/feeds/luci/luci.mk
 
 # --- Package Information ---
 PKG_NAME:=luci-app-peditxos
-PKG_VERSION:=65
-PKG_RELEASE:=3
+PKG_VERSION:=66
+PKG_RELEASE:=1
 PKG_MAINTAINER:=PeDitX <telegram: @PeDitX>
 
 # --- LuCI Configuration ---
@@ -23,10 +23,7 @@ LUCI_DEPENDS:= \
 	+coreutils \
 	+coreutils-base64 \
 	+coreutils-nohup \
-	+wget \
-	+luci-theme-peditx \
-	+luci-theme-carbonpx \
-	+luci-app-themeswitch
+	+wget
 
 # --- Package Definition ---
 define Package/luci-app-peditxos
@@ -42,7 +39,7 @@ define Package/luci-app-peditxos/description
 	Includes Passwall installers, DNS changers, service managers, and system optimizations.
 endef
 
-# --- *** FIX: Correctly install files with proper permissions *** ---
+# --- Installation Rules ---
 # This section tells the build system how to install your files into the package.
 define Package/luci-app-peditxos/install
 	# Install LuCI controller and view files
@@ -54,16 +51,9 @@ define Package/luci-app-peditxos/install
 	$(INSTALL_BIN) ./root/usr/bin/peditx_runner.sh $(1)/usr/bin/
 endef
 
-# This tells the build system to include the post-install and pre-removal scripts
-define Package/luci-app-peditxos/postinst
-	$(INSTALL_DIR) $(1)/etc/uci-defaults
-	$(INSTALL_BIN) ./control/postinst $(1)/etc/uci-defaults/99-luci-app-peditxos
-endef
-
-define Package/luci-app-peditxos/prerm
-	$(CP) ./control/prerm $(1)/prerm
-endef
+# By removing the 'define Package/.../postinst' and 'prerm' blocks,
+# the build system will automatically pick up the scripts from the 'control/' directory.
+# This is the standard and correct way.
 
 # --- Finalize Package ---
 $(eval $(call BuildPackage,$(PKG_NAME)))
-
