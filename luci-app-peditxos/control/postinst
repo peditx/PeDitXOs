@@ -1,8 +1,7 @@
 #!/bin/sh
-
 # This script runs once after the package is installed.
 
-# --- Banner and Profile Configuration ---
+# --- 1. Banner and Profile Configuration ---
 cat > /etc/banner << "EOF"
  ______     _____   _   _   _   _____      
 (_____ \   (____ \ (_)_  \ \ / /   / ___ \     
@@ -24,19 +23,114 @@ chmod +x /etc/profile.d/30-sysinfo.sh
 chmod +x /etc/profile.d/sys_bashrc.sh
 echo "Profile configuration complete."
 
-# --- Initial system configuration ---
+
+# --- 2. Initial System Configuration ---
 echo ">>> Applying initial system configuration..."
 uci set system.@system[0].zonename='Asia/Tehran'
 uci set system.@system[0].hostname='PeDitXOS'
 uci commit system
 
-# Update release info
 sed -i 's/DISTRIB_ID=.*/DISTRIB_ID="PeDitXOS"/' /etc/openwrt_release
 sed -i 's/DISTRIB_DESCRIPTION=.*/DISTRIB_DESCRIPTION="PeDitX OS telegram:@peditx"/' /etc/openwrt_release
 
-# Remove default bootstrap theme if it exists, as we have dependencies for our own themes.
+
+# --- 3. Install Custom Themes and Theme Switcher ---
+
+# Function to install a theme from a repository
+install_theme() {
+    local REPO_NAME=$1
+    local THEME_NAME=$2
+    local LATEST_RELEASE_URL="https://api.github.com/repos/peditx/$REPO_NAME/releases/latest"
+
+    echo ">>> Processing $THEME_NAME..."
+    
+    # Get the .ipk download URL
+    IPK_URL=$(curl -s "$LATEST_RELEASE_URL" | grep "browser_download_url.*ipk" | cut -d '"' -f 4)
+
+    if [ -z "$IPK_URL" ]; then
+        echo "Error: Download link for the .ipk file of $THEME_NAME not found."
+        return 1
+    fi
+
+    local filename="/tmp/$THEME_NAME.ipk"
+    
+    # Download the .ipk package
+    echo "Downloading the latest version of $THEME_NAME..."
+    if ! wget -q "$IPK_URL" -O "$filename"; then
+        echo "Error: Failed to download $THEME_NAME."
+        return 1
+    fi
+
+    # Install the .ipk package
+    echo "Installing $THEME_NAME..."
+    if ! opkg install "$filename"; then
+        echo "Error: Failed to install $THEME_NAME."
+        return 1
+    fi
+
+    # Clean up the downloaded file
+    rm -f "$filename"
+    echo "$THEME_NAME installed successfully."
+    return 0
+}
+
+# 3.1. Prepare /var/lock directory
+if [ ! -d "/var/lock" ]; then
+    echo "Creating /var/lock directory..."
+    mkdir -p /var/lock
+fi
+
+# 3.2. Install themes
+install_theme "luci-theme-peditx" "luci-theme-peditx"
+install_theme "luci-theme-carbonpx" "luci-theme-carbonpx"
+
+# 3.3. Remove old theme
+echo "Removing default luci-theme-bootstrap..."
 opkg remove luci-theme-bootstrap --force-depends >/dev/null 2>&1
 
+# 3.4. Install themeswitch with architecture detection
+themeswitch_version=$(curl -s https://api.github.com/repos/peditx/luci-app-themeswitch/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+if [ -z "$themeswitch_version" ]; then
+    echo "Error: Failed to fetch the latest themeswitch version!"
+else
+    pkg_arch=$(opkg print-architecture | awk '{print $2}')
+    themeswitch_url=""
+
+    for arch in $pkg_arch; do
+        case "$arch" in
+            aarch64_cortex-a53|aarch64_cortex-a72|aarch64_generic|\
+            arm_cortex-a15_neon-vfpv4|arm_cortex-a5_vfpv4|arm_cortex-a7|\
+            arm_cortex-a7_neon-vfpv4|arm_cortex-a8_vfpv3|arm_cortex-a9|\
+            arm_cortex-a9_neon|arm_cortex-a9_vfpv3-d16|mipsel_24kc|\
+            mipsel_74kc|mipsel_mips32|mips_24kc|mips_4kec|mips_mips32|x86_64)
+                themeswitch_url="https://github.com/peditx/luci-app-themeswitch/releases/download/${themeswitch_version}/luci-app-themeswitch_${themeswitch_version}_${arch}.ipk"
+                break
+                ;;
+        esac
+    done
+
+    if [ -z "$themeswitch_url" ]; then
+        echo "Error: Unsupported CPU architecture detected for themeswitch."
+    else
+        pkg_name="luci-app-themeswitch"
+        filename="/tmp/luci-app-themeswitch.ipk"
+        echo "Downloading $pkg_name..."
+        if ! wget -q "${themeswitch_url}" -O "${filename}"; then
+            echo "Error: Failed to download $pkg_name."
+        else
+            echo "Installing $pkg_name..."
+            if ! opkg install "${filename}"; then
+                echo "Error: Failed to install $pkg_name."
+            else
+                echo "$pkg_name installed successfully."
+            fi
+            rm -f "$filename"
+        fi
+    fi
+fi
+
+
+# --- 4. Finalizing ---
 # Clear LuCI cache to apply changes
 rm -f /tmp/luci-indexcache
 
