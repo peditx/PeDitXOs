@@ -1,0 +1,46 @@
+#!/bin/sh
+
+# This script runs once after the package is installed.
+
+# --- Banner and Profile Configuration ---
+cat > /etc/banner << "EOF"
+ ______     _____   _   _   _   _____      
+(_____ \   (____ \ (_)_  \ \ / /   / ___ \     
+ _____) )___ _   \ \ _| |_  \ \/ /   | |   | | ___ 
+|  ____/ _  ) |   | | |  _)  )  (    | |   | |/___)
+| |   ( (/ /| |__/ /| | |__ / /\ \   | |___| |___ |
+|_|    \____)_____/ |_|\___)_/  \_\   \_____/(___/ 
+                                           
+HTTPS://PEDITX.IR   
+telegram : @PeDitX
+EOF
+
+echo ">>> Configuring system profile and bash settings..."
+mkdir -p /etc/profile.d
+wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/profile -O /etc/profile
+wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/30-sysinfo.sh -O /etc/profile.d/30-sysinfo.sh
+wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/sys_bashrc.sh -O /etc/profile.d/sys_bashrc.sh
+chmod +x /etc/profile.d/30-sysinfo.sh
+chmod +x /etc/profile.d/sys_bashrc.sh
+echo "Profile configuration complete."
+
+# --- Initial system configuration ---
+echo ">>> Applying initial system configuration..."
+uci set system.@system[0].zonename='Asia/Tehran'
+uci set system.@system[0].hostname='PeDitXOS'
+uci commit system
+
+# Update release info
+sed -i 's/DISTRIB_ID=.*/DISTRIB_ID="PeDitXOS"/' /etc/openwrt_release
+sed -i 's/DISTRIB_DESCRIPTION=.*/DISTRIB_DESCRIPTION="PeDitX OS telegram:@peditx"/' /etc/openwrt_release
+
+# Remove default bootstrap theme if it exists, as we have dependencies for our own themes.
+opkg remove luci-theme-bootstrap --force-depends >/dev/null 2>&1
+
+# Clear LuCI cache to apply changes
+rm -f /tmp/luci-indexcache
+
+echo "PeDitXOS Tools post-installation script finished successfully."
+echo "Please refresh your browser to see the changes."
+
+exit 0
