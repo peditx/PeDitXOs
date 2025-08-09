@@ -18,6 +18,7 @@ on:
 
 env:
   TZ: Asia/Tehran
+  # نام پوشه پکیج شما
   REPO_NAME: luci-app-peditxos
 
 jobs:
@@ -26,7 +27,6 @@ jobs:
     name: Check Version and Create Release
     runs-on: ubuntu-latest
     outputs:
-      # خروجی‌ها برای استفاده در جاب بعدی
       new_version_tag: ${{ steps.check_version.outputs.new_version_tag }}
       upload_url: ${{ steps.create_release.outputs.upload_url }}
       run_build: ${{ steps.check_version.outputs.run_build }}
@@ -38,9 +38,14 @@ jobs:
       - name: Check for new version
         id: check_version
         run: |
-          # خواندن نسخه از Makefile
-          PKG_VERSION=$(grep -m 1 'PKG_VERSION:=' Makefile | cut -d':=' -f2)
-          PKG_RELEASE=$(grep -m 1 'PKG_RELEASE:=' Makefile | cut -d':=' -f2)
+          # خواندن نسخه از Makefile داخل پوشه پکیج
+          MAKEFILE_PATH="${{ env.REPO_NAME }}/Makefile"
+          if [ ! -f "$MAKEFILE_PATH" ]; then
+            echo "Makefile not found at $MAKEFILE_PATH"
+            exit 1
+          fi
+          PKG_VERSION=$(grep -m 1 'PKG_VERSION:=' "$MAKEFILE_PATH" | cut -d':=' -f2)
+          PKG_RELEASE=$(grep -m 1 'PKG_RELEASE:=' "$MAKEFILE_PATH" | cut -d':=' -f2)
           CURRENT_TAG="v${PKG_VERSION}-${PKG_RELEASE}"
           echo "Current version from Makefile: ${CURRENT_TAG}"
 
@@ -56,7 +61,6 @@ jobs:
 
       - name: Create new release
         id: create_release
-        # فقط در صورت وجود نسخه جدید اجرا شود
         if: steps.check_version.outputs.run_build == 'true'
         uses: softprops/action-gh-release@v2
         with:
@@ -71,15 +75,12 @@ jobs:
   # --- جاب دوم: کامپایل پکیج برای معماری‌های مختلف ---
   build_package:
     name: Build for ${{ matrix.arch }}
-    # این جاب به جاب قبلی وابسته است
     needs: check_and_release
-    # فقط زمانی اجرا شود که نسخه جدیدی وجود داشته باشد
     if: needs.check_and_release.outputs.run_build == 'true'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        # تعریف معماری و لینک SDK به صورت یکجا
         include:
           - arch: "x86_64"
             sdk_url: "https://downloads.openwrt.org/releases/23.05.3/sdk/openwrt-sdk-23.05.3-x86-64_gcc-12.3.0_musl.Linux-x86_64.tar.xz"
@@ -129,7 +130,10 @@ jobs:
         id: compile
         run: |
           SDK_PATH=$PWD/openwrt-sdk
-          cp -r $GITHUB_WORKSPACE $SDK_PATH/package/$REPO_NAME
+          # --- *** مهم: این خط تغییر کرده است *** ---
+          # کپی کردن فقط پوشه پکیج به داخل SDK
+          cp -r $GITHUB_WORKSPACE/$REPO_NAME $SDK_PATH/package/
+          
           cd $SDK_PATH
           ./scripts/feeds update -a
           ./scripts/feeds install -a
@@ -148,4 +152,3 @@ jobs:
           asset_content_type: application/vnd.debian.binary-package
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
