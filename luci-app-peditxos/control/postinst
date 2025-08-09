@@ -1,5 +1,7 @@
 #!/bin/sh
-# This script runs once after the package is installed.
+
+# --- FIX: Ensure runner script is executable ---
+chmod +x /usr/bin/peditx_runner.sh
 
 # --- Function to install a package from GitHub Releases ---
 install_from_github() {
@@ -8,31 +10,17 @@ install_from_github() {
     local PACKAGE_NAME=$2
     
     echo ">>> Installing ${PACKAGE_NAME}..."
-    
-    # Get the latest release download URL for the .ipk file
     IPK_URL=$(curl -s "https://api.github.com/repos/${REPO_USER}/${REPO_NAME}/releases/latest" | grep "browser_download_url.*\.ipk" | cut -d '"' -f 4 | head -n 1)
-
     if [ -z "$IPK_URL" ]; then
         echo "Error: Could not find download URL for ${PACKAGE_NAME}. Skipping."
         return 1
     fi
-
     local FILENAME="/tmp/${PACKAGE_NAME}.ipk"
-    
-    # Download the package
-    if ! wget -q "$IPK_URL" -O "$FILENAME"; then
-        echo "Error: Failed to download ${PACKAGE_NAME}. Skipping."
-        return 1
-    fi
-    
-    # Install the package
+    wget -q "$IPK_URL" -O "$FILENAME"
     opkg install "$FILENAME"
-    
-    # Clean up
     rm -f "$FILENAME"
     echo "${PACKAGE_NAME} installed successfully."
 }
-
 
 # --- 1. Banner and Profile Configuration ---
 cat > /etc/banner << "EOF"
@@ -49,50 +37,29 @@ EOF
 
 echo ">>> Configuring system profile and bash settings..."
 mkdir -p /etc/profile.d
-wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/profile -O /etc/profile
-wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/30-sysinfo.sh -O /etc/profile.d/30-sysinfo.sh
-wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/sys_bashrc.sh -O /etc/profile.d/sys_bashrc.sh
-chmod +x /etc/profile.d/30-sysinfo.sh
-chmod +x /etc/profile.d/sys_bashrc.sh
-echo "Profile configuration complete."
-
+#wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/profile -O /etc/profile
+#wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/30-sysinfo.sh -O /etc/profile.d/30-sysinfo.sh
+#wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/sys_bashrc.sh -O /etc/profile.d/sys_bashrc.sh
+#chmod +x /etc/profile.d/30-sysinfo.sh
+#chmod +x /etc/profile.d/sys_bashrc.sh
 
 # --- 2. Initial System Configuration ---
 echo ">>> Applying initial system configuration..."
 uci set system.@system[0].zonename='Asia/Tehran'
 uci set system.@system[0].hostname='PeDitXOS'
 uci commit system
-
 sed -i 's/DISTRIB_ID=.*/DISTRIB_ID="PeDitXOS"/' /etc/openwrt_release
 sed -i 's/DISTRIB_DESCRIPTION=.*/DISTRIB_DESCRIPTION="PeDitX OS telegram:@peditx"/' /etc/openwrt_release
 
-
-# --- 3. Install Custom Themes and Theme Switcher ---
-# Create /var/lock if it doesn't exist (dependency for some themes)
+# --- 3. Install Custom Themes ---
 mkdir -p /var/lock
-
-# Remove default bootstrap theme to avoid conflicts
 opkg remove luci-theme-bootstrap --force-depends >/dev/null 2>&1
-
-# Install custom packages from GitHub
 install_from_github "luci-theme-peditx" "luci-theme-peditx"
 install_from_github "luci-theme-carbonpx" "luci-theme-carbonpx"
 install_from_github "luci-app-themeswitch" "luci-app-themeswitch"
 
-
-# --- 4. Set Executable Permissions ---
-# *** FIX: Explicitly set executable permission on the runner script ***
-if [ -f "/usr/bin/peditx_runner.sh" ]; then
-    echo ">>> Setting executable permission for runner script..."
-    chmod +x /usr/bin/peditx_runner.sh
-fi
-
-
-# --- 5. Finalizing ---
-# Clear LuCI cache to apply changes
+# --- 4. Finalizing ---
 rm -f /tmp/luci-indexcache
-
 echo "PeDitXOS Tools post-installation script finished successfully."
-echo "Please refresh your browser to see the changes."
 
 exit 0
