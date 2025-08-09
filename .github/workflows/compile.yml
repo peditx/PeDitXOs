@@ -44,8 +44,9 @@ jobs:
             echo "Makefile not found at $MAKEFILE_PATH"
             exit 1
           fi
-          PKG_VERSION=$(grep -m 1 'PKG_VERSION:=' "$MAKEFILE_PATH" | cut -d':=' -f2)
-          PKG_RELEASE=$(grep -m 1 'PKG_RELEASE:=' "$MAKEFILE_PATH" | cut -d':=' -f2)
+          # --- *** FIX: Using awk instead of cut for multi-character delimiter *** ---
+          PKG_VERSION=$(grep -m 1 'PKG_VERSION:=' "$MAKEFILE_PATH" | awk -F':=' '{print $2}' | xargs)
+          PKG_RELEASE=$(grep -m 1 'PKG_RELEASE:=' "$MAKEFILE_PATH" | awk -F':=' '{print $2}' | xargs)
           CURRENT_TAG="v${PKG_VERSION}-${PKG_RELEASE}"
           echo "Current version from Makefile: ${CURRENT_TAG}"
 
@@ -130,7 +131,6 @@ jobs:
         id: compile
         run: |
           SDK_PATH=$PWD/openwrt-sdk
-          # --- *** مهم: این خط تغییر کرده است *** ---
           # کپی کردن فقط پوشه پکیج به داخل SDK
           cp -r $GITHUB_WORKSPACE/$REPO_NAME $SDK_PATH/package/
           
