@@ -1,5 +1,4 @@
 #
-# PeDitXOS Tools Makefile
 # Copyright (C) 2024 PeDitX
 #
 include $(TOPDIR)/rules.mk
@@ -8,7 +7,7 @@ include $(TOPDIR)/feeds/luci/luci.mk
 # --- Package Information ---
 PKG_NAME:=luci-app-peditxos
 PKG_VERSION:=65
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_MAINTAINER:=PeDitX <telegram: @PeDitX>
 
 # --- LuCI Configuration ---
@@ -43,32 +42,28 @@ define Package/luci-app-peditxos/description
 	Includes Passwall installers, DNS changers, service managers, and system optimizations.
 endef
 
-# --- Build/Installation Rules ---
-# This section tells the build system where to place your files inside the package.
-
+# --- *** FIX: Correctly install files with proper permissions *** ---
+# This section tells the build system how to install your files into the package.
 define Package/luci-app-peditxos/install
-	# Install the LuCI controller and view files
+	# Install LuCI controller and view files
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci
 	$(CP) ./luasrc/* $(1)/usr/lib/lua/luci/
 
-	# Install the main runner script
+	# Install the main runner script as an executable file
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) ./root/usr/bin/peditx_runner.sh $(1)/usr/bin/
 endef
 
-# --- Post-Installation and Pre-Removal Scripts ---
-# These will use the files you create in the 'control' directory.
-
+# This tells the build system to include the post-install and pre-removal scripts
 define Package/luci-app-peditxos/postinst
-	#!/bin/sh
-	# The contents of the 'control/postinst' file will be automatically included here.
+	$(INSTALL_DIR) $(1)/etc/uci-defaults
+	$(INSTALL_BIN) ./control/postinst $(1)/etc/uci-defaults/99-luci-app-peditxos
 endef
 
 define Package/luci-app-peditxos/prerm
-	#!/bin/sh
-	# The contents of the 'control/prerm' file will be automatically included here.
+	$(CP) ./control/prerm $(1)/prerm
 endef
-
 
 # --- Finalize Package ---
 $(eval $(call BuildPackage,$(PKG_NAME)))
+
