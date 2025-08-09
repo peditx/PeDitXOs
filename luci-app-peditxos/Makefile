@@ -7,7 +7,7 @@ include $(TOPDIR)/feeds/luci/luci.mk
 # --- Package Information ---
 PKG_NAME:=luci-app-peditxos
 PKG_VERSION:=65
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_MAINTAINER:=PeDitX <telegram: @PeDitX>
 
 # --- LuCI Configuration ---
