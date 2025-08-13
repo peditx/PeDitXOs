@@ -1,1 +1,37 @@
-
+[
+  {
+    "id": "install_torplus",
+    "name": "Install TORPlus",
+    "description": " ابزاری برای اتصال به شبکه Tor"
+  },
+  {
+    "id": "install_sshplus",
+    "name": "Install SSHPlus",
+    "description": "ابزار مدیریت پیشرفته SSH"
+  },
+  {
+    "id": "install_aircast",
+    "name": "Install Air-Cast",
+    "description": "سرویس ارسال تصویر و صدا"
+  },
+  {
+    "id": "install_warp",
+    "name": "Install Warp+",
+    "description": "سرویس Warp+ از Cloudflare"
+  },
+  {
+    "id": "change_repo",
+    "name": "Change to PeDitX Repo",
+    "description": "تغییر مخزن بسته‌ها به PeDitX"
+  },
+  {
+    "id": "install_wol",
+    "name": "Install Wake On Lan",
+    "description": "قابلیت روشن کردن دستگاه‌ها از طریق شبکه"
+  },
+  {
+    "id": "cleanup_memory",
+    "name": "Cleanup Memory",
+    "description": "آزاد کردن حافظه رم دستگاه"
+  }
+]
