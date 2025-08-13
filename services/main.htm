@@ -1,0 +1,160 @@
+<%# LuCI - Service Installer View v66 %>
+<%+header%>
+<style>
+    :root { 
+        --peditx-primary: #00b5e2; 
+        --peditx-orange: #ffae42; 
+        --peditx-dark-bg: #2d2d2d; 
+        --peditx-card-bg: #3a3a3a; 
+        --peditx-border: #444; 
+        --peditx-text-color: #f0f0f0; 
+        --peditx-hover-bg: #454545; 
+    }
+    .action-grid { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+        gap: 15px; 
+    }
+    .action-item { 
+        background: var(--peditx-card-bg); 
+        padding: 15px; 
+        border-radius: 8px; 
+        display: flex; 
+        align-items: center; 
+        cursor: pointer; 
+        border: 1px solid var(--peditx-border); 
+        transition: all 0.2s; 
+    }
+    .action-item:hover { 
+        transform: translateY(-3px); 
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+        background: var(--peditx-hover-bg); 
+    }
+    .action-item input[type="radio"] { 
+        margin-right: 15px; 
+        transform: scale(1.2); 
+        cursor: pointer; 
+    }
+    .action-item label { 
+        cursor: pointer; 
+        width: 100%; 
+    }
+    .action-item .desc { 
+        font-size: 0.9em; 
+        color: #ccc; 
+        margin-top: 4px; 
+    }
+    .execute-bar { 
+        margin-top: 25px; 
+        display: flex; 
+        justify-content: center; 
+        gap: 20px; 
+    }
+    .peditx-main-button { 
+        font-size: 16px; 
+        padding: 12px 30px; 
+        color: #1a1a1a; 
+        font-weight: bold; 
+        border: none; 
+        border-radius: 50px; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
+        cursor: pointer; 
+    }
+    #execute-button { 
+        background: linear-gradient(135deg, var(--peditx-orange), #ff8c00); 
+    }
+    #update-button { 
+        background: linear-gradient(135deg, var(--peditx-primary), #008eb2); 
+    }
+    .peditx-status { 
+        padding: 15px; 
+        margin-top: 20px; 
+        background-color: var(--peditx-card-bg); 
+        border-radius: 8px; 
+        text-align: center; 
+        font-weight: bold; 
+        border: 1px solid var(--peditx-border); 
+        color: var(--peditx-orange); 
+    }
+</style>
+
+<div class="cbi-map">
+    <h2>Service Installer</h2>
+    <p>Select a service to install. The list is fetched from an external source.</p>
+    
+    <div id="service-grid" class="action-grid">
+        <p>Loading service list...</p>
+    </div>
+
+    <div class="execute-bar">
+        <button id="update-button" class="peditx-main-button">Update List</button>
+        <button id="execute-button" class="peditx-main-button">Start Installation</button>
+    </div>
+
+    <div id="peditx-status" class="peditx-status">Ready.</div>
+    <p style="text-align:center; margin-top:15px;">Note: The installation log will appear in the main "PeDitXOS Tools" dashboard.</p>
+</div>
+
+<script type="text/javascript">
+    const servicesUrl = '<%=luci.dispatcher.build_url("admin", "serviceinstaller", "get_services")%>';
+    const runUrl = '<%=luci.dispatcher.build_url("admin", "peditxos", "run")%>';
+    const grid = document.getElementById('service-grid');
+    const statusDiv = document.getElementById('peditx-status');
+
+    function renderServices(services) {
+        grid.innerHTML = '';
+        if (!Array.isArray(services)) {
+            grid.innerHTML = '<p style="color:red;">Error: Service list is not valid.</p>';
+            return;
+        }
+        services.forEach(service => {
+            const item = document.createElement('div');
+            item.className = 'action-item';
+            const radioId = 'action_' + service.id;
+            item.innerHTML = `
+                <input type="radio" name="peditx_action" id="${radioId}" value="${service.id}">
+                <label for="${radioId}">
+                    <div>\${service.name}</div>
+                    <div class="desc">\${service.description || ''}</div>
+                </label>
+            `;
+            grid.appendChild(item);
+        });
+    }
+
+    function loadServices(force) {
+        statusDiv.textContent = 'Fetching service list...';
+        XHR.get(servicesUrl + (force ? '?force=true' : ''), null, function(x, data) {
+            if (x && x.status === 200 && data) {
+                renderServices(data);
+                statusDiv.textContent = 'Service list loaded. Ready.';
+            } else {
+                grid.innerHTML = '<p style="color:red;">Error: Could not load service list.</p>';
+                statusDiv.textContent = 'Error loading list.';
+            }
+        });
+    }
+
+    document.getElementById('update-button').addEventListener('click', () => loadServices(true));
+
+    document.getElementById('execute-button').addEventListener('click', function() {
+        const selected = document.querySelector('input[name="peditx_action"]:checked');
+        if (!selected) {
+            alert('Please select a service to install.');
+            return;
+        }
+        const action = selected.value;
+        statusDiv.textContent = `Starting installation for \${action}...`;
+        XHR.get(runUrl, { action: action }, function(x, data) {
+            if (x && x.status === 200 && data.success) {
+                statusDiv.textContent = `Action '\${action}' started. Check the log in the main dashboard.`;
+            } else {
+                statusDiv.textContent = `Error starting action: \${data ? data.error : 'Unknown'}`;
+            }
+        });
+    });
+
+    // Load services on initial page view
+    loadServices(false); 
+</script>
+<%+footer%>
