@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# PeDitXOS Tools - Simplified Installer Script v70 (Corrected Store Logic & UI)
-# This version adds a dedicated function to update the store list and improves error checking.
+# PeDitXOS Tools - Simplified Installer Script v71 (Final Store & Refresh LuCI)
+# This version adds a Refresh LuCI function and ensures Store logic is robust.
 
 # --- Banner and Profile Configuration ---
 cat > /etc/banner << "EOF"
@@ -165,7 +165,7 @@ fi
 echo "Store page files downloaded. Make sure they are updated on your GitHub."
 # --- END OF STORE SECTION ---
 
-# Create the Runner Script (with new update_service_list function)
+# Create the Runner Script (with new refresh_luci function)
 cat > /usr/bin/peditx_runner.sh << 'EOF'
 #!/bin/sh
 
@@ -190,14 +190,16 @@ update_service_list() {
     echo "Updating service list from GitHub..."
     if wget https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/services.json -O /etc/config/peditx_services.json; then
         echo "Service list downloaded successfully."
-        echo "--- Content of services.json ---"
-        cat /etc/config/peditx_services.json
-        echo ""
-        echo "--------------------------------"
     else
         echo "ERROR: Failed to download the service list."
         return 1
     fi
+}
+
+refresh_luci() {
+    echo "Clearing LuCI cache..."
+    rm -f /tmp/luci-indexcache
+    echo "LuCI cache cleared. Reloading..."
 }
 
 install_torplus() {
@@ -466,6 +468,7 @@ echo "--------------------------------------"
 EXIT_CODE=0
 case "$ACTION" in
     update_service_list) update_service_list ;;
+    refresh_luci) refresh_luci ;;
     install_torplus) install_torplus ;;
     install_sshplus) install_sshplus ;;
     install_aircast) install_aircast ;;
@@ -605,7 +608,7 @@ echo "Controller file created."
 
 # Create the main View file
 cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
-<%# LuCI - Lua Configuration Interface v70 %>
+<%# LuCI - Lua Configuration Interface v71 %>
 <%+header%>
 <style>
     :root {
