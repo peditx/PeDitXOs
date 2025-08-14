@@ -2,7 +2,7 @@
   {
     "id": "install_torplus",
     "name": "Install TORPlus",
-    "description": "A tool to connect to the Tor network."
+    "description": "A tool to connect to the Tor network.",
     "icon_url": "https://raw.githubusercontent.com/peditx/openwrt-torplus/refs/heads/main/icon/tor.png",
     "version": "v30.1"
   },
