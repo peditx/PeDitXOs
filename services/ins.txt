@@ -1,0 +1,8 @@
+for json
+{
+  "id": "install_torplus",
+  "name": "Install TORPlus",
+  "description": "A tool to connect to the Tor network.",
+  "icon_url": "https://raw.githubusercontent.com/peditx/my-icons/main/torplus.png",
+  "version": "1.2.3"
+}
