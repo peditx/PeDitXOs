@@ -28,6 +28,13 @@
     "version": "v6.3"
   },
   {
+    "id": "install_warpplusplus",
+    "name": "Install Warp++",
+    "description": "Cloudflare's Warp++ service. with fragment",
+    "icon_url": "https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/icon/warp.png",
+    "version": "v9.3"
+  },
+  {
     "id": "change_repo",
     "name": "Change to PeDitX Repo",
     "description": "Switches the package repository to PeDitX.",
