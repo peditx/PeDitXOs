@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# PeDitXOS Tools - Simplified Installer Script v71 (Final Store & Refresh LuCI)
-# This version adds a Refresh LuCI function and ensures Store logic is robust.
+# PeDitXOS Tools - Simplified Installer Script v72 (Final Store & Refresh LuCI)
+# This version adds a Refresh LuCI function, hides wget URLs, and ensures Store logic is robust.
 
 # --- Banner and Profile Configuration ---
 cat > /etc/banner << "EOF"
@@ -152,20 +152,23 @@ echo ">>> Creating Store page by downloading files from GitHub..."
 mkdir -p /usr/lib/lua/luci/view/serviceinstaller
 
 # Download the service list, controller, and view files with error checking
-if ! wget https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/services.json -O /etc/config/peditx_services.json; then
+echo "Downloading Store component: services.json..."
+if ! wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/services.json -O /etc/config/peditx_services.json; then
     echo "ERROR: Failed to download services.json. Store may be empty."
 fi
-if ! wget https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/serviceinstaller.lua -O /usr/lib/lua/luci/controller/serviceinstaller.lua; then
+echo "Downloading Store component: serviceinstaller.lua..."
+if ! wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/serviceinstaller.lua -O /usr/lib/lua/luci/controller/serviceinstaller.lua; then
     echo "ERROR: Failed to download serviceinstaller.lua. Store may not work."
 fi
-if ! wget https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/main.htm -O /usr/lib/lua/luci/view/serviceinstaller/main.htm; then
+echo "Downloading Store component: main.htm..."
+if ! wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/main.htm -O /usr/lib/lua/luci/view/serviceinstaller/main.htm; then
     echo "ERROR: Failed to download main.htm for the store. Store page will be broken."
 fi
 
 echo "Store page files downloaded. Make sure they are updated on your GitHub."
 # --- END OF STORE SECTION ---
 
-# Create the Runner Script (with new refresh_luci function)
+# Create the Runner Script (with new refresh_luci function and hidden URLs)
 cat > /usr/bin/peditx_runner.sh << 'EOF'
 #!/bin/sh
 
@@ -185,10 +188,22 @@ touch "$LOCK_FILE"
 trap 'rm -f "$LOCK_FILE"' EXIT TERM INT
 exec >> "$LOG_FILE" 2>&1
 
+# --- URLs (to keep logs clean) ---
+URL_TORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/install.sh"
+URL_SSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
+URL_AIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
+URL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/install.sh"
+URL_PW1="https://github.com/peditx/iranIPS/raw/refs/heads/main/.files/passwall.sh"
+URL_PW2="https://github.com/peditx/iranIPS/raw/refs/heads/main/.files/passwall2.sh"
+URL_PW_DUE="https://github.com/peditx/iranIPS/raw/refs/heads/main/.files/passwalldue.sh"
+URL_EZEXROOT="https://github.com/peditx/ezexroot/raw/refs/heads/main/ezexroot.sh"
+URL_EXPAND="https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/expand.sh"
+URL_SERVICES_JSON="https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/services.json"
+
 # --- Function Definitions ---
 update_service_list() {
-    echo "Updating service list from GitHub..."
-    if wget https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/services.json -O /etc/config/peditx_services.json; then
+    echo "Updating service list from remote source..."
+    if wget -q "$URL_SERVICES_JSON" -O /etc/config/peditx_services.json; then
         echo "Service list downloaded successfully."
     else
         echo "ERROR: Failed to download the service list."
@@ -199,65 +214,65 @@ update_service_list() {
 refresh_luci() {
     echo "Clearing LuCI cache..."
     rm -f /tmp/luci-indexcache
-    echo "LuCI cache cleared. Reloading..."
+    echo "LuCI cache cleared. Please reload the web page."
 }
 
 install_torplus() {
-    echo "Installing TORPlus via official script..."
-    cd /tmp && rm -f *.sh && wget https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/install.sh && chmod +x install.sh && sh install.sh
+    echo "Downloading TORPlus components..."
+    cd /tmp && rm -f *.sh && wget -q "$URL_TORPLUS" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_sshplus() {
-    echo "Installing SSHPlus via official script..."
-    cd /tmp && rm -f *.sh && wget https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh && sh install_sshplus.sh
+    echo "Downloading SSHPlus components..."
+    cd /tmp && rm -f *.sh && wget -q "$URL_SSHPLUS" -O install_sshplus.sh && sh install_sshplus.sh
 }
 
 install_aircast() {
-    echo "Installing Air-Cast via official script..."
-    cd /tmp && rm -f *.sh && wget https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh && sh aircast_install.sh
+    echo "Downloading Air-Cast components..."
+    cd /tmp && rm -f *.sh && wget -q "$URL_AIRCAST" -O aircast_install.sh && sh aircast_install.sh
 }
 
 install_warp() {
-    echo "Installing Warp+..."
+    echo "Downloading Warp+ components..."
     cd /tmp
-    rm -f install.sh && wget https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/install.sh && chmod +X install.sh && sh install.sh
+    rm -f install.sh && wget -q "$URL_WARP" -O install.sh && chmod +X install.sh && sh install.sh
     echo "Warp+ installation script executed."
 }
 
 install_pw1() {
-    echo "Installing Passwall 1..."
+    echo "Downloading Passwall 1 components..."
     cd /tmp
     rm -f passwall.sh
-    wget https://github.com/peditx/iranIPS/raw/refs/heads/main/.files/passwall.sh -O passwall.sh
+    wget -q "$URL_PW1" -O passwall.sh
     chmod +x passwall.sh
     sh passwall.sh
     echo "Passwall 1 installed successfully."
 }
 
 install_pw2() {
-    echo "Installing Passwall 2..."
+    echo "Downloading Passwall 2 components..."
     cd /tmp
     rm -f passwall2.sh
-    wget https://github.com/peditx/iranIPS/raw/refs/heads/main/.files/passwall2.sh -O passwall2.sh
+    wget -q "$URL_PW2" -O passwall2.sh
     chmod +x passwall2.sh
     sh passwall2.sh
     echo "Passwall 2 installed successfully."
 }
 
 install_both() {
-    echo "Installing both Passwall 1 and Passwall 2..."
+    echo "Downloading Passwall 1 & 2 components..."
     cd /tmp
     rm -f passwalldue.sh
-    wget https://github.com/peditx/iranIPS/raw/refs/heads/main/.files/passwalldue.sh -O passwalldue.sh
+    wget -q "$URL_PW_DUE" -O passwalldue.sh
     chmod +x passwalldue.sh
     sh passwalldue.sh
     echo "Both Passwall versions installed successfully."
 }
 
 easy_exroot() {
-    echo "Running Easy Exroot script..."
+    echo "Downloading Easy Exroot script..."
     cd /tmp
-    curl -ksSL https://github.com/peditx/ezexroot/raw/refs/heads/main/ezexroot.sh -o ezexroot.sh
+    curl -ksSL "$URL_EZEXROOT" -o ezexroot.sh
     sh ezexroot.sh
     echo "Easy Exroot script finished."
 }
@@ -438,7 +453,7 @@ expand_root() {
     echo "---"
     echo "Downloading and preparing the expansion script..."
     cd /tmp
-    wget https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/expand.sh -O expand.sh
+    wget -q "$URL_EXPAND" -O expand.sh
     chmod +x expand.sh
     echo "---"
     echo "--- ACTION REQUIRED ---"
@@ -684,7 +699,9 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
 </div>
 
 <div class="cbi-map">
-    <h2>PeDitXOS Dashboard</h2>
+    <div class="cbi-map-title">
+        <h2>PeDitXOS Dashboard</h2>
+    </div>
     <div class="peditx-tabs">
         <button class="peditx-tab-link active" onclick="showTab(event, 'main-tools')">Main Tools</button>
         <button class="peditx-tab-link" onclick="showTab(event, 'dns-changer')">DNS Changer</button>
