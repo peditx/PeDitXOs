@@ -10,6 +10,7 @@ URL_TORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.File
 URL_SSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
 URL_AIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
 URL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/install.sh"
+URL_WRRPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/install.sh"
 
 # --- Function Definitions ---
 
@@ -31,6 +32,11 @@ install_aircast() {
 install_warp() {
     echo "Downloading Warp+ components..."
     cd /tmp && rm -f install.sh && wget -q "$URL_WARP" -O install.sh && chmod +X install.sh && sh install.sh
+}
+
+install_warpPplusplus() {
+    echo "Downloading Warp+ components..."
+    cd /tmp && rm -f install.sh && wget -q "$URL_WRRPPLUSPLUS" -O install.sh && chmod +X install.sh && sh install.sh
 }
 
 change_repo() {
@@ -58,6 +64,7 @@ case "$ACTION" in
     install_sshplus) install_sshplus ;;
     install_aircast) install_aircast ;;
     install_warp) install_warp ;;
+    install_warp) install_warpplusplus ;;
     change_repo) change_repo ;;
     install_wol) install_wol ;;
     cleanup_memory) cleanup_memory ;;
