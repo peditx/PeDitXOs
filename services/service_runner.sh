@@ -41,8 +41,8 @@ install_warpPplusplus() {
 }
 
 install_amneziawg() {
-    echo "Downloading Warp+ components..."
-    cd /tmp && rm -f amneziawg-install.sh && wget -q "$URL_AMNEZIAWG" -O amneziawg-install.sh && chmod +X amneziawg-install.sh && sh amneziawg-install.sh
+    echo "Downloading AmneziaWG components..."
+    cd /tmp && rm -f install.sh && wget -q "$URL_AMNEZIAWG" -O install.sh && chmod +X install.sh && sh install.sh
 }
 
 change_repo() {
