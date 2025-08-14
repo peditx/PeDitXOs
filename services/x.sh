@@ -1,17 +1,17 @@
 #!/bin/sh
 
-# PeDitXOS Tools - Simplified Installer Script v72 (Final Store & Refresh LuCI)
-# This version adds a Refresh LuCI function, hides wget URLs, and ensures Store logic is robust.
+# PeDitXOS Tools - Simplified Installer Script v73 (Modular Service Runner)
+# This version delegates store/service actions to an external, updatable runner script.
 
 # --- Banner and Profile Configuration ---
 cat > /etc/banner << "EOF"
   ______     _____   _     _   _   _____      
 (_____ \   (____ \ (_)_   \ \ / /   / ___ \     
- _____) )___ _   \ \ _| |_  \ \/ /   | |   | | ___ 
-|  ____/ _  ) |   | | |  _)  )  (    | |   | |/___)
+ _____) )___ _   \ \ _| |_   \ \/ /   | |   | | ___ 
+|  ____/ _  ) |   | | |  _)   )  (    | |   | |/___)
 | |   ( (/ /| |__/ /| | |__ / /\ \   | |___| |___ |
 |_|    \____)_____/ |_|\___)_/  \_\   \_____/(___/ 
-                                                  
+                                                 
 HTTPS://PEDITX.IR   
 telegram : @PeDitX
 EOF
@@ -168,7 +168,7 @@ fi
 echo "Store page files downloaded. Make sure they are updated on your GitHub."
 # --- END OF STORE SECTION ---
 
-# Create the Runner Script (with new refresh_luci function and hidden URLs)
+# Create the Runner Script (with new modular service handling)
 cat > /usr/bin/peditx_runner.sh << 'EOF'
 #!/bin/sh
 
@@ -189,10 +189,7 @@ trap 'rm -f "$LOCK_FILE"' EXIT TERM INT
 exec >> "$LOG_FILE" 2>&1
 
 # --- URLs (to keep logs clean) ---
-URL_TORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/install.sh"
-URL_SSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
-URL_AIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
-URL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/install.sh"
+URL_SERVICE_RUNNER="https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/service_runner.sh"
 URL_PW1="https://github.com/peditx/iranIPS/raw/refs/heads/main/.files/passwall.sh"
 URL_PW2="https://github.com/peditx/iranIPS/raw/refs/heads/main/.files/passwall2.sh"
 URL_PW_DUE="https://github.com/peditx/iranIPS/raw/refs/heads/main/.files/passwalldue.sh"
@@ -201,6 +198,21 @@ URL_EXPAND="https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.f
 URL_SERVICES_JSON="https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/services.json"
 
 # --- Function Definitions ---
+handle_service_action() {
+    local service_action="$1"
+    echo ">>> Delegating to Service Runner for action: $service_action"
+    cd /tmp
+    rm -f service_runner.sh
+    if ! wget -q "$URL_SERVICE_RUNNER" -O service_runner.sh; then
+        echo "ERROR: Failed to download the service runner script."
+        return 1
+    fi
+    chmod +x service_runner.sh
+    echo "--- Executing Service Runner ---"
+    sh ./service_runner.sh "$service_action"
+    echo "--- Service Runner Finished ---"
+}
+
 update_service_list() {
     echo "Updating service list from remote source..."
     if wget -q "$URL_SERVICES_JSON" -O /etc/config/peditx_services.json; then
@@ -215,28 +227,6 @@ refresh_luci() {
     echo "Clearing LuCI cache..."
     rm -f /tmp/luci-indexcache
     echo "LuCI cache cleared. Please reload the web page."
-}
-
-install_torplus() {
-    echo "Downloading TORPlus components..."
-    cd /tmp && rm -f *.sh && wget -q "$URL_TORPLUS" -O install.sh && chmod +x install.sh && sh install.sh
-}
-
-install_sshplus() {
-    echo "Downloading SSHPlus components..."
-    cd /tmp && rm -f *.sh && wget -q "$URL_SSHPLUS" -O install_sshplus.sh && sh install_sshplus.sh
-}
-
-install_aircast() {
-    echo "Downloading Air-Cast components..."
-    cd /tmp && rm -f *.sh && wget -q "$URL_AIRCAST" -O aircast_install.sh && sh aircast_install.sh
-}
-
-install_warp() {
-    echo "Downloading Warp+ components..."
-    cd /tmp
-    rm -f install.sh && wget -q "$URL_WARP" -O install.sh && chmod +X install.sh && sh install.sh
-    echo "Warp+ installation script executed."
 }
 
 install_pw1() {
@@ -327,24 +317,6 @@ set_lan_ip() {
     uci set network.lan.ipaddr="$ipaddr"
     uci commit network
     echo "LAN IP will be changed after the next network restart or system reboot."
-}
-
-change_repo() {
-    echo "Changing to PeDitX Repo..."
-    echo "Repository change function is a placeholder."
-}
-
-install_wol() {
-    echo "Installing Wake On Lan..."
-    opkg update
-    opkg install luci-app-wol
-    echo "Wake On Lan installed successfully."
-}
-
-cleanup_memory() {
-    echo "Cleaning up memory..."
-    sync && echo 3 > /proc/sys/vm/drop_caches
-    echo "Memory cleanup complete."
 }
 
 get_system_info() {
@@ -482,12 +454,14 @@ echo "--------------------------------------"
 
 EXIT_CODE=0
 case "$ACTION" in
+    # Actions handled by the external service runner
+    install_torplus | install_sshplus | install_aircast | install_warp | change_repo | install_wol | cleanup_memory)
+        handle_service_action "$ACTION"
+        ;;
+
+    # Actions handled locally by this script
     update_service_list) update_service_list ;;
     refresh_luci) refresh_luci ;;
-    install_torplus) install_torplus ;;
-    install_sshplus) install_sshplus ;;
-    install_aircast) install_aircast ;;
-    install_warp) install_warp ;;
     install_pw1) install_pw1 ;;
     install_pw2) install_pw2 ;;
     install_both) install_both ;;
@@ -502,9 +476,6 @@ case "$ACTION" in
     set_dns_custom) set_dns "custom" "$ARG1" "$ARG2" ;;
     set_wifi_config) set_wifi_config "$ARG1" "$ARG2" "$ARG3" ;;
     set_lan_ip) set_lan_ip "$ARG1" ;;
-    change_repo) change_repo ;;
-    install_wol) install_wol ;;
-    cleanup_memory) cleanup_memory ;;
     get_system_info) get_system_info ;;
     opkg_update) opkg update ;;
     install_opt_packages | install_extra_packages) install_opt_packages "$ARG1" ;;
@@ -1038,3 +1009,5 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
     pollStatus(true);
 </script>
 <%+footer%>
+EOF
+
