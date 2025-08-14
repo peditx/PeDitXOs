@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# PeDitXOS Tools - Simplified Installer Script v68 (Dynamic File Download & UI Fix)
-# This version downloads Store files from GitHub and improves the UI.
+# PeDitXOS Tools - Simplified Installer Script v70 (Corrected Store Logic & UI)
+# This version adds a dedicated function to update the store list and improves error checking.
 
 # --- Banner and Profile Configuration ---
 cat > /etc/banner << "EOF"
@@ -151,15 +151,21 @@ echo "Application directories created."
 echo ">>> Creating Store page by downloading files from GitHub..."
 mkdir -p /usr/lib/lua/luci/view/serviceinstaller
 
-# Download the service list, controller, and view files
-wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/services.json -O /etc/config/peditx_services.json
-wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/serviceinstaller.lua -O /usr/lib/lua/luci/controller/serviceinstaller.lua
-wget -q https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/main.htm -O /usr/lib/lua/luci/view/serviceinstaller/main.htm
+# Download the service list, controller, and view files with error checking
+if ! wget https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/services.json -O /etc/config/peditx_services.json; then
+    echo "ERROR: Failed to download services.json. Store may be empty."
+fi
+if ! wget https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/serviceinstaller.lua -O /usr/lib/lua/luci/controller/serviceinstaller.lua; then
+    echo "ERROR: Failed to download serviceinstaller.lua. Store may not work."
+fi
+if ! wget https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/main.htm -O /usr/lib/lua/luci/view/serviceinstaller/main.htm; then
+    echo "ERROR: Failed to download main.htm for the store. Store page will be broken."
+fi
 
 echo "Store page files downloaded. Make sure they are updated on your GitHub."
 # --- END OF STORE SECTION ---
 
-# Create the Runner Script (Unchanged)
+# Create the Runner Script (with new update_service_list function)
 cat > /usr/bin/peditx_runner.sh << 'EOF'
 #!/bin/sh
 
@@ -180,6 +186,20 @@ trap 'rm -f "$LOCK_FILE"' EXIT TERM INT
 exec >> "$LOG_FILE" 2>&1
 
 # --- Function Definitions ---
+update_service_list() {
+    echo "Updating service list from GitHub..."
+    if wget https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/services.json -O /etc/config/peditx_services.json; then
+        echo "Service list downloaded successfully."
+        echo "--- Content of services.json ---"
+        cat /etc/config/peditx_services.json
+        echo ""
+        echo "--------------------------------"
+    else
+        echo "ERROR: Failed to download the service list."
+        return 1
+    fi
+}
+
 install_torplus() {
     echo "Installing TORPlus via official script..."
     cd /tmp && rm -f *.sh && wget https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/install.sh && chmod +x install.sh && sh install.sh
@@ -445,6 +465,7 @@ echo "--------------------------------------"
 
 EXIT_CODE=0
 case "$ACTION" in
+    update_service_list) update_service_list ;;
     install_torplus) install_torplus ;;
     install_sshplus) install_sshplus ;;
     install_aircast) install_aircast ;;
@@ -584,7 +605,7 @@ echo "Controller file created."
 
 # Create the main View file
 cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
-<%# LuCI - Lua Configuration Interface v68 %>
+<%# LuCI - Lua Configuration Interface v70 %>
 <%+header%>
 <style>
     :root {
@@ -997,15 +1018,3 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
     pollStatus(true);
 </script>
 <%+footer%>
-EOF
-chmod 644 /usr/lib/lua/luci/view/peditxos/main.htm
-echo "View file created."
-
-echo ">>> Step 3: Finalizing..."
-rm -f /tmp/luci-indexcache
-/etc/init.d/uhttpd restart
-echo ""
-echo "********************************************"
-echo "           Update Successful!           "
-echo "********************************************"
-echo "Store page is now available and fully functional."
