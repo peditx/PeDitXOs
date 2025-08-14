@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# PeDitXOS Tools - Simplified Installer Script v75 (Unified UI)
-# This version unifies the Dashboard and Store UI for a consistent look and feel.
+# PeDitXOS Tools - Simplified Installer Script v75.1 (Unified UI with classic button)
+# This version unifies the Dashboard and Store UI and restores the classic pulsing start button.
 
 # --- Banner and Profile Configuration ---
 cat > /etc/banner << "EOF"
@@ -603,7 +603,7 @@ echo "Controller file created."
 
 # Create the main View file
 cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
-<%# LuCI - Lua Configuration Interface v75 - Unified UI %>
+<%# LuCI - Lua Configuration Interface v75.1 - Unified UI %>
 <%+header%>
 <style>
     /* ===== UNIFIED THEME (Dracula Inspired) ===== */
@@ -670,12 +670,60 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
     .action-item label, .pkg-item label { cursor: pointer; width: 100%; }
     
     .execute-bar { margin-top: 25px; text-align: center; display: flex; justify-content: center; gap: 20px; }
-    .peditx-main-button { font-size: 18px; padding: 12px 40px; color: var(--bg-color); font-weight: bold; border: none; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: background 0.3s ease, transform 0.2s ease; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
-    #execute-button { background: var(--primary-color); }
-    #execute-button:hover { background: #62ff8a; transform: translateY(-2px); }
-    #execute-button:disabled { background: #555; cursor: not-allowed; box-shadow: none; transform: none; color: #999; }
-    #stop-button { background: var(--danger-color); }
-    #stop-button:hover { background: #ff6e6e; transform: translateY(-2px); }
+    
+    /* ===== BUTTON STYLES (START & STOP) ===== */
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 174, 66, 0.7); }
+        70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(255, 174, 66, 0); }
+        100% { transform: scale(1); }
+    }
+
+    .peditx-main-button { 
+        font-size: 18px; 
+        padding: 12px 40px;
+        font-weight: bold; 
+        border: none; 
+        border-radius: 50px; /* Make buttons round */
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+        transition: background 0.3s ease, transform 0.2s ease; 
+        cursor: pointer; 
+        display: inline-flex; 
+        align-items: center; 
+        justify-content: center;
+        text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    }
+
+    #execute-button { 
+        background: linear-gradient(135deg, #ffae42, #ff8c00); /* Orange gradient */
+        color: #21222c; /* Dark text for contrast */
+        animation: pulse 2.5s infinite;
+    }
+
+    #execute-button:hover { 
+        background: linear-gradient(135deg, #ff8c00, #e87a00); 
+        transform: translateY(-2px);
+        animation-play-state: paused;
+    }
+
+    #execute-button:disabled { 
+        background: #555; 
+        cursor: not-allowed; 
+        box-shadow: none; 
+        transform: none; 
+        color: #999;
+        animation: none; /* Stop animation when disabled */
+    }
+
+    #stop-button { 
+        background: var(--danger-color); 
+        color: var(--text-color); /* Ensure text is light */
+    }
+
+    #stop-button:hover { 
+        background: #ff6e6e; 
+        transform: translateY(-2px); 
+    }
+    /* ===== END OF BUTTON STYLES ===== */
 
     .peditx-log-container { background-color: var(--header-bg); color: var(--text-color); font-family: monospace; padding: 15px; border-radius: 8px; height: 350px; overflow-y: scroll; white-space: pre-wrap; border: 1px solid var(--border-color); margin-top: 10px; box-shadow: inset 0 0 5px rgba(0,0,0,0.2); }
     .peditx-status { padding: 15px; margin-top: 20px; background-color: var(--card-bg); border-radius: 8px; text-align: center; font-weight: bold; border: 1px solid var(--border-color); color: var(--warning-color); }
