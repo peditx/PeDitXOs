@@ -23,7 +23,9 @@
   {
     "id": "install_warp",
     "name": "Install Warp+",
-    "description": "Cloudflare's Warp+ service."
+    "description": "Cloudflare's Warp+ service.",
+    "icon_url": "https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/icon/warp.png",
+    "version": "v6.3"
   },
   {
     "id": "change_repo",
