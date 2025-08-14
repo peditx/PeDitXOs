@@ -38,13 +38,14 @@
     "id": "install_wol",
     "name": "Install Wake On Lan",
     "description": "Allows turning on devices over the network.",
-    "description": "Switches the package repository to PeDitX.",
-    "icon_url": "https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/icon/app1.png",
+    "icon_url": "https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/icon/wol.png",
     "version": "master"
   },
   {
     "id": "cleanup_memory",
     "name": "Cleanup Memory",
-    "description": "Frees up system RAM."
+    "description": "Frees up system RAM.",
+    "icon_url": "https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/icon/Clean-up.png",
+    "version": "master"
   }
 ]
