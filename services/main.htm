@@ -89,6 +89,7 @@
     <div class="execute-bar">
         <button id="execute-button" class="peditx-main-button">Install Selected</button>
         <button id="update-list-btn" class="peditx-main-button peditx-secondary-button">Update List</button>
+        <button id="refresh-luci-btn" class="peditx-main-button peditx-secondary-button" style="background: #2ecc71;">Refresh LuCI</button>
         <button id="stop-button" class="peditx-main-button" style="display:none;">Stop</button>
     </div>
 
@@ -119,6 +120,7 @@
     var logOutput = document.getElementById('log-output');
     var autoRefreshToggle = document.getElementById('auto-refresh-toggle');
     var updateBtn = document.getElementById('update-list-btn');
+    var refreshLuciBtn = document.getElementById('refresh-luci-btn');
 
     // State variables
     var selectedAction = null;
@@ -146,6 +148,7 @@
                 startButton.disabled = true;
                 stopButton.style.display = 'inline-flex';
                 updateBtn.disabled = true;
+                refreshLuciBtn.disabled = true;
             } else {
                 if (isPolling) {
                     if (!autoRefreshToggle.checked) {
@@ -156,6 +159,7 @@
                 startButton.disabled = false;
                 stopButton.style.display = 'none';
                 updateBtn.disabled = false;
+                refreshLuciBtn.disabled = false;
             }
         });
     }
@@ -183,7 +187,7 @@
 
     function renderServices(services) {
         serviceGrid.innerHTML = '';
-        if (!services || services.length === 0) {
+        if (!services || !Array.isArray(services) || services.length === 0) {
             serviceGrid.innerHTML = '<p>No services found or list is empty. Please try the "Update List" button.</p>';
             return;
         }
@@ -191,7 +195,7 @@
         services.forEach(function(service) {
             var item = document.createElement('div');
             item.className = 'action-item';
-            item.setAttribute('data-action', service.action);
+            item.setAttribute('data-action', service.action); // Changed from 'id' to 'action'
             item.innerHTML = `
                 <div class="action-item-header">
                     <img src="${service.icon_url}" alt="${service.name}" onerror="this.src='https://placehold.co/48x48/3a3a3a/f0f0f0?text=ICON'; this.onerror=null;">
@@ -217,7 +221,8 @@
         serviceGrid.innerHTML = '<p>Loading services...</p>';
         XHR.get(servicesURL, null, function(x, data) {
             if (x && x.status === 200 && data && !data.error) {
-                renderServices(data.services);
+                // *** FIX: Use the data directly as it is an array ***
+                renderServices(data); 
             } else {
                 serviceGrid.innerHTML = '<p style="color: var(--peditx-red);">Error: ' + (data ? data.error : 'Could not fetch service list.') + '</p>';
             }
@@ -263,13 +268,18 @@
     updateBtn.addEventListener('click', function() {
         statusDiv.innerText = 'Updating app list from GitHub...';
         // Call the dedicated action in the runner script
-        XHR.get(runURL, { action: 'update_service_list' }, function(x, data) {
+        startActionByName('update_service_list');
+        // After the list is downloaded, re-fetch and render it
+        setTimeout(fetchServices, 2000); // Wait 2 seconds for download to complete
+    });
+
+    refreshLuciBtn.addEventListener('click', function() {
+        statusDiv.innerText = 'Clearing LuCI cache and reloading...';
+        XHR.get(runURL, { action: 'refresh_luci' }, function(x, data) {
             if (x && x.status === 200) {
-                statusDiv.innerText = 'App list updated. Reloading view...';
-                // After the list is downloaded, re-fetch and render it
-                fetchServices();
+                setTimeout(function() { window.location.reload(); }, 1000);
             } else {
-                statusDiv.innerText = 'Error updating app list.';
+                statusDiv.innerText = 'Error refreshing LuCI.';
             }
         });
     });
