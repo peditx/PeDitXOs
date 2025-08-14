@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# PeDitXOS Service Runner v1
+# PeDitXOS Service Runner v2
 # This script contains the installation logic for Store applications.
 
 ACTION="$1"
