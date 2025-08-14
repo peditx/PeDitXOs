@@ -26,23 +26,6 @@
     .store-header h2 {
         margin: 0;
     }
-    #refresh-store-btn {
-        background: var(--peditx-primary);
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: background 0.3s;
-    }
-    #refresh-store-btn:hover {
-        background: var(--peditx-focus-ring);
-    }
-    #refresh-store-btn:disabled {
-        background: #555;
-        cursor: not-allowed;
-    }
 
     .action-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px;}
     .action-item { background: var(--peditx-card-bg); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; cursor: pointer; border: 1px solid var(--peditx-border); transition: transform 0.2s, box-shadow 0.2s, background 0.2s; }
@@ -57,7 +40,7 @@
     
     .action-item-footer { margin-top: auto; font-size: 0.8em; color: #888; }
     
-    .execute-bar { margin-top: 25px; text-align: center; display: flex; justify-content: center; gap: 20px; }
+    .execute-bar { margin-top: 25px; text-align: center; display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; }
 
     @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.7), 0 4px 15px rgba(0,0,0,0.3); } 70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(255, 140, 0, 0), 0 6px 25px rgba(0,0,0,0.4); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 0, 0), 0 4px 15px rgba(0,0,0,0.3); } }
 
@@ -68,6 +51,21 @@
     
     #stop-button { background: linear-gradient(135deg, var(--peditx-red), var(--peditx-red-hover)); }
     #stop-button:hover { background: linear-gradient(135deg, var(--peditx-red-hover), #a03228); }
+
+    .peditx-secondary-button {
+        background: var(--peditx-primary);
+        color: white;
+        font-size: 16px;
+        padding: 14px 30px;
+        animation: none;
+    }
+    .peditx-secondary-button:hover {
+        background: var(--peditx-focus-ring);
+    }
+    .peditx-secondary-button:disabled {
+        background: #555;
+        cursor: not-allowed;
+    }
 
     .peditx-log-container { background-color: var(--peditx-dark-bg); color: var(--peditx-text-color); font-family: monospace; padding: 15px; border-radius: 8px; height: 350px; overflow-y: scroll; white-space: pre-wrap; border: 1px solid var(--peditx-border); margin-top: 10px; box-shadow: inset 0 0 5px rgba(0,0,0,0.2); }
     .peditx-status { padding: 15px; margin-top: 20px; background-color: var(--peditx-card-bg); border-radius: 8px; text-align: center; font-weight: bold; border: 1px solid var(--peditx-border); color: var(--peditx-orange); }
@@ -81,7 +79,6 @@
 <div class="cbi-map">
     <div class="store-header">
         <h2>PeDitXOS Store</h2>
-        <button id="refresh-store-btn" class="cbi-button">Refresh Store</button>
     </div>
     <p>Select a service to install. The list is fetched from an external source.</p>
     
@@ -91,6 +88,7 @@
 
     <div class="execute-bar">
         <button id="execute-button" class="peditx-main-button">Install Selected</button>
+        <button id="update-list-btn" class="peditx-main-button peditx-secondary-button">Update List</button>
         <button id="stop-button" class="peditx-main-button" style="display:none;">Stop</button>
     </div>
 
@@ -120,7 +118,7 @@
     var statusDiv = document.getElementById('peditx-status');
     var logOutput = document.getElementById('log-output');
     var autoRefreshToggle = document.getElementById('auto-refresh-toggle');
-    var refreshBtn = document.getElementById('refresh-store-btn');
+    var updateBtn = document.getElementById('update-list-btn');
 
     // State variables
     var selectedAction = null;
@@ -146,9 +144,8 @@
             if (data.running) {
                 if (!isPolling) isPolling = true;
                 startButton.disabled = true;
-                startButton.style.display = 'none';
                 stopButton.style.display = 'inline-flex';
-                refreshBtn.disabled = true;
+                updateBtn.disabled = true;
             } else {
                 if (isPolling) {
                     if (!autoRefreshToggle.checked) {
@@ -157,9 +154,8 @@
                     isPolling = false;
                 }
                 startButton.disabled = false;
-                startButton.style.display = 'inline-flex';
                 stopButton.style.display = 'none';
-                refreshBtn.disabled = false;
+                updateBtn.disabled = false;
             }
         });
     }
@@ -188,7 +184,7 @@
     function renderServices(services) {
         serviceGrid.innerHTML = '';
         if (!services || services.length === 0) {
-            serviceGrid.innerHTML = '<p>No services found or list is empty.</p>';
+            serviceGrid.innerHTML = '<p>No services found or list is empty. Please try the "Update List" button.</p>';
             return;
         }
 
@@ -264,10 +260,9 @@
 		}
 	});
 
-    refreshBtn.addEventListener('click', function() {
+    updateBtn.addEventListener('click', function() {
         statusDiv.innerText = 'Updating app list from GitHub...';
-        refreshBtn.disabled = true;
-        // Call the new action in the runner script
+        // Call the dedicated action in the runner script
         XHR.get(runURL, { action: 'update_service_list' }, function(x, data) {
             if (x && x.status === 200) {
                 statusDiv.innerText = 'App list updated. Reloading view...';
@@ -276,7 +271,6 @@
             } else {
                 statusDiv.innerText = 'Error updating app list.';
             }
-            refreshBtn.disabled = false;
         });
     });
 
