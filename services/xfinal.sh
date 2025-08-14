@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# PeDitXOS Tools - Simplified & Silent Installer Script v75.1
-# This version installs silently and self-deletes upon completion.
+# PeDitXOS Tools - Simplified & Silent Installer Script v75.1 (No Shunt)
+# This version installs silently, self-deletes, and does not auto-configure sing-box shunt.
 
 echo ">>> Starting silent installation of PeDitXOS Tools..."
 
@@ -333,20 +333,6 @@ install_opt_packages() {
             echo "Failed to install $package_name."
         fi
     done
-
-    if opkg list-installed | grep -q "^sing-box "; then
-        echo "Configuring SingBoX shunt..."
-        uci set passwall2.MainShunt=nodes
-        uci set passwall2.MainShunt.remarks='SingBoX-Shunt'
-        uci set passwall2.MainShunt.type='Sing-Box'
-        uci set passwall2.MainShunt.protocol='_shunt'
-        uci set passwall2.MainShunt.Direct='_direct'
-        uci set passwall2.MainShunt.DirectGame='_default'
-        uci commit passwall2
-        echo "SingBoX shunt configured successfully."
-    else
-        echo "SingBoX is not installed. Skipping shunt configuration."
-    fi
 }
 
 apply_cpu_opts() {
