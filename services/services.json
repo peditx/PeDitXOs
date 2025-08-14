@@ -31,6 +31,8 @@
     "id": "change_repo",
     "name": "Change to PeDitX Repo",
     "description": "Switches the package repository to PeDitX."
+    "icon_url": "https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/icon/app1.png",
+    "version": "master"
   },
   {
     "id": "install_wol",
