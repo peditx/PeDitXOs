@@ -16,7 +16,9 @@
   {
     "id": "install_aircast",
     "name": "Install Air-Cast",
-    "description": "A service for audio and video streaming."
+    "description": "A service for audio and video streaming.",
+    "icon_url": "https://raw.githubusercontent.com/peditx/aircast-openwrt/refs/heads/main/icon/aircast.png",
+    "version": "v15"
   },
   {
     "id": "install_warp",
