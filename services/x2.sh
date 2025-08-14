@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# PeDitXOS Tools - Simplified Installer Script v74 (with Dynamic Runner)
-# This version includes the dynamic runner that delegates unknown actions to an external script.
+# PeDitXOS Tools - Simplified Installer Script v75 (Unified UI)
+# This version unifies the Dashboard and Store UI for a consistent look and feel.
 
 # --- Banner and Profile Configuration ---
 cat > /etc/banner << "EOF"
@@ -603,84 +603,129 @@ echo "Controller file created."
 
 # Create the main View file
 cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
-<%# LuCI - Lua Configuration Interface v71 %>
+<%# LuCI - Lua Configuration Interface v75 - Unified UI %>
 <%+header%>
 <style>
+    /* ===== UNIFIED THEME (Dracula Inspired) ===== */
     :root {
-        --peditx-primary: #00b5e2;
-        --peditx-orange: #ffae42;
-        --peditx-dark-bg: #2d2d2d;
-        --peditx-card-bg: #3a3a3a;
-        --peditx-border: #444;
-        --peditx-text-color: #f0f0f0;
-        --peditx-hover-bg: #454545;
-        --peditx-focus-ring: #008eb2;
-        --peditx-red: #e74c3c;
-        --peditx-red-hover: #c0392b;
-        --peditx-pink: #ff79c6;
-        --peditx-pink-hover: #ff55b3;
+        --bg-color: #282a36;
+        --card-bg: #3a3c51;
+        --header-bg: #21222c;
+        --text-color: #f8f8f2;
+        --primary-color: #50fa7b;   /* Green */
+        --secondary-color: #ff79c6; /* Pink */
+        --danger-color: #ff5555;    /* Red */
+        --warning-color: #f1fa8c;   /* Yellow */
+        --info-color: #8be9fd;      /* Cyan */
+        --purple-color: #bd93f9;    /* Purple */
+        --border-color: #44475a;
+        --hover-color: #44475a;
     }
-    body { color: var(--peditx-text-color); }
+    body { 
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .cbi-map {
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+    }
+    .cbi-map-title h2 {
+        display: none; /* Hide default title, using custom header */
+    }
+    /* ===== END OF THEME ===== */
+
+    .peditx-header {
+        background-color: var(--header-bg);
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        border: 1px solid var(--border-color);
+        text-align: center;
+    }
+    .peditx-header h2 {
+        margin: 0 0 5px 0;
+        color: var(--info-color);
+        font-size: 24px;
+        font-weight: 600;
+    }
+    .peditx-header p {
+        margin: 0;
+        color: var(--purple-color);
+        font-size: 16px;
+    }
     
-    .peditx-tabs { display: flex; border-bottom: 1px solid var(--peditx-border); margin-bottom: 20px; flex-wrap: wrap; }
-    .peditx-tab-link { background-color: var(--peditx-card-bg); border: none; border-bottom: 3px solid transparent; outline: none; cursor: pointer; padding: 14px 20px; transition: color 0.3s, background-color 0.3s, border-color 0.3s; font-size: 16px; font-weight: 500; color: #bbb; margin-right: 5px; margin-bottom: -1px; border-top-left-radius: 8px; border-top-right-radius: 8px; }
-    .peditx-tab-link:hover { color: var(--peditx-text-color); background-color: var(--peditx-hover-bg); }
-    .peditx-tab-link.active { color: #1a1a1a; background: linear-gradient(135deg, #ffae42, #ff8c00); border-bottom: 3px solid transparent; font-weight: 700; }
+    .peditx-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 20px; flex-wrap: wrap; }
+    .peditx-tab-link { background-color: transparent; border: none; border-bottom: 3px solid transparent; outline: none; cursor: pointer; padding: 14px 20px; transition: color 0.3s, background-color 0.3s, border-color 0.3s; font-size: 16px; font-weight: 500; color: var(--text-color); margin-right: 5px; margin-bottom: -2px; border-radius: 8px 8px 0 0; }
+    .peditx-tab-link:hover { color: var(--text-color); background-color: var(--hover-color); }
+    .peditx-tab-link.active { color: var(--primary-color); background-color: var(--card-bg); border-bottom-color: var(--primary-color); font-weight: 700; }
     .peditx-tab-content { display: none; padding: 6px 12px; border-top: none; }
 
     .action-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
-    .action-item { background: var(--peditx-card-bg); padding: 15px; border-radius: 8px; display: flex; align-items: center; cursor: pointer; border: 1px solid var(--peditx-border); transition: transform 0.2s, box-shadow 0.2s, background 0.2s; }
-    .action-item:hover { transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.3); background: var(--peditx-hover-bg); }
-    .action-item input[type="radio"], .pkg-item input[type="checkbox"] { margin-right: 15px; transform: scale(1.2); cursor: pointer; }
-    .action-item input[type="radio"]:checked + label { color: var(--peditx-orange); font-weight: bold; }
+    .action-item { background: var(--card-bg); padding: 15px; border-radius: 8px; display: flex; align-items: center; cursor: pointer; border: 1px solid var(--border-color); transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; }
+    .action-item:hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-color: var(--primary-color); }
+    .action-item input[type="radio"], .pkg-item input[type="checkbox"] { margin-right: 15px; transform: scale(1.2); cursor: pointer; accent-color: var(--secondary-color); }
+    .action-item input[type="radio"]:checked + label { color: var(--primary-color); font-weight: bold; }
     .action-item label, .pkg-item label { cursor: pointer; width: 100%; }
-    .execute-bar { margin-top: 25px; text-align: center; display: flex; justify-content: center; gap: 20px; }
-
-    @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.7), 0 4px 15px rgba(0,0,0,0.3); } 70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(255, 140, 0, 0), 0 6px 25px rgba(0,0,0,0.4); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 0, 0), 0 4px 15px rgba(0,0,0,0.3); } }
-
-    .peditx-main-button { font-size: 18px; padding: 16px 45px; color: #1a1a1a; font-weight: bold; border: none; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: background 0.3s ease, transform 0.2s ease; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; text-shadow: 0 1px 1px rgba(255,255,255,0.2); }
-    #execute-button { background: linear-gradient(135deg, var(--peditx-orange), #ff8c00); animation: pulse 2.5s infinite; }
-    #execute-button:hover { background: linear-gradient(135deg, #ff8c00, #e87a00); animation-play-state: paused; }
-    #execute-button:disabled { background: #555; cursor: not-allowed; box-shadow: none; transform: none; animation: none; color: #999; }
     
-    #stop-button { background: linear-gradient(135deg, var(--peditx-red), var(--peditx-red-hover)); }
-    #stop-button:hover { background: linear-gradient(135deg, var(--peditx-red-hover), #a03228); }
+    .execute-bar { margin-top: 25px; text-align: center; display: flex; justify-content: center; gap: 20px; }
+    .peditx-main-button { font-size: 18px; padding: 12px 40px; color: var(--bg-color); font-weight: bold; border: none; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: background 0.3s ease, transform 0.2s ease; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+    #execute-button { background: var(--primary-color); }
+    #execute-button:hover { background: #62ff8a; transform: translateY(-2px); }
+    #execute-button:disabled { background: #555; cursor: not-allowed; box-shadow: none; transform: none; color: #999; }
+    #stop-button { background: var(--danger-color); }
+    #stop-button:hover { background: #ff6e6e; transform: translateY(-2px); }
 
-    .peditx-log-container { background-color: var(--peditx-dark-bg); color: var(--peditx-text-color); font-family: monospace; padding: 15px; border-radius: 8px; height: 350px; overflow-y: scroll; white-space: pre-wrap; border: 1px solid var(--peditx-border); margin-top: 10px; box-shadow: inset 0 0 5px rgba(0,0,0,0.2); }
-    .peditx-status { padding: 15px; margin-top: 20px; background-color: var(--peditx-card-bg); border-radius: 8px; text-align: center; font-weight: bold; border: 1px solid var(--peditx-border); color: var(--peditx-orange); }
+    .peditx-log-container { background-color: var(--header-bg); color: var(--text-color); font-family: monospace; padding: 15px; border-radius: 8px; height: 350px; overflow-y: scroll; white-space: pre-wrap; border: 1px solid var(--border-color); margin-top: 10px; box-shadow: inset 0 0 5px rgba(0,0,0,0.2); }
+    .peditx-status { padding: 15px; margin-top: 20px; background-color: var(--card-bg); border-radius: 8px; text-align: center; font-weight: bold; border: 1px solid var(--border-color); color: var(--warning-color); }
+    
     .input-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
-    .cbi-input-text, .cbi-input-password, .cbi-input-select, textarea.cbi-input-text { background-color: var(--peditx-card-bg); border: 1px solid var(--peditx-border); color: var(--peditx-text-color); padding: 10px; border-radius: 5px; width: 100%; box-sizing: border-box; transition: border-color 0.3s, box-shadow 0.3s; }
-    .cbi-input-text:focus, .cbi-input-password:focus, .cbi-input-select:focus, textarea.cbi-input-text:focus { outline: none; border-color: var(--peditx-orange); box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.3); }
+    .cbi-input-text, .cbi-input-password, .cbi-input-select, textarea.cbi-input-text { background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); padding: 10px; border-radius: 5px; width: 100%; box-sizing: border-box; transition: border-color 0.3s, box-shadow 0.3s; }
+    .cbi-input-text:focus, .cbi-input-password:focus, .cbi-input-select:focus, textarea.cbi-input-text:focus { outline: none; border-color: var(--secondary-color); box-shadow: 0 0 0 3px rgba(255, 121, 198, 0.2); }
+    
     .pkg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; margin-top: 15px; }
-    .pkg-item { background: var(--peditx-card-bg); padding: 10px; border-radius: 8px; display: flex; align-items: center; border: 1px solid var(--peditx-border); transition: background 0.2s; }
-    .pkg-item:hover { background: var(--peditx-hover-bg); }
-    .sub-section { border: 1px solid var(--peditx-border); padding: 20px; border-radius: 8px; margin-top: 20px; }
-    .log-controls { display: flex; justify-content: flex-end; align-items: center; margin-top: 20px; gap: 10px; }
-    .log-controls .cbi-button { font-size: 12px; padding: 8px 15px; border-radius: 5px; background-color: var(--peditx-card-bg); color: var(--peditx-text-color); border: 1px solid var(--peditx-border); transition: background 0.2s, border-color 0.2s; cursor: pointer; }
-    .log-controls .cbi-button:hover { background-color: var(--peditx-hover-bg); border-color: var(--peditx-orange); }
-    #logout-button { background: linear-gradient(135deg, var(--peditx-pink), var(--peditx-pink-hover)); color: #1a1a1a; border-color: var(--peditx-pink); }
-    #logout-button:hover { background: linear-gradient(135deg, var(--peditx-pink-hover), #f73ca8); border-color: var(--peditx-pink-hover); }
+    .pkg-item { background: var(--card-bg); padding: 10px; border-radius: 8px; display: flex; align-items: center; border: 1px solid var(--border-color); transition: background 0.2s; }
+    .pkg-item:hover { background: var(--hover-color); }
+    
+    .sub-section { background-color: var(--card-bg); border: 1px solid var(--border-color); padding: 20px; border-radius: 8px; margin-top: 20px; }
+    
+    .log-controls { display: flex; justify-content: flex-end; align-items: center; margin-top: 20px; gap: 10px; flex-wrap: wrap; }
+    .log-controls .cbi-button { font-size: 12px; padding: 8px 15px; border-radius: 5px; background-color: var(--hover-color); color: var(--text-color); border: 1px solid var(--border-color); transition: background 0.2s, border-color 0.2s; cursor: pointer; }
+    .log-controls .cbi-button:hover { background-color: var(--card-bg); border-color: var(--secondary-color); }
+    #logout-button { background: var(--secondary-color); color: var(--bg-color); border-color: var(--secondary-color); }
+    #logout-button:hover { background: #ff95d6; border-color: #ff95d6; }
     .log-controls label { margin-right: 10px; cursor: pointer; user-select: none; }
-    .log-controls input[type="checkbox"] { vertical-align: middle; margin-right: 5px; }
+    .log-controls input[type="checkbox"] { vertical-align: middle; margin-right: 5px; accent-color: var(--secondary-color); }
+    
     .peditx-modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
-    .peditx-modal-content { background-color: var(--peditx-card-bg); color: var(--peditx-text-color); margin: 15% auto; padding: 30px; border: 1px solid var(--peditx-border); width: 90%; max-width: 450px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
+    .peditx-modal-content { background-color: var(--card-bg); color: var(--text-color); margin: 15% auto; padding: 30px; border: 1px solid var(--border-color); width: 90%; max-width: 450px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
     .peditx-modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
-    .peditx-modal-buttons .cbi-button { padding: 10px 20px; border-radius: 20px; }
+    .peditx-modal-buttons .cbi-button { padding: 10px 20px; border-radius: 8px; }
+    #peditx-modal-yes { background-color: var(--primary-color); color: var(--bg-color); }
+    #peditx-modal-no { background-color: var(--hover-color); }
+
+    @media (max-width: 768px) {
+        .peditx-tab-link { padding: 12px 10px; font-size: 14px; margin-right: 2px; }
+        .peditx-header h2 { font-size: 20px; }
+        .peditx-header p { font-size: 14px; }
+    }
 </style>
 
 <div id="peditx-confirm-modal" class="peditx-modal">
     <div class="peditx-modal-content">
         <p id="peditx-modal-text"></p>
         <div class="peditx-modal-buttons">
-            <button id="peditx-modal-yes" class="cbi-button cbi-button-apply">Yes</button>
+            <button id="peditx-modal-yes" class="cbi-button">Yes</button>
             <button id="peditx-modal-no" class="cbi-button">No</button>
         </div>
     </div>
 </div>
 
 <div class="cbi-map">
-    <div class="cbi-map-title">
+    <div class="peditx-header">
         <h2>PeDitXOS Dashboard</h2>
+        <p>Your central command for managing and optimizing the system.</p>
     </div>
     <div class="peditx-tabs">
         <button class="peditx-tab-link active" onclick="showTab(event, 'main-tools')">Main Tools</button>
@@ -722,9 +767,9 @@ cat > /usr/lib/lua/luci/view/peditxos/main.htm << 'EOF'
                 <li><b>Login:</b> Use your router's username (usually <code>root</code>) and password.</li>
                 <li><b>Pasting Commands:</b> Use <code>Ctrl+Shift+V</code> (Windows/Linux) or <code>Cmd+V</code> (Mac) to paste commands. Right-clicking may also work depending on your browser.</li>
             </ul>
-            <p style="color: var(--peditx-red);"><b>Warning:</b> Commands executed here can permanently alter your system configuration and cause instability. Proceed with caution.</p>
-            <div id="ttyd-placeholder" style="text-align: center; padding: 20px; color: var(--peditx-orange);">Loading Terminal...</div>
-            <iframe id="ttyd-iframe" style="width: 100%; height: 500px; border: 1px solid var(--peditx-border); border-radius: 8px; margin-top: 15px; display: none;">
+            <p style="color: var(--danger-color);"><b>Warning:</b> Commands executed here can permanently alter your system configuration and cause instability. Proceed with caution.</p>
+            <div id="ttyd-placeholder" style="text-align: center; padding: 20px; color: var(--warning-color);">Loading Terminal...</div>
+            <iframe id="ttyd-iframe" style="width: 100%; height: 500px; border: 1px solid var(--border-color); border-radius: 8px; margin-top: 15px; display: none;">
             </iframe>
         </div>
     </div>
