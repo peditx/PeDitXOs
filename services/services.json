@@ -34,11 +34,4 @@
     "name": "Cleanup Memory",
     "description": "Frees up system RAM."
   }
-#  {
-#    "id": "cleanup_memory",
-#    "name": "Cleanup Memory",
-#    "description": "Frees up system RAM.",
-#    "icon_url": "https://raw.githubusercontent.com/peditx/my-icons/main/torplus.png",
-#    "version": "1.2.3"
-#  }
 ]
