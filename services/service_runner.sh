@@ -11,6 +11,7 @@ URL_SSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install
 URL_AIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
 URL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/install.sh"
 URL_WRRPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/install.sh"
+URL_AMNEZIAWG="https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh"
 
 # --- Function Definitions ---
 
@@ -39,6 +40,11 @@ install_warpPplusplus() {
     cd /tmp && rm -f install.sh && wget -q "$URL_WRRPPLUSPLUS" -O install.sh && chmod +X install.sh && sh install.sh
 }
 
+install_amneziawg() {
+    echo "Downloading Warp+ components..."
+    cd /tmp && rm -f amneziawg-install.sh && wget -q "$URL_AMNEZIAWG" -O amneziawg-install.sh && chmod +X amneziawg-install.sh && sh amneziawg-install.sh
+}
+
 change_repo() {
     echo "Changing to PeDitX Repo..."
     # Add actual commands here in the future
@@ -64,7 +70,8 @@ case "$ACTION" in
     install_sshplus) install_sshplus ;;
     install_aircast) install_aircast ;;
     install_warp) install_warp ;;
-    install_warp) install_warpplusplus ;;
+    install_warpplusplus) install_warpplusplus ;;
+    install_amneziawg) install_amneziawg ;;
     change_repo) change_repo ;;
     install_wol) install_wol ;;
     cleanup_memory) cleanup_memory ;;
