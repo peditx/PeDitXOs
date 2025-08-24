@@ -12,6 +12,7 @@ URL_AIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/airca
 URL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/install.sh"
 URL_WRRPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/install.sh"
 URL_AMNEZIAWG="https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh"
+URL_PEDITX="https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/install.sh"
 
 # --- Function Definitions ---
 
@@ -38,6 +39,11 @@ install_warp() {
 install_warpPplusplus() {
     echo "Downloading Warp+ components..."
     cd /tmp && rm -f install.sh && wget -q "$URL_WRRPPLUSPLUS" -O install.sh && chmod +X install.sh && sh install.sh
+}
+
+install_peditx() {
+    echo "Downloading PeDitX Theme components..."
+    cd /tmp && rm -f install.sh && wget -q "$URL_PEDITX" -O install.sh && chmod +X install.sh && sh install.sh
 }
 
 install_amneziawg() {
