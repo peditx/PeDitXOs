@@ -1,74 +1,170 @@
-<%# LuCI - Lua Configuration Interface - PeDitXOS Store v3 %>
+<%# LuCI - Lua Configuration Interface - PeDitXOS Store v4 %>
 <%+header%>
 <style>
+    /* ===== NEW THEME (Dracula Inspired) ===== */
     :root {
-        --peditx-primary: #00b5e2;
-        --peditx-orange: #ffae42;
-        --peditx-dark-bg: #2d2d2d;
-        --peditx-card-bg: #3a3a3a;
-        --peditx-border: #444;
-        --peditx-text-color: #f0f0f0;
-        --peditx-hover-bg: #454545;
-        --peditx-focus-ring: #008eb2;
-        --peditx-red: #e74c3c;
-        --peditx-red-hover: #c0392b;
-    }
-    body { color: var(--peditx-text-color); }
-    
-    /* This will make the title follow the theme's animation and style */
-    .cbi-map-title {
-        padding-bottom: 15px;
-        border-bottom: 1px solid var(--peditx-border);
-        margin-bottom: 10px;
+        --bg-color: #282a36;
+        --card-bg: #3a3c51;
+        --header-bg: #21222c;
+        --text-color: #f8f8f2;
+        --primary-color: #50fa7b;   /* Green */
+        --secondary-color: #ff79c6; /* Pink */
+        --danger-color: #ff5555;     /* Red */
+        --warning-color: #f1fa8c;   /* Yellow */
+        --info-color: #8be9fd;       /* Cyan */
+        --purple-color: #bd93f9;     /* Purple */
+        --border-color: #44475a;
+        --hover-color: #44475a;
+        --orange-gradient-start: #ffae42;
+        --orange-gradient-end: #ff8c00;
     }
 
-    .action-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px;}
-    .action-item { background: var(--peditx-card-bg); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; cursor: pointer; border: 1px solid var(--peditx-border); transition: transform 0.2s, box-shadow 0.2s, background 0.2s; }
-    .action-item:hover { transform: translateY(-5px); box-shadow: 0 6px 15px rgba(0,0,0,0.4); background: var(--peditx-hover-bg); }
-    .action-item.selected { border-color: var(--peditx-orange); box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.5), 0 6px 15px rgba(0,0,0,0.4); }
+    body { 
+        background-color: var(--bg-color);
+        color: var(--text-color);
+    }
+    
+    .cbi-map-title {
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 10px;
+        color: var(--info-color);
+    }
+
+    .action-grid { 
+        display: flex; 
+        flex-wrap: wrap;
+        gap: 20px; 
+        margin-top: 20px;
+    }
+    .action-item { 
+        background: var(--card-bg); 
+        padding: 20px; 
+        border-radius: 12px; 
+        display: flex; 
+        flex-direction: column; 
+        cursor: pointer; 
+        border: 1px solid var(--border-color); 
+        transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        flex-basis: 280px;
+        flex-grow: 1;
+    }
+    .action-item:hover { 
+        transform: translateY(-5px); 
+        box-shadow: 0 6px 15px rgba(0,0,0,0.4); 
+        border-color: var(--primary-color);
+    }
+    .action-item.selected { 
+        border-color: var(--orange-gradient-start); 
+        box-shadow: 0 0 0 3px rgba(255, 174, 66, 0.5), 0 6px 15px rgba(0,0,0,0.4); 
+    }
     
     .action-item-header { display: flex; align-items: center; margin-bottom: 15px; }
-    .action-item-header img { width: 48px; height: 48px; margin-right: 15px; border-radius: 8px; background-color: #2d2d2d; }
-    .action-item-header h4 { margin: 0; font-size: 1.1em; color: var(--peditx-text-color); }
+    .action-item-header img { width: 48px; height: 48px; margin-right: 15px; border-radius: 8px; background-color: var(--bg-color); }
+    .action-item-header h4 { margin: 0; font-size: 1.1em; color: var(--text-color); }
     
     .action-item p { font-size: 0.9em; color: #ccc; flex-grow: 1; margin-bottom: 15px; }
     
-    .action-item-footer { margin-top: auto; font-size: 0.8em; color: #888; }
+    .action-item-footer { margin-top: auto; font-size: 0.8em; color: #bd93f9; }
     
     .execute-bar { margin-top: 25px; text-align: center; display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; }
 
-    @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.7), 0 4px 15px rgba(0,0,0,0.3); } 70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(255, 140, 0, 0), 0 6px 25px rgba(0,0,0,0.4); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 0, 0), 0 4px 15px rgba(0,0,0,0.3); } }
+    @keyframes pulse { 
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 174, 66, 0.7); } 
+        70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(255, 174, 66, 0); } 
+        100% { transform: scale(1); } 
+    }
 
-    .peditx-main-button { font-size: 18px; padding: 16px 45px; color: #1a1a1a; font-weight: bold; border: none; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: background 0.3s ease, transform 0.2s ease; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; text-shadow: 0 1px 1px rgba(255,255,255,0.2); }
-    #execute-button { background: linear-gradient(135deg, var(--peditx-orange), #ff8c00); animation: pulse 2.5s infinite; }
-    #execute-button:hover { background: linear-gradient(135deg, #ff8c00, #e87a00); animation-play-state: paused; }
-    #execute-button:disabled { background: #555; cursor: not-allowed; box-shadow: none; transform: none; animation: none; color: #999; }
+    .peditx-main-button { 
+        font-size: 18px; 
+        padding: 12px 40px; 
+        font-weight: bold; 
+        border: none; 
+        border-radius: 50px; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+        transition: background 0.3s ease, transform 0.2s ease; 
+        cursor: pointer; 
+        display: inline-flex; 
+        align-items: center; 
+        justify-content: center;
+        text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    }
+    #execute-button { 
+        background: linear-gradient(135deg, var(--orange-gradient-start), var(--orange-gradient-end));
+        color: var(--header-bg);
+        animation: pulse 2.5s infinite; 
+    }
+    #execute-button:hover { 
+        background: linear-gradient(135deg, var(--orange-gradient-end), #e87a00); 
+        transform: translateY(-2px);
+        animation-play-state: paused; 
+    }
+    #execute-button:disabled { 
+        background: #555; 
+        cursor: not-allowed; 
+        box-shadow: none; 
+        transform: none; 
+        animation: none; 
+        color: #999; 
+    }
     
-    #stop-button { background: linear-gradient(135deg, var(--peditx-red), var(--peditx-red-hover)); }
-    #stop-button:hover { background: linear-gradient(135deg, var(--peditx-red-hover), #a03228); }
+    #stop-button { 
+        background: var(--danger-color); 
+        color: var(--text-color);
+    }
+    #stop-button:hover {
+        background: #ff6e6e;
+        transform: translateY(-2px);
+    }
 
     .peditx-secondary-button {
-        background: var(--peditx-primary);
-        color: white;
+        background: var(--info-color);
+        color: var(--header-bg);
         font-size: 16px;
-        padding: 14px 30px;
-        animation: none;
+        padding: 10px 30px;
     }
     .peditx-secondary-button:hover {
-        background: var(--peditx-focus-ring);
+        background: #a2f2ff;
+        transform: translateY(-2px);
     }
     .peditx-secondary-button:disabled {
         background: #555;
         cursor: not-allowed;
+        transform: none;
     }
 
-    .peditx-log-container { background-color: var(--peditx-dark-bg); color: var(--peditx-text-color); font-family: monospace; padding: 15px; border-radius: 8px; height: 350px; overflow-y: scroll; white-space: pre-wrap; border: 1px solid var(--peditx-border); margin-top: 10px; box-shadow: inset 0 0 5px rgba(0,0,0,0.2); }
-    .peditx-status { padding: 15px; margin-top: 20px; background-color: var(--peditx-card-bg); border-radius: 8px; text-align: center; font-weight: bold; border: 1px solid var(--peditx-border); color: var(--peditx-orange); }
+    #refresh-luci-btn {
+        background: var(--primary-color);
+        color: var(--header-bg);
+    }
+    #refresh-luci-btn:hover {
+        background: #6aff8f;
+    }
+
+    .peditx-log-container { background-color: var(--header-bg); color: var(--text-color); font-family: monospace; padding: 15px; border-radius: 8px; height: 350px; overflow-y: scroll; white-space: pre-wrap; border: 1px solid var(--border-color); margin-top: 10px; box-shadow: inset 0 0 5px rgba(0,0,0,0.2); }
+    .peditx-status { padding: 15px; margin-top: 20px; background-color: var(--card-bg); border-radius: 8px; text-align: center; font-weight: bold; border: 1px solid var(--border-color); color: var(--warning-color); }
+    
     .log-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; gap: 10px; }
-    .log-controls .cbi-button { font-size: 12px; padding: 8px 15px; border-radius: 5px; background-color: var(--peditx-card-bg); color: var(--peditx-text-color); border: 1px solid var(--peditx-border); transition: background 0.2s, border-color 0.2s; cursor: pointer; }
-    .log-controls .cbi-button:hover { background-color: var(--peditx-hover-bg); border-color: var(--peditx-orange); }
+    .log-controls .cbi-button { font-size: 12px; padding: 8px 15px; border-radius: 5px; background-color: var(--hover-color); color: var(--text-color); border: 1px solid var(--border-color); transition: background 0.2s, border-color 0.2s; cursor: pointer; }
+    .log-controls .cbi-button:hover { background-color: var(--card-bg); border-color: var(--secondary-color); }
     .log-controls label { margin-right: 10px; cursor: pointer; user-select: none; }
-    .log-controls input[type="checkbox"] { vertical-align: middle; margin-right: 5px; }
+    .log-controls input[type="checkbox"] { vertical-align: middle; margin-right: 5px; accent-color: var(--secondary-color); }
+
+    /* Search bar style */
+    #search-bar {
+        width: 100%; 
+        padding: 12px; 
+        border-radius: 8px; 
+        background: var(--card-bg); 
+        border: 1px solid var(--border-color); 
+        color: var(--text-color);
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    #search-bar:focus {
+        outline: none;
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 3px rgba(255, 121, 198, 0.2);
+    }
 </style>
 
 <div class="cbi-map">
@@ -77,6 +173,10 @@
     </div>
     <p>Select a service to install. The list is fetched from an external source.</p>
     
+    <div class="cbi-input-section" style="margin-bottom: 20px;">
+        <input type="text" id="search-bar" class="cbi-input-text" placeholder="Search for a service...">
+    </div>
+
     <div id="service-grid" class="action-grid">
         <p>Loading services...</p>
     </div>
@@ -84,7 +184,7 @@
     <div class="execute-bar">
         <button id="update-list-btn" class="peditx-main-button peditx-secondary-button">Update List</button>
         <button id="execute-button" class="peditx-main-button">Install Selected</button>
-        <button id="refresh-luci-btn" class="peditx-main-button peditx-secondary-button" style="background: #2ecc71;">Refresh LuCI</button>
+        <button id="refresh-luci-btn" class="peditx-main-button peditx-secondary-button">Refresh LuCI</button>
         <button id="stop-button" class="peditx-main-button" style="display:none;">Stop</button>
     </div>
 
@@ -116,6 +216,7 @@
     var autoRefreshToggle = document.getElementById('auto-refresh-toggle');
     var updateBtn = document.getElementById('update-list-btn');
     var refreshLuciBtn = document.getElementById('refresh-luci-btn');
+    var searchBar = document.getElementById('search-bar');
 
     // State variables
     var selectedAction = null;
@@ -190,10 +291,10 @@
         services.forEach(function(service) {
             var item = document.createElement('div');
             item.className = 'action-item';
-            item.setAttribute('data-action', service.id); // *** FIX: Use service.id ***
+            item.setAttribute('data-action', service.id);
             item.innerHTML = `
                 <div class="action-item-header">
-                    <img src="${service.icon_url}" alt="${service.name}" onerror="this.src='https://placehold.co/48x48/3a3a3a/f0f0f0?text=ICON'; this.onerror=null;">
+                    <img src="${service.icon_url}" alt="${service.name}" onerror="this.src='https.placehold.co/48x48/282a36/f8f8f2?text=ICON'; this.onerror=null;">
                     <h4>${service.name}</h4>
                 </div>
                 <p>${service.description}</p>
@@ -202,7 +303,7 @@
                 </div>
             `;
             item.addEventListener('click', function() {
-                if (isPolling) return; // Don't allow selection while a process is running
+                if (isPolling) return;
                 document.querySelectorAll('.action-item').forEach(el => el.classList.remove('selected'));
                 this.classList.add('selected');
                 selectedAction = this.getAttribute('data-action');
@@ -216,19 +317,39 @@
         serviceGrid.innerHTML = '<p>Loading services...</p>';
         XHR.get(servicesURL, null, function(x, data) {
             if (x && x.status === 200 && data && !data.error) {
-                // *** FIX: Use the data directly as it is an array ***
                 renderServices(data); 
             } else {
-                serviceGrid.innerHTML = '<p style="color: var(--peditx-red);">Error: ' + (data ? data.error : 'Could not fetch service list.') + '</p>';
+                serviceGrid.innerHTML = '<p style="color: var(--danger-color);">Error: ' + (data ? data.error : 'Could not fetch service list.') + '</p>';
             }
         });
     }
 
     // --- Event Listeners ---
 
+    searchBar.addEventListener('input', function() {
+        var searchTerm = this.value.toLowerCase().trim();
+        var services = document.querySelectorAll('.action-item');
+
+        services.forEach(function(service) {
+            var serviceName = service.querySelector('h4').textContent.toLowerCase();
+            var serviceDesc = service.querySelector('p').textContent.toLowerCase();
+            
+            if (serviceName.includes(searchTerm) || serviceDesc.includes(searchTerm)) {
+                service.style.display = 'flex';
+            } else {
+                service.style.display = 'none';
+            }
+        });
+    });
+
     startButton.addEventListener('click', function() {
         if (!selectedAction) {
-            alert('Please select a service to install first.');
+            statusDiv.innerText = 'Please select a service to install first.';
+            statusDiv.style.color = 'var(--danger-color)';
+            setTimeout(() => { 
+                statusDiv.innerText = 'Ready. Select a service and press Install.';
+                statusDiv.style.color = 'var(--warning-color)';
+            }, 3000);
             return;
         }
         startActionByName(selectedAction);
@@ -246,26 +367,24 @@
     });
 
     autoRefreshToggle.addEventListener('change', function() {
-		if (this.checked) {
+        if (this.checked) {
             statusDiv.innerText = 'Auto-refresh enabled.';
             if (!isPolling) {
-			    pollStatus(true);
+                pollStatus(true);
             }
-		} else {
+        } else {
             statusDiv.innerText = 'Auto-refresh disabled.';
             if (isPolling) {
-			    XHR.poll.stop();
+                XHR.poll.stop();
                 isPolling = false;
             }
-		}
-	});
+        }
+    });
 
     updateBtn.addEventListener('click', function() {
-        statusDiv.innerText = 'Updating app list from GitHub...';
-        // Call the dedicated action in the runner script
+        statusDiv.innerText = 'Updating app list...';
         startActionByName('update_service_list');
-        // After the list is downloaded, re-fetch and render it
-        setTimeout(fetchServices, 2000); // Wait 2 seconds for download to complete
+        setTimeout(fetchServices, 3000);
     });
 
     refreshLuciBtn.addEventListener('click', function() {
