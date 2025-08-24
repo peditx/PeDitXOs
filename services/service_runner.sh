@@ -14,7 +14,6 @@ URL_WRRPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/
 URL_AMNEZIAWG="https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh"
 URL_PEDITX="https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/install.sh"
 URL_CARBONPX="https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/install.sh"
-URL_HTMLREFRESH="https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/htmlrefresh.sh"
 
 # --- Function Definitions ---
 
@@ -56,11 +55,6 @@ install_carbonpx() {
 install_amneziawg() {
     echo "Downloading AmneziaWG components..."
     cd /tmp && rm -f install.sh && wget -q "$URL_AMNEZIAWG" -O install.sh && chmod +X install.sh && sh install.sh
-}
-
-refresh_html() {
-    echo "refresh_html..."
-    cd /tmp && rm -f install.sh && wget -q "$URL_HTMLREFRESH" -O install.sh && chmod +X install.sh && sh install.sh
 }
 
 change_repo() {
