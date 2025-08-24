@@ -42,6 +42,13 @@
     "version": "v24.10.2"
   },
   {
+    "id": "install_carbonpx",
+    "name": "Install CarbonPX Theme",
+    "description": "CarbonPX theme is a Oled modern, mobile-optimized theme for OpenWrt, designed for both desktop and mobile devices.",
+    "icon_url": "https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/screenshots/m1.PNG",
+    "version": "v1.0.4-01"
+  },
+  {
     "id": "install_peditx",
     "name": "Install PeDitX Theme",
     "description": "PeDitX theme is a modern, mobile-optimized theme for OpenWrt, designed for both desktop and mobile devices.",
