@@ -77,6 +77,10 @@
     "version": "master"
   },
   {
-  "id": "refresh_html"
+    "id": "refresh_html"
+    "name": "Cleanup Memory",
+    "description": "Frees up system RAM.",
+    "icon_url": "https://static.vecteezy.com/system/resources/previews/013/221/562/non_2x/refresh-icon-style-free-vector.jpg",
+    "version": "master"
   }
 ]
