@@ -47,7 +47,7 @@
         border: 1px solid var(--border-color); 
         transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
         flex-basis: 280px;
-        /* flex-grow: 1; --- REMOVED this line to keep card width fixed --- */
+        flex-shrink: 0; /* --- ADDED: Prevents items from shrinking --- */
     }
     .action-item:hover { 
         transform: translateY(-5px); 
