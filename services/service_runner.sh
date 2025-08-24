@@ -13,6 +13,7 @@ URL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/m
 URL_WRRPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/install.sh"
 URL_AMNEZIAWG="https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh"
 URL_PEDITX="https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/install.sh"
+URL_CARBONPX="https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/install.sh"
 
 # --- Function Definitions ---
 
@@ -44,6 +45,11 @@ install_warpPplusplus() {
 install_peditx() {
     echo "Downloading PeDitX Theme components..."
     cd /tmp && rm -f install.sh && wget -q "$URL_PEDITX" -O install.sh && chmod +X install.sh && sh install.sh
+}
+
+install_carbonpx() {
+    echo "Downloading CarbonPX Theme components..."
+    cd /tmp && rm -f install.sh && wget -q "$URL_CARBONPX" -O install.sh && chmod +X install.sh && sh install.sh
 }
 
 install_amneziawg() {
@@ -79,6 +85,7 @@ case "$ACTION" in
     install_warpplusplus) install_warpplusplus ;;
     install_amneziawg) install_amneziawg ;;
     install_peditx) install_peditx ;;
+    install_carbonpx) install_carbonpx;;
     change_repo) change_repo ;;
     install_wol) install_wol ;;
     cleanup_memory) cleanup_memory ;;
