@@ -44,9 +44,9 @@
   {
     "id": "install_peditx",
     "name": "Install PeDitX Theme",
-    "description": "",
-    "icon_url": "https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/icon/warp2.png",
-    "version": "v9.3"
+    "description": "PeDitX theme is a modern, mobile-optimized theme for OpenWrt, designed for both desktop and mobile devices.",
+    "icon_url": "https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/screenshots/m1.PNG",
+    "version": "v1.2.3-01"
   },
   {
     "id": "change_repo",
