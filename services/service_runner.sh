@@ -78,6 +78,7 @@ case "$ACTION" in
     install_warp) install_warp ;;
     install_warpplusplus) install_warpplusplus ;;
     install_amneziawg) install_amneziawg ;;
+    install_peditx) install_peditx ;;
     change_repo) change_repo ;;
     install_wol) install_wol ;;
     cleanup_memory) cleanup_memory ;;
