@@ -9,10 +9,10 @@
         --text-color: #f8f8f2;
         --primary-color: #50fa7b;   /* Green */
         --secondary-color: #ff79c6; /* Pink */
-        --danger-color: #ff5555;     /* Red */
+        --danger-color: #ff5555;    /* Red */
         --warning-color: #f1fa8c;   /* Yellow */
-        --info-color: #8be9fd;       /* Cyan */
-        --purple-color: #bd93f9;     /* Purple */
+        --info-color: #8be9fd;      /* Cyan */
+        --purple-color: #bd93f9;    /* Purple */
         --border-color: #44475a;
         --hover-color: #44475a;
         --orange-gradient-start: #ffae42;
@@ -141,6 +141,17 @@
         background: #6aff8f;
     }
 
+    /* Style for the new self-update button */
+    #self-update-btn {
+        background: #6272a4; /* A different shade of blue/purple */
+        color: var(--text-color);
+        font-size: 14px;
+        padding: 8px 20px;
+    }
+    #self-update-btn:hover {
+        background: #7184c2;
+    }
+
     .peditx-log-container { background-color: var(--header-bg); color: var(--text-color); font-family: monospace; padding: 15px; border-radius: 8px; height: 350px; overflow-y: scroll; white-space: pre-wrap; border: 1px solid var(--border-color); margin-top: 10px; box-shadow: inset 0 0 5px rgba(0,0,0,0.2); }
     .peditx-status { padding: 15px; margin-top: 20px; background-color: var(--card-bg); border-radius: 8px; text-align: center; font-weight: bold; border: 1px solid var(--border-color); color: var(--warning-color); }
     
@@ -182,6 +193,7 @@
     </div>
 
     <div class="execute-bar">
+        <button id="self-update-btn" class="peditx-main-button">Update UI</button>
         <button id="update-list-btn" class="peditx-main-button peditx-secondary-button">Update List</button>
         <button id="execute-button" class="peditx-main-button">Install Selected</button>
         <button id="refresh-luci-btn" class="peditx-main-button peditx-secondary-button">Refresh LuCI</button>
@@ -217,6 +229,7 @@
     var updateBtn = document.getElementById('update-list-btn');
     var refreshLuciBtn = document.getElementById('refresh-luci-btn');
     var searchBar = document.getElementById('search-bar');
+    var selfUpdateBtn = document.getElementById('self-update-btn'); // New Button
 
     // State variables
     var selectedAction = null;
@@ -245,6 +258,7 @@
                 stopButton.style.display = 'inline-flex';
                 updateBtn.disabled = true;
                 refreshLuciBtn.disabled = true;
+                selfUpdateBtn.disabled = true;
             } else {
                 if (isPolling) {
                     if (!autoRefreshToggle.checked) {
@@ -256,6 +270,7 @@
                 stopButton.style.display = 'none';
                 updateBtn.disabled = false;
                 refreshLuciBtn.disabled = false;
+                selfUpdateBtn.disabled = false;
             }
         });
     }
@@ -397,6 +412,15 @@
             }
         });
     });
+
+    // New event listener for the self-update button
+    selfUpdateBtn.addEventListener('click', function() {
+        if (confirm("Are you sure you want to update the store UI? This will replace the current view file.")) {
+            statusDiv.innerText = 'Starting UI self-update...';
+            startActionByName('self_update_view');
+        }
+    });
+
 
     // --- Initial Load ---
     fetchServices();
