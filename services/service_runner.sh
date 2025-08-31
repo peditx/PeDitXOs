@@ -38,7 +38,7 @@ install_warp() {
 }
 
 install_warpPplusplus() {
-    echo "Downloading Warp+ components..."
+    echo "Downloading Warp++ components..."
     cd /tmp && rm -f install.sh && wget -q "$URL_WRRPPLUSPLUS" -O install.sh && chmod +X install.sh && sh install.sh
 }
 
@@ -76,6 +76,35 @@ cleanup_memory() {
     echo "Memory cleanup complete."
 }
 
+# New function to self-update the UI view file
+self_update_view() {
+    echo "--- Starting Store UI Self-Update ---"
+    VIEW_FILE_PATH="/usr/lib/lua/luci/view/serviceinstaller/main.htm"
+    VIEW_FILE_URL="https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/main.htm"
+    TEMP_FILE="/tmp/main.htm.new"
+
+    echo "Downloading latest UI from GitHub..."
+    wget -q "$VIEW_FILE_URL" -O "$TEMP_FILE"
+
+    if [ $? -eq 0 ] && [ -s "$TEMP_FILE" ]; then
+        echo "Download successful."
+        echo "Replacing old file at ${VIEW_FILE_PATH}"
+        mv "$TEMP_FILE" "$VIEW_FILE_PATH"
+        if [ $? -eq 0 ]; then
+            echo "Store UI updated successfully!"
+            echo "Please clear your browser cache and refresh the LuCI page."
+        else
+            echo "[ERROR] Failed to move the new file. Check permissions."
+            rm -f "$TEMP_FILE"
+        fi
+    else
+        echo "[ERROR] Failed to download the new UI file. Please check your internet connection."
+        rm -f "$TEMP_FILE"
+    fi
+    echo "--- UI Update Finished ---"
+}
+
+
 # --- Main Execution Block ---
 case "$ACTION" in
     install_torplus) install_torplus ;;
@@ -89,6 +118,7 @@ case "$ACTION" in
     change_repo) change_repo ;;
     install_wol) install_wol ;;
     cleanup_memory) cleanup_memory ;;
+    self_update_view) self_update_view ;; # <-- New action added here
     *) exit 1 ;; # Exit if action is not found
 esac
 
