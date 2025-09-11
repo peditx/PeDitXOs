@@ -14,6 +14,7 @@ URL_WRRPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/
 URL_AMNEZIAWG="https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh"
 URL_PEDITX="https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/install.sh"
 URL_CARBONPX="https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/install.sh"
+URL_IRANIPS="https://raw.githubusercontent.com/peditx/iranIPS/refs/heads/main/.files/iranips.sh"
 
 # --- Function Definitions ---
 
@@ -50,6 +51,11 @@ install_peditx() {
 install_carbonpx() {
     echo "Downloading CarbonPX Theme components..."
     cd /tmp && rm -f install.sh && wget -q "$URL_CARBONPX" -O install.sh && chmod +X install.sh && sh install.sh
+}
+
+install_iranips() {
+    echo "Downloading Iran rule IPS components..."
+    cd /tmp && rm -f install.sh && wget -q "$URL_IRANIPS" -O install.sh && chmod +X install.sh && sh install.sh
 }
 
 install_amneziawg() {
@@ -115,6 +121,7 @@ case "$ACTION" in
     install_amneziawg) install_amneziawg ;;
     install_peditx) install_peditx ;;
     install_carbonpx) install_carbonpx;;
+    install_iranips) install_iranips;;
     change_repo) change_repo ;;
     install_wol) install_wol ;;
     cleanup_memory) cleanup_memory ;;
