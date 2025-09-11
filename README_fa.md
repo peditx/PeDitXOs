@@ -1,7 +1,8 @@
 # PeDitXOS Tools  
 
-### Language Selection  
-English | فارسی | 中文 | Русский  
+## Language Selection:
+
+[**English**](README.md) | [**فارسی**](README_fa.md) | [**中文**](README_zh.md) | [**Русский**](README_ru.md)
 
 ![PeDitX Banner](https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/luasrc/brand.png)  
 
