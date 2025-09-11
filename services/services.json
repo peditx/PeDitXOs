@@ -49,6 +49,13 @@
     "version": "v1.0.4-01"
   },
   {
+    "id": "install_iranips",
+    "name": "Install Iran Rule IPS for Passwall2",
+    "description": "Bypass iran ips for passwall2. after install this script you can use IRAN shunt in your Passwall2",
+    "icon_url": "https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/icon/iran.png",
+    "version": "v1.0.5"
+  },
+  {
     "id": "install_peditx",
     "name": "Install PeDitX Theme",
     "description": "PeDitX theme is a modern, mobile-optimized theme for OpenWrt, designed for both desktop and mobile devices.",
