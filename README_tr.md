@@ -74,6 +74,7 @@ Bu adımdan sonra, gelecekteki tüm yönetim işlemleri LuCI web arayüzü üzer
 
 🏗️ Firmware Oluşturucu
 Çevrimiçi hizmetimizi kullanarak resmi PeDitXOS eklentileriyle kendi özel OpenWrt firmware imajınızı oluşturun:
+
 👉 [Oluşturmaya Başla](https://peditxos.ir)  
 
 🙏 Özel Teşekkürler
