@@ -77,6 +77,8 @@ Bu adımdan sonra, gelecekteki tüm yönetim işlemleri LuCI web arayüzü üzer
 
 👉 [Oluşturmaya Başla](https://peditxos.ir)  
 
+---
+
 🙏 Özel Teşekkürler
 
 - [PeDitX](https://github.com/peditx)  
