@@ -88,7 +88,6 @@ sh -c "$(curl -sL https://peditxos.ir/install)"
 - [ImmortalWrt](https://github.com/immortalwrt)
 - [Bootstrap Theme](https://github.com/twbs/bootstrap)
 
-This theme is based on the [Bootstrap Theme](https://github.com/twbs/bootstrap).
 
 
 © 2018–2025 PeDitX. All rights reserved.  
