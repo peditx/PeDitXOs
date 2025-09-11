@@ -81,17 +81,15 @@ sh -c "$(curl -sL https://peditxos.ir/install)"
 ---
 
 ## 🙏 Special Thanks  
-- OpenWrt Team  
-- PeDitX Theme  
-- Passwall Team  
-- V2Ray Team  
-- PeDitXrt  
-- Mohamadreza Broujerdi  
-- Sia7ash  
 
----
+- [PeDitX](https://github.com/peditx)
+- [PeDitXRT](https://github.com/peditx/peditxrt)
+- [OpenWrt](https://github.com/openwrt)
+- [ImmortalWrt](https://github.com/immortalwrt)
+- [Bootstrap Theme](https://github.com/twbs/bootstrap)
 
-<div align="center">  
-  <sub>Yours sincerely,</sub>  
-  <a href="https://github.com/peditx">PeDitX</a>  
-</div>  
+This theme is based on the [Bootstrap Theme](https://github.com/twbs/bootstrap).
+
+
+© 2018–2025 PeDitX. All rights reserved.  
+For support or inquiries, join us on [Telegram](https://t.me/peditx).
