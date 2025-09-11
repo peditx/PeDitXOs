@@ -67,23 +67,22 @@
 Hızlı kurulum için yönlendiricinizin SSH terminalinde aşağıdaki komutu çalıştırın:
 
 ```bash
-sh -c "$(curl -sL [https://peditxos.ir/install](https://peditxos.ir/install))" ```
+sh -c "$(curl -sL https://peditxos.ir/install)"
+```
+
 Bu adımdan sonra, gelecekteki tüm yönetim işlemleri LuCI web arayüzü üzerinden yapılabilir.
 
 🏗️ Firmware Oluşturucu
 Çevrimiçi hizmetimizi kullanarak resmi PeDitXOS eklentileriyle kendi özel OpenWrt firmware imajınızı oluşturun:
-👉 Oluşturmaya Başla
+👉 [Oluşturmaya Başla](https://peditxos.ir)  
 
 🙏 Özel Teşekkürler
-PeDitX
 
-PeDitXRT
-
-OpenWrt
-
-ImmortalWrt
-
-Bootstrap Theme
+- [PeDitX](https://github.com/peditx)  
+- [PeDitXRT](https://github.com/peditx/peditxrt)  
+- [OpenWrt](https://github.com/openwrt)  
+- [ImmortalWrt](https://github.com/immortalwrt)  
+- [Bootstrap Theme](https://github.com/twbs/bootstrap) 
 
 © 2018–2025 PeDitX. Tüm hakları saklıdır.
 Destek veya sorularınız için Telegram üzerinden bize katılın.
