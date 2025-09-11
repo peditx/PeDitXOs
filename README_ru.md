@@ -88,7 +88,6 @@ sh -c "$(curl -sL https://peditxos.ir/install)"
 - [ImmortalWrt](https://github.com/immortalwrt)  
 - [Bootstrap Theme](https://github.com/twbs/bootstrap)  
 
-Эта тема основана на [Bootstrap Theme](https://github.com/twbs/bootstrap).  
 
 ---
 
