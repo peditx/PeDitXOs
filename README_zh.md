@@ -86,9 +86,8 @@ sh -c "$(curl -sL https://peditxos.ir/install)"
 - [PeDitXRT](https://github.com/peditx/peditxrt)  
 - [OpenWrt](https://github.com/openwrt)  
 - [ImmortalWrt](https://github.com/immortalwrt)  
-- [Bootstrap Theme](https://github.com/twbs/bootstrap)  
-
-本主题基于 [Bootstrap Theme](https://github.com/twbs/bootstrap)。  
+- [Bootstrap Theme](https://github.com/twbs/bootstrap)
+ 
 
 ---
 
