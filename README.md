@@ -88,7 +88,6 @@ Build your own custom OpenWrt firmware image with official PeDitXOS plugins usin
 - [ImmortalWrt](https://github.com/immortalwrt)  
 - [Bootstrap Theme](https://github.com/twbs/bootstrap)  
 
-This theme is based on the [Bootstrap Theme](https://github.com/twbs/bootstrap).  
 
 ---
 
