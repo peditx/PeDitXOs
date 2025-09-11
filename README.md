@@ -1,2 +1,91 @@
-<div align="center">PeDitXOSYour Ultimate OpenWrt Management Console<p><a href="#-features">Features</a> •<a href="#-quick-install">Install</a> •<a href="#-firmware-builder">Firmware Builder</a> •<a href="#-community--support">Community</a></p><p><a href="https://www.google.com/search?q=https://github.com/peditx/peditxos/actions"><img src="https://www.google.com/search?q=https://img.shields.io/github/actions/workflow/status/peditx/peditxos/main.yml%3Fstyle%3Dfor-the-badge%26logo%3Dgithub" alt="Build Status"></a><a href="https://t.me/peditx" target="_blank"><img src="https://www.google.com/search?q=https://img.shields.io/badge/Telegram-Community-2CA5E0%3Fstyle%3Dfor-the-badge%26logo%3Dtelegram" alt="Telegram Community"></a><a href="https://www.google.com/search?q=https://github.com/peditx/peditxos/blob/main/LICENSE"><img src="https://www.google.com/search?q=https://img.shields.io/github/license/peditx/peditxos%3Fstyle%3Dfor-the-badge" alt="License"></a></p></div>✨ FeaturesIconFeatureDescription🎨Stunning ThemesTransform your LuCI web interface with our modern and attractive themes.🛠️Powerful ToolsEasily install Passwall, Tor, SSHPlus, and more with just one click.⚙️System OptimizationOptimize CPU, network, and memory performance for maximum efficiency.💻Web-based TerminalGet direct access to your router's command line through the web interface.📦 Package RepositoryAccess the dedicated PeDitXOS repository to get the latest versions of all packages.<div align="center"><a href="http://repo.peditxdl.ir" target="_blank"><img src="https://www.google.com/search?q=https://img.shields.io/badge/Enter%2520Repository-%2523007BFF%3Fstyle%3Dfor-the-badge%26logo%3Ddropbox%26logoColor%3Dwhite" alt="Enter Repository"></a></div>🚀 Quick InstallCopy and run the following command in your router's SSH terminal to begin the installation.sh -c "$(curl -sL [https://peditxos.ir/install](https://peditxos.ir/install))"
-🏗️ Firmware BuilderBuild your own custom OpenWrt firmware image with PeDitXOS official plugins using our online service.<div align="center"><a href="https://firmware.peditxos.ir" target="_blank"><img src="https://www.google.com/search?q=https://img.shields.io/badge/Start%2520Building-%2523007BFF%3Fstyle%3Dfor-the-badge%26logo%3Dunrealengine%26logoColor%3Dwhite" alt="Start Building"></a></div>🌐 Community & Support<div align="center"><a href="https://t.me/peditx" target="_blank"><img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram"/></a><a href="https://github.com/peditx" target="_blank"><img src="https://www.google.com/search?q=https://img.shields.io/badge/GitHub-181717%3Fstyle%3Dfor-the-badge%26logo%3Dgithub%26logoColor%3Dwhite" alt="GitHub"/></a></div><div align="center" style="margin-top: 20px; font-size: 12px; color: #888;"><p>&copy; 2025 PeDitXOS. All rights reserved.</p></div>
+PeDitXOS Tools
+Language Selection:
+English | فارسی | 中文 | Русский
+![PeDitX Banner](https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/luasrc/brand.png)
+
+The Ultimate Management Suite for OpenWrt.
+Install complex network protocols and manage your router's traffic with a simple, one-click graphical installer right in the LuCI web interface. No permanent SSH access required.
+
+Contact Us:
+🚀 What is PeDitXOS?
+The PeDitXOS script collection transforms your OpenWrt device into a powerful, modern, and easy-to-use gateway.  
+It provides native support for a wide range of protocols like OpenVPN, Xray, V2Ray, WireGuard, and Cloudflare Warp.  
+You can install Passwall 1 and Passwall 2 (either separately or together) to enjoy a stable internet connection with segmented and continuous traffic routing.  
+This project is under active development and will be continuously improved.
+✨ Features
+One-Click Graphical Installation: Simple graphical installer in LuCI after initial setup.  
+Full Automatic Setup: Get everything running with a single command.  
+Dual Passwall Support: Run Passwall 1 and Passwall 2 concurrently on the same router.  
+Easy Exroot: Expand router storage with one click if USB is available.  
+X86 Tools: Convert Linux x86/x64 into a powerful OpenWrt router.  
+Quick Wi-Fi Setup: Configure Wi-Fi by just entering SSID + password.  
+Memory Cleaner: Free up RAM with one click.  
+Extra Packages: OpenVPN, Sing-box, SoftEther, and more (for >512MB storage).  
+Smart XRAY Installation: Installs XRAY on tmpfs if storage is limited.  
+Optimized Routing: Direct routing for Iran IP/domains for better performance.  
+Performance Enhancements: New theme, fixed WARP, default kill switch, XRAY Fragment TLS Hello.  
+📡 Supported Protocols
+Protocol     
+XRAY Core
+SING-BOX Core
+VLESS   
+✅       
+✅           
+VMESS   
+✅       
+✅           
+REALITY 
+✅       
+❌           
+TROJAN   
+✅       
+✅           
+HYSTERIA2
+❌       
+✅           
+TUIC     
+❌       
+✅           
+Shadowsocks
+✅     
+✅           
+WireGuard
+✅       
+✅           
+SOCKS   
+✅       
+✅           
+HTTP     
+✅       
+✅           
+
+📶 Recommended Routers
+Google WiFi (Gale)  
+Linksys EA8300 / E8450 / EA7500 / EA8100  
+Belkin rt3200  
+GL-iNet GL-A1300 / AR300M (NOR)  
+Xiaomi AX3000T / AX3600 / AX3200 / AX6000  
+TP-Link C6 v3  
+Mikrotik Hap ac2  
+ASUS RT-N66U  
+Netgear R7800  
+~~Xiaomi 4a Gigabit~~  
+⚡ Quick Install
+Run the following command in your router’s SSH terminal.  
+After this one-time step, all future management can be done from the LuCI web interface:
+sh -c "$(curl -sL [https://peditxos.ir/install](https://peditxos.ir/install))"
+
+
+
+🏗️ Firmware Builder
+Build your own custom OpenWrt firmware image with PeDitXOS official plugins using our online service:
+👉 Start Building
+🙏 Special Thanks
+OpenWrt Team
+PeDitX Theme
+Passwall Team
+V2Ray Team
+PeDitXrt
+Mohamadreza Broujerdi
+Sia7ash
+<div align="center"> <sub>Yours sincerely,</sub> <a href="https://github.com/peditx">PeDitX</a> </div>
