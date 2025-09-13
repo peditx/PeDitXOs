@@ -85,7 +85,10 @@ Bu adımdan sonra, gelecekteki tüm yönetim işlemleri LuCI web arayüzü üzer
 - [PeDitXRT](https://github.com/peditx/peditxrt)  
 - [OpenWrt](https://github.com/openwrt)  
 - [ImmortalWrt](https://github.com/immortalwrt)  
-- [Bootstrap Theme](https://github.com/twbs/bootstrap) 
+- [Bootstrap Theme](https://github.com/twbs/bootstrap)
+- [Mohamadreza Broujerdi](https://t.me/MR13_B)
+- [Sia7ash](https://github.com/Sia7ash)
+
 
 © 2018–2025 PeDitX. Tüm hakları saklıdır.
 Destek veya sorularınız için Telegram üzerinden bize katılın.
