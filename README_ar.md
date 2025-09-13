@@ -43,6 +43,7 @@
 
 ## 📶 أجهزة التوجيه الموصى بها
 
+* x86/64
 * Google WiFi (Gale)
 * Linksys EA8300 / E8450 / EA7500 / EA8100
 * Belkin rt3200
@@ -77,6 +78,9 @@ sh -c "$(curl -sL https://peditxos.ir/install)"
 * [OpenWrt](https://github.com/openwrt)
 * [ImmortalWrt](https://github.com/immortalwrt)
 * [Bootstrap Theme](https://github.com/twbs/bootstrap)
+* [Mohamadreza Broujerdi](https://t.me/MR13_B)
+* [Sia7ash](https://github.com/Sia7ash)
+
 
 © 2018–2025 PeDitX. كل الحقوق محفوظة.
 للحصول على الدعم أو الاستفسارات، انضم إلينا على [Telegram](https://t.me/peditx).
