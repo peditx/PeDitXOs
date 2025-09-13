@@ -50,6 +50,7 @@
 ---
 
 ## 📶 Recommended Routers  
+- x86/64
 - Google WiFi (Gale)  
 - Linksys EA8300 / E8450 / EA7500 / EA8100  
 - Belkin rt3200  
