@@ -1,81 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PeDitX CMS</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PeDitX CMS Dashboard</title>
+
+    <!--
+      NOTE: By removing the MANUAL_INIT script, Decap CMS will automatically
+      look for a 'config.yml' file in the same directory and initialize itself
+      after the page has fully loaded. This is the standard and recommended way.
+    -->
+    <script src="https://unpkg.com/decap-cms@latest/dist/decap-cms.js"></script>
 
     <style>
       body {
+        font-family: "Inter", sans-serif;
         background-color: #0f172a;
         color: #f8fafc;
-        font-family: "Inter", sans-serif;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
         margin: 0;
       }
 
-      .card {
-        background-color: rgba(255, 255, 255, 0.08);
-        border-radius: 1rem;
-        padding: 2rem;
-        max-width: 400px;
-        width: 90%;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-        text-align: center;
+      .nc-appHeader {
+        background-color: #111827 !important;
+        color: #10b981 !important;
       }
 
-      .btn {
-        display: inline-block;
-        margin-top: 1.5rem;
-        background: #10b981;
-        color: white;
-        padding: 0.75rem 1.5rem;
-        border-radius: 0.5rem;
-        transition: background 0.2s ease;
-        text-decoration: none;
+      .nc-sidebar,
+      .nc-sidebar .nc-sidebar__section {
+        background-color: #1e293b;
+        color: #f8fafc;
       }
 
-      .btn:hover {
-        background: #059669;
+      .nc-sidebar a,
+      .nc-sidebar a:hover {
+        color: #10b981;
       }
 
-      .cms-logo {
-        width: 120px;
-        height: 120px;
-        border-radius: 1rem;
-        background: linear-gradient(135deg, #10b981, #3b82f6);
-        color: white;
-        font-size: 2rem;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1rem auto;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      .nc-main {
+        background-color: #0f172a;
       }
 
-      h1 { font-size: 1.75rem; font-weight: bold; margin-bottom: 0.5rem; }
-      p { color: #d1d5db; font-size: 0.95rem; margin-bottom: 1rem; }
+      .nc-widget__input,
+      .nc-widget__control {
+        background-color: #1e293b;
+        color: #f8fafc;
+        border-color: #374151;
+      }
 
-      @media (max-width: 600px) {
-        .cms-logo { width: 90px; height: 90px; font-size: 1.5rem; }
-        h1 { font-size: 1.5rem; }
-        p { font-size: 0.85rem; }
+      .nc-widget__input:focus,
+      .nc-widget__control:focus {
+        border-color: #10b981;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.4);
       }
     </style>
   </head>
-
   <body>
-    <div class="card">
-      <div class="cms-logo">PX</div>
-      <h1>PeDitX CMS</h1>
-      <p>Access the dashboard to manage and edit your services</p>
-      <a href="cms.html" class="btn">Go to Admin Dashboard</a>
-    </div>
+    <!-- Decap CMS will automatically find this body tag and mount its UI here. -->
   </body>
 </html>
