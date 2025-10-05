@@ -5,13 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>PeDitX CMS Dashboard</title>
 
-    <!--
-      NOTE: By removing the MANUAL_INIT script, Decap CMS will automatically
-      look for a 'config.yml' file in the same directory and initialize itself
-      after the page has fully loaded. This is the standard and recommended way.
-    -->
-    <script src="https://unpkg.com/decap-cms@latest/dist/decap-cms.js"></script>
-
     <style>
       body {
         font-family: "Inter", sans-serif;
@@ -56,6 +49,10 @@
     </style>
   </head>
   <body>
-    <!-- Decap CMS will automatically find this body tag and mount its UI here. -->
+    <!-- Decap CMS will mount its UI here. -->
+
+    <!-- Moved the script to the end of the body to ensure the DOM is loaded first -->
+    <script src="https://unpkg.com/decap-cms@latest/dist/decap-cms.js"></script>
   </body>
 </html>
+
