@@ -1,0 +1,41 @@
+{
+  "scripts": [
+    {
+      "id": "install_torplus",
+      "url": "https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/install.sh"
+    },
+    {
+      "id": "install_sshplus",
+      "url": "https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
+    },
+    {
+      "id": "install_aircast",
+      "url": "https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
+    },
+    {
+      "id": "install_warp",
+      "url": "https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/install.sh"
+    },
+    {
+      "id": "install_warpplusplus",
+      "url": "https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/install.sh"
+    },
+    {
+      "id": "install_amneziawg",
+      "url": "https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh"
+    },
+    {
+      "id": "install_peditx",
+      "url": "https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/install.sh"
+    },
+    {
+      "id": "install_carbonpx",
+      "url": "https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/install.sh"
+    },
+    {
+      "id": "install_iranips",
+      "url": "https://raw.githubusercontent.com/peditx/iranIPS/refs/heads/main/.files/iranips.sh"
+    }
+  ]
+}
+
