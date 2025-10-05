@@ -1,11 +1,73 @@
 #!/bin/sh
 
-# PeDitXOS Service Runner v4 - Hybrid (Local Commands + Remote Manifest)
+# PeDitXOS Service Runner v2
+# This script contains the installation logic for Store applications.
 
 ACTION="$1"
 
-# --- 1. Define Local Functions ---
-# These are commands that run directly on the system and don't have an install URL.
+# --- URLs (to keep logs clean) ---
+URL_TORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/install.sh"
+URL_SSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
+URL_AIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
+URL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/install.sh"
+URL_WRRPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/install.sh"
+URL_AMNEZIAWG="https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh"
+URL_PEDITX="https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/install.sh"
+URL_CARBONPX="https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/install.sh"
+URL_IRANIPS="https://raw.githubusercontent.com/peditx/iranIPS/refs/heads/main/.files/iranips.sh"
+
+# --- Function Definitions ---
+
+install_torplus() {
+    echo "Downloading TORPlus components..."
+    cd /tmp && rm -f *.sh && wget -q "$URL_TORPLUS" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_sshplus() {
+    echo "Downloading SSHPlus components..."
+    cd /tmp && rm -f *.sh && wget -q "$URL_SSHPLUS" -O install_sshplus.sh && sh install_sshplus.sh
+}
+
+install_aircast() {
+    echo "Downloading Air-Cast components..."
+    cd /tmp && rm -f *.sh && wget -q "$URL_AIRCAST" -O aircast_install.sh && sh aircast_install.sh
+}
+
+install_warp() {
+    echo "Downloading Warp+ components..."
+    cd /tmp && rm -f install.sh && wget -q "$URL_WARP" -O install.sh && chmod +X install.sh && sh install.sh
+}
+
+install_warpPplusplus() {
+    echo "Downloading Warp++ components..."
+    cd /tmp && rm -f install.sh && wget -q "$URL_WRRPPLUSPLUS" -O install.sh && chmod +X install.sh && sh install.sh
+}
+
+install_peditx() {
+    echo "Downloading PeDitX Theme components..."
+    cd /tmp && rm -f install.sh && wget -q "$URL_PEDITX" -O install.sh && chmod +X install.sh && sh install.sh
+}
+
+install_carbonpx() {
+    echo "Downloading CarbonPX Theme components..."
+    cd /tmp && rm -f install.sh && wget -q "$URL_CARBONPX" -O install.sh && chmod +X install.sh && sh install.sh
+}
+
+install_iranips() {
+    echo "Downloading Iran rule IPS components..."
+    cd /tmp && rm -f install.sh && wget -q "$URL_IRANIPS" -O install.sh && chmod +X install.sh && sh install.sh
+}
+
+install_amneziawg() {
+    echo "Downloading AmneziaWG components..."
+    cd /tmp && rm -f install.sh && wget -q "$URL_AMNEZIAWG" -O install.sh && chmod +X install.sh && sh install.sh
+}
+
+change_repo() {
+    echo "Changing to PeDitX Repo..."
+    # Add actual commands here in the future
+    echo "Repository change function is a placeholder."
+}
 
 install_wol() {
     echo "Installing Wake On Lan..."
@@ -20,72 +82,51 @@ cleanup_memory() {
     echo "Memory cleanup complete."
 }
 
-# --- 2. Check if the action is a local command FIRST ---
+# New function to self-update the UI view file
+self_update_view() {
+    echo "--- Starting Store UI Self-Update ---"
+    VIEW_FILE_PATH="/usr/lib/lua/luci/view/serviceinstaller/main.htm"
+    VIEW_FILE_URL="https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/main.htm"
+    TEMP_FILE="/tmp/main.htm.new"
+
+    echo "Downloading latest UI from GitHub..."
+    wget -q "$VIEW_FILE_URL" -O "$TEMP_FILE"
+
+    if [ $? -eq 0 ] && [ -s "$TEMP_FILE" ]; then
+        echo "Download successful."
+        echo "Replacing old file at ${VIEW_FILE_PATH}"
+        mv "$TEMP_FILE" "$VIEW_FILE_PATH"
+        if [ $? -eq 0 ]; then
+            echo "Store UI updated successfully!"
+            echo "Please clear your browser cache and refresh the LuCI page."
+        else
+            echo "[ERROR] Failed to move the new file. Check permissions."
+            rm -f "$TEMP_FILE"
+        fi
+    else
+        echo "[ERROR] Failed to download the new UI file. Please check your internet connection."
+        rm -f "$TEMP_FILE"
+    fi
+    echo "--- UI Update Finished ---"
+}
+
+
+# --- Main Execution Block ---
 case "$ACTION" in
-    install_wol)
-        install_wol
-        exit 0
-        ;;
-    cleanup_memory)
-        cleanup_memory
-        exit 0
-        ;;
-    *)
-        # If it's not a known local command, proceed to remote installation
-        echo "Action '$ACTION' is not a local command. Checking remote manifest..."
-        ;;
+    install_torplus) install_torplus ;;
+    install_sshplus) install_sshplus ;;
+    install_aircast) install_aircast ;;
+    install_warp) install_warp ;;
+    install_warpplusplus) install_warpplusplus ;;
+    install_amneziawg) install_amneziawg ;;
+    install_peditx) install_peditx ;;
+    install_carbonpx) install_carbonpx;;
+    install_iranips) install_iranips;;
+    change_repo) change_repo ;;
+    install_wol) install_wol ;;
+    cleanup_memory) cleanup_memory ;;
+    self_update_view) self_update_view ;; # <-- New action added here
+    *) exit 1 ;; # Exit if action is not found
 esac
 
-# --- 3. Remote Installation via Manifest ---
-# This part handles all installs that have a URL in the manifest.
-
-MANIFEST_URL="https://raw.githubusercontent.com/peditx/releases/main/services/install_manifest.json"
-TEMP_MANIFEST="/tmp/install_manifest.json"
-
-# Check for required tools
-if ! command -v wget >/dev/null || ! command -v jq >/dev/null; then
-    echo "Error: 'wget' and 'jq' are required. Please install them. (opkg update && opkg install wget jq)"
-    exit 1
-fi
-
-# Fetch the latest manifest file
-echo "Fetching latest installation manifest..."
-wget -q "$MANIFEST_URL" -O "$TEMP_MANIFEST"
-if [ $? -ne 0 ] || [ ! -s "$TEMP_MANIFEST" ]; then
-    echo "Error: Could not download the installation manifest. Check internet connection."
-    rm -f "$TEMP_MANIFEST"
-    exit 1
-fi
-
-# Find the URL for the requested action using jq
-INSTALL_URL=$(jq -r --arg action "$ACTION" '.scripts[] | select(.id == $action) | .url' "$TEMP_MANIFEST")
-
-# Clean up the manifest file immediately
-rm -f "$TEMP_MANIFEST"
-
-# Check if a URL was found
-if [ -z "$INSTALL_URL" ] || [ "$INSTALL_URL" = "null" ]; then
-    echo "Error: Action '$ACTION' not found in the manifest."
-    exit 1
-fi
-
-# Download and execute the script
-echo "Action '$ACTION' found. Downloading from: $INSTALL_URL"
-INSTALL_SCRIPT="/tmp/${ACTION}_install.sh"
-wget -q "$INSTALL_URL" -O "$INSTALL_SCRIPT"
-
-if [ $? -ne 0 ] || [ ! -s "$INSTALL_SCRIPT" ]; then
-    echo "Error: Failed to download the installation script."
-    rm -f "$INSTALL_SCRIPT"
-    exit 1
-fi
-
-echo "Executing installation script..."
-chmod +x "$INSTALL_SCRIPT"
-sh "$INSTALL_SCRIPT"
-
-# Final cleanup
-rm -f "$INSTALL_SCRIPT"
-
 exit 0
-
