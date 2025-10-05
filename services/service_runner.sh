@@ -5,7 +5,7 @@
 
 ACTION="$1"
 
-# --- URLs (to keep logs clean) ---
+# --- URLS START ---
 URL_TORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/install.sh"
 URL_SSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
 URL_AIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
@@ -15,9 +15,9 @@ URL_AMNEZIAWG="https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/re
 URL_PEDITX="https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/install.sh"
 URL_CARBONPX="https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/install.sh"
 URL_IRANIPS="https://raw.githubusercontent.com/peditx/iranIPS/refs/heads/main/.files/iranips.sh"
+# --- URLS END ---
 
-# --- Function Definitions ---
-
+# --- FUNCTIONS START ---
 install_torplus() {
     echo "Downloading TORPlus components..."
     cd /tmp && rm -f *.sh && wget -q "$URL_TORPLUS" -O install.sh && chmod +x install.sh && sh install.sh
@@ -62,57 +62,61 @@ install_amneziawg() {
     echo "Downloading AmneziaWG components..."
     cd /tmp && rm -f install.sh && wget -q "$URL_AMNEZIAWG" -O install.sh && chmod +X install.sh && sh install.sh
 }
+# --- FUNCTIONS END ---
 
+# --- STATIC FUNCTIONS START ---
 change_repo() {
-    echo "Changing to PeDitX Repo..."
-    # Add actual commands here in the future
-    echo "Repository change function is a placeholder."
+    echo "Changing to PeDitX Repo..."
+    # Add actual commands here in the future
+    echo "Repository change function is a placeholder."
 }
 
 install_wol() {
-    echo "Installing Wake On Lan..."
-    opkg update
-    opkg install luci-app-wol
-    echo "Wake On Lan installed successfully."
+    echo "Installing Wake On Lan..."
+    opkg update
+    opkg install luci-app-wol
+    echo "Wake On Lan installed successfully."
 }
 
 cleanup_memory() {
-    echo "Cleaning up memory..."
-    sync && echo 3 > /proc/sys/vm/drop_caches
-    echo "Memory cleanup complete."
+    echo "Cleaning up memory..."
+    sync && echo 3 > /proc/sys/vm/drop_caches
+    echo "Memory cleanup complete."
 }
 
 # New function to self-update the UI view file
 self_update_view() {
-    echo "--- Starting Store UI Self-Update ---"
-    VIEW_FILE_PATH="/usr/lib/lua/luci/view/serviceinstaller/main.htm"
-    VIEW_FILE_URL="https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/main.htm"
-    TEMP_FILE="/tmp/main.htm.new"
+    echo "--- Starting Store UI Self-Update ---"
+    VIEW_FILE_PATH="/usr/lib/lua/luci/view/serviceinstaller/main.htm"
+    VIEW_FILE_URL="https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/main.htm"
+    TEMP_FILE="/tmp/main.htm.new"
 
-    echo "Downloading latest UI from GitHub..."
-    wget -q "$VIEW_FILE_URL" -O "$TEMP_FILE"
+    echo "Downloading latest UI from GitHub..."
+    wget -q "$VIEW_FILE_URL" -O "$TEMP_FILE"
 
-    if [ $? -eq 0 ] && [ -s "$TEMP_FILE" ]; then
-        echo "Download successful."
-        echo "Replacing old file at ${VIEW_FILE_PATH}"
-        mv "$TEMP_FILE" "$VIEW_FILE_PATH"
-        if [ $? -eq 0 ]; then
-            echo "Store UI updated successfully!"
-            echo "Please clear your browser cache and refresh the LuCI page."
-        else
-            echo "[ERROR] Failed to move the new file. Check permissions."
-            rm -f "$TEMP_FILE"
-        fi
-    else
-        echo "[ERROR] Failed to download the new UI file. Please check your internet connection."
-        rm -f "$TEMP_FILE"
-    fi
-    echo "--- UI Update Finished ---"
+    if [ $? -eq 0 ] && [ -s "$TEMP_FILE" ]; then
+        echo "Download successful."
+        echo "Replacing old file at ${VIEW_FILE_PATH}"
+        mv "$TEMP_FILE" "$VIEW_FILE_PATH"
+        if [ $? -eq 0 ]; then
+            echo "Store UI updated successfully!"
+            echo "Please clear your browser cache and refresh the LuCI page."
+        else
+            echo "[ERROR] Failed to move the new file. Check permissions."
+            rm -f "$TEMP_FILE"
+        fi
+    else
+        echo "[ERROR] Failed to download the new UI file. Please check your internet connection."
+        rm -f "$TEMP_FILE"
+    fi
+    echo "--- UI Update Finished ---"
 }
+# --- STATIC FUNCTIONS END ---
 
 
-# --- Main Execution Block ---
+# --- MAIN EXECUTION BLOCK ---
 case "$ACTION" in
+# --- CASE START ---
     install_torplus) install_torplus ;;
     install_sshplus) install_sshplus ;;
     install_aircast) install_aircast ;;
@@ -122,6 +126,7 @@ case "$ACTION" in
     install_peditx) install_peditx ;;
     install_carbonpx) install_carbonpx;;
     install_iranips) install_iranips;;
+# --- CASE END ---
     change_repo) change_repo ;;
     install_wol) install_wol ;;
     cleanup_memory) cleanup_memory ;;
