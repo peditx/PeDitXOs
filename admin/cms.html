@@ -5,12 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>PeDitX CMS Dashboard</title>
 
+    <!-- Initialize CMS manually -->
+    <script>
+      window.CMS_MANUAL_INIT = true;
+    </script>
+
     <script src="https://unpkg.com/decap-cms@latest/dist/decap-cms.js"></script>
+
+    <script>
+      // Load config from same admin folder
+      CMS.init({ config: "config.yml" });
+    </script>
+
     <style>
       body {
         font-family: "Inter", sans-serif;
         background-color: #0f172a;
         color: #f8fafc;
+        margin: 0;
       }
 
       .nc-appHeader {
