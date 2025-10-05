@@ -56,20 +56,20 @@
     "script_url": "https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh"
   },
   {
-    "id": "install_carbonpx",
-    "name": "Install CarbonPX Theme",
-    "description": "CarbonPX theme is a Oled modern, mobile-optimized theme for OpenWrt, designed for both desktop and mobile devices.",
-    "icon_url": "https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/screenshots/m1.PNG",
-    "version": "v1.0.4-01",
-    "script_url": "https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/install.sh"
-  },
-  {
     "id": "install_iranips",
     "name": "Install Iran Rule IPS for Passwall2",
     "description": "Bypass iran ips for passwall2. after install this script you can use IRAN shunt in your Passwall2",
     "icon_url": "https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/icon/iran.png",
     "version": "v1.0.5",
     "script_url": "https://raw.githubusercontent.com/peditx/iranIPS/refs/heads/main/.files/iranips.sh"
+  },
+  {
+    "id": "install_carbonpx",
+    "name": "Install CarbonPX Theme",
+    "description": "CarbonPX theme is a Oled modern, mobile-optimized theme for OpenWrt, designed for both desktop and mobile devices.",
+    "icon_url": "https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/screenshots/m1.PNG",
+    "version": "v1.0.4-01",
+    "script_url": "https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/install.sh"
   },
   {
     "id": "install_peditx",
