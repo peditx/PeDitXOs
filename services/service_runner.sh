@@ -6,6 +6,7 @@
 ACTION="$1"
 
 # --- Dynamic URLs Start ---
+URL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/install.sh"
 URL_TORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/install.sh"
 URL_SSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
 URL_AIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
@@ -15,11 +16,15 @@ URL_AMNEZIAWG="https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/re
 URL_CARBONPX="https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/install.sh"
 URL_IRANIPS="https://raw.githubusercontent.com/peditx/iranIPS/refs/heads/main/.files/iranips.sh"
 URL_PEDITX="https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/install.sh"
-URL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/install.sh"
 # --- Dynamic URLs End ---
 
 
 # --- Dynamic Functions Start ---
+install_pxnotifier() {
+    echo "Downloading PXNotifier components..."
+    cd /tmp && rm -f install.sh && wget -q "$URL_PXNOTIFIER" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
 install_torplus() {
     echo "Downloading Install TORPlus components..."
     cd /tmp && rm -f install.sh && wget -q "$URL_TORPLUS" -O install.sh && chmod +x install.sh && sh install.sh
@@ -63,11 +68,6 @@ install_iranips() {
 install_peditx() {
     echo "Downloading Install PeDitX Theme components..."
     cd /tmp && rm -f install.sh && wget -q "$URL_PEDITX" -O install.sh && chmod +x install.sh && sh install.sh
-}
-
-install_pxnotifier() {
-    echo "Downloading PXNotifier components..."
-    cd /tmp && rm -f install.sh && wget -q "$URL_PXNOTIFIER" -O install.sh && chmod +x install.sh && sh install.sh
 }
 # --- Dynamic Functions End ---
 
@@ -124,6 +124,7 @@ self_update_view() {
 # --- Main Execution Block ---
 case "$ACTION" in
 # --- Dynamic Cases Start ---
+    install_pxnotifier) install_pxnotifier ;;
     install_torplus) install_torplus ;;
     install_sshplus) install_sshplus ;;
     install_aircast) install_aircast ;;
@@ -133,7 +134,6 @@ case "$ACTION" in
     install_carbonpx) install_carbonpx ;;
     install_iranips) install_iranips ;;
     install_peditx) install_peditx ;;
-    install_pxnotifier) install_pxnotifier ;;
 # --- Dynamic Cases End ---
 
 # --- Static Cases (Do not edit these) ---
