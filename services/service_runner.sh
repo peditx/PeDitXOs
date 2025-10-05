@@ -13,8 +13,8 @@ URL_AIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/airca
 URL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/install.sh"
 URL_WARPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/install.sh"
 URL_AMNEZIAWG="https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh"
-URL_CARBONPX="https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/install.sh"
 URL_IRANIPS="https://raw.githubusercontent.com/peditx/iranIPS/refs/heads/main/.files/iranips.sh"
+URL_CARBONPX="https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/install.sh"
 URL_PEDITX="https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/install.sh"
 # --- Dynamic URLs End ---
 
@@ -55,14 +55,14 @@ install_amneziawg() {
     cd /tmp && rm -f amneziawg-install.sh && wget -q "$URL_AMNEZIAWG" -O amneziawg-install.sh && chmod +x amneziawg-install.sh && sh amneziawg-install.sh
 }
 
-install_carbonpx() {
-    echo "Downloading Install CarbonPX Theme components..."
-    cd /tmp && rm -f install.sh && wget -q "$URL_CARBONPX" -O install.sh && chmod +x install.sh && sh install.sh
-}
-
 install_iranips() {
     echo "Downloading Install Iran Rule IPS for Passwall2 components..."
     cd /tmp && rm -f iranips.sh && wget -q "$URL_IRANIPS" -O iranips.sh && chmod +x iranips.sh && sh iranips.sh
+}
+
+install_carbonpx() {
+    echo "Downloading Install CarbonPX Theme components..."
+    cd /tmp && rm -f install.sh && wget -q "$URL_CARBONPX" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_peditx() {
@@ -131,8 +131,8 @@ case "$ACTION" in
     install_warp) install_warp ;;
     install_warpplusplus) install_warpplusplus ;;
     install_amneziawg) install_amneziawg ;;
-    install_carbonpx) install_carbonpx ;;
     install_iranips) install_iranips ;;
+    install_carbonpx) install_carbonpx ;;
     install_peditx) install_peditx ;;
 # --- Dynamic Cases End ---
 
