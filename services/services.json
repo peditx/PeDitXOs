@@ -1,4 +1,4 @@
-[
+{
   "services": [
     {
       "id": "install_torplus",
@@ -85,3 +85,4 @@
       "version": "master"
     }
   ]
+}
