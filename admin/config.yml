@@ -1,0 +1,33 @@
+backend:
+  name: github
+  repo: peditx/releases
+  branch: main
+  auth_type: implicit
+  app_id: Ov23lifHcrzFtVm5F3Zl
+
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "services"
+    label: "Services"
+    label_singular: "Service"
+    files:
+      - file: "services/services.json"
+        label: "Services List"
+        name: "services_list"
+        fields:
+          - label: "Services"
+            name: "services"
+            widget: "list"
+            allow_add: true
+            allow_reorder: true
+            collapsed: false
+            summary: "{{fields.name}} ({{fields.version}})"
+            fields:
+              - { label: "ID", name: "id", widget: "string", hint: "e.g., install_torplus" }
+              - { label: "Name", name: "name", widget: "string", hint: "Service display name" }
+              - { label: "Description", name: "description", widget: "text", hint: "Short service description" }
+              - { label: "Icon URL", name: "icon_url", widget: "string", hint: "URL to the icon image" }
+              - { label: "Version", name: "version", widget: "string", hint: "Version number or identifier" }
+              - { label: "Code URL", name: "code_url", widget: "string", required: false, hint: "Optional: direct link to code" }
