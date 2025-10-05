@@ -10,7 +10,7 @@ URL_TORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.File
 URL_SSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
 URL_AIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
 URL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/install.sh"
-URL_WRRPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/install.sh"
+URL_WARPPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/install.sh"
 URL_AMNEZIAWG="https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh"
 URL_PEDITX="https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/install.sh"
 URL_CARBONPX="https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/install.sh"
@@ -35,81 +35,80 @@ install_aircast() {
 
 install_warp() {
     echo "Downloading Warp+ components..."
-    cd /tmp && rm -f install.sh && wget -q "$URL_WARP" -O install.sh && chmod +X install.sh && sh install.sh
+    cd /tmp && rm -f install.sh && wget -q "$URL_WARP" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
-install_warpPplusplus() {
+install_warpplusplus() {
     echo "Downloading Warp++ components..."
-    cd /tmp && rm -f install.sh && wget -q "$URL_WRRPPLUSPLUS" -O install.sh && chmod +X install.sh && sh install.sh
+    cd /tmp && rm -f install.sh && wget -q "$URL_WARPPPLUSPLUS" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_peditx() {
     echo "Downloading PeDitX Theme components..."
-    cd /tmp && rm -f install.sh && wget -q "$URL_PEDITX" -O install.sh && chmod +X install.sh && sh install.sh
+    cd /tmp && rm -f install.sh && wget -q "$URL_PEDITX" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_carbonpx() {
     echo "Downloading CarbonPX Theme components..."
-    cd /tmp && rm -f install.sh && wget -q "$URL_CARBONPX" -O install.sh && chmod +X install.sh && sh install.sh
+    cd /tmp && rm -f install.sh && wget -q "$URL_CARBONPX" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_iranips() {
     echo "Downloading Iran rule IPS components..."
-    cd /tmp && rm -f install.sh && wget -q "$URL_IRANIPS" -O install.sh && chmod +X install.sh && sh install.sh
+    cd /tmp && rm -f install.sh && wget -q "$URL_IRANIPS" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_amneziawg() {
     echo "Downloading AmneziaWG components..."
-    cd /tmp && rm -f install.sh && wget -q "$URL_AMNEZIAWG" -O install.sh && chmod +X install.sh && sh install.sh
+    cd /tmp && rm -f install.sh && wget -q "$URL_AMNEZIAWG" -O install.sh && chmod +x install.sh && sh install.sh
 }
 # --- FUNCTIONS END ---
 
 # --- STATIC FUNCTIONS START ---
 change_repo() {
-    echo "Changing to PeDitX Repo..."
-    # Add actual commands here in the future
-    echo "Repository change function is a placeholder."
+    echo "Changing to PeDitX Repo..."
+    # Add actual commands here in the future
+    echo "Repository change function is a placeholder."
 }
 
 install_wol() {
-    echo "Installing Wake On Lan..."
-    opkg update
-    opkg install luci-app-wol
-    echo "Wake On Lan installed successfully."
+    echo "Installing Wake On Lan..."
+    opkg update
+    opkg install luci-app-wol
+    echo "Wake On Lan installed successfully."
 }
 
 cleanup_memory() {
-    echo "Cleaning up memory..."
-    sync && echo 3 > /proc/sys/vm/drop_caches
-    echo "Memory cleanup complete."
+    echo "Cleaning up memory..."
+    sync && echo 3 > /proc/sys/vm/drop_caches
+    echo "Memory cleanup complete."
 }
 
-# New function to self-update the UI view file
 self_update_view() {
-    echo "--- Starting Store UI Self-Update ---"
-    VIEW_FILE_PATH="/usr/lib/lua/luci/view/serviceinstaller/main.htm"
-    VIEW_FILE_URL="https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/main.htm"
-    TEMP_FILE="/tmp/main.htm.new"
+    echo "--- Starting Store UI Self-Update ---"
+    VIEW_FILE_PATH="/usr/lib/lua/luci/view/serviceinstaller/main.htm"
+    VIEW_FILE_URL="https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/services/main.htm"
+    TEMP_FILE="/tmp/main.htm.new"
 
-    echo "Downloading latest UI from GitHub..."
-    wget -q "$VIEW_FILE_URL" -O "$TEMP_FILE"
+    echo "Downloading latest UI from GitHub..."
+    wget -q "$VIEW_FILE_URL" -O "$TEMP_FILE"
 
-    if [ $? -eq 0 ] && [ -s "$TEMP_FILE" ]; then
-        echo "Download successful."
-        echo "Replacing old file at ${VIEW_FILE_PATH}"
-        mv "$TEMP_FILE" "$VIEW_FILE_PATH"
-        if [ $? -eq 0 ]; then
-            echo "Store UI updated successfully!"
-            echo "Please clear your browser cache and refresh the LuCI page."
-        else
-            echo "[ERROR] Failed to move the new file. Check permissions."
-            rm -f "$TEMP_FILE"
-        fi
-    else
-        echo "[ERROR] Failed to download the new UI file. Please check your internet connection."
-        rm -f "$TEMP_FILE"
-    fi
-    echo "--- UI Update Finished ---"
+    if [ $? -eq 0 ] && [ -s "$TEMP_FILE" ]; then
+        echo "Download successful."
+        echo "Replacing old file at ${VIEW_FILE_PATH}"
+        mv "$TEMP_FILE" "$VIEW_FILE_PATH"
+        if [ $? -eq 0 ]; then
+            echo "Store UI updated successfully!"
+            echo "Please clear your browser cache and refresh the LuCI page."
+        else
+            echo "[ERROR] Failed to move the new file. Check permissions."
+            rm -f "$TEMP_FILE"
+        fi
+    else
+        echo "[ERROR] Failed to download the new UI file. Please check your internet connection."
+        rm -f "$TEMP_FILE"
+    fi
+    echo "--- UI Update Finished ---"
 }
 # --- STATIC FUNCTIONS END ---
 
@@ -130,8 +129,9 @@ case "$ACTION" in
     change_repo) change_repo ;;
     install_wol) install_wol ;;
     cleanup_memory) cleanup_memory ;;
-    self_update_view) self_update_view ;; # <-- New action added here
-    *) exit 1 ;; # Exit if action is not found
+    self_update_view) self_update_view ;;
+    *) exit 1 ;;
 esac
 
 exit 0
+
