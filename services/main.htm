@@ -176,65 +176,6 @@
         border-color: var(--secondary-color);
         box-shadow: 0 0 0 3px rgba(255, 121, 198, 0.2);
     }
-
-    /* ===== Confirmation Modal ===== */
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(40, 42, 54, 0.8);
-        display: none; /* Hidden by default */
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-        backdrop-filter: blur(5px);
-    }
-    .modal-content {
-        background: var(--card-bg);
-        padding: 30px;
-        border-radius: 12px;
-        text-align: center;
-        border: 1px solid var(--border-color);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        max-width: 400px;
-        width: 90%;
-    }
-    .modal-content h4 {
-        margin-top: 0;
-        color: var(--info-color);
-        font-size: 1.5em;
-    }
-    .modal-content p {
-        color: var(--text-color);
-        margin-bottom: 25px;
-    }
-    .modal-actions {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-    }
-    .modal-actions .cbi-button {
-        padding: 10px 30px;
-        font-size: 1em;
-        border-radius: 8px;
-        border: none;
-        cursor: pointer;
-        transition: transform 0.2s, background 0.2s;
-        font-weight: bold;
-    }
-    .modal-actions .cbi-button:hover {
-        transform: translateY(-2px);
-    }
-    .cbi-button-confirm {
-        background: var(--primary-color);
-        color: var(--header-bg);
-    }
-    .cbi-button-cancel {
-        background: var(--danger-color);
-        color: var(--text-color);
-    }
 </style>
 
 <div class="cbi-map">
@@ -272,18 +213,6 @@
     <pre id="log-output" class="peditx-log-container">Welcome to the PeDitXOS Store!</pre>
 </div>
 
-<!-- Confirmation Modal HTML -->
-<div id="confirmation-modal" class="modal-overlay">
-    <div class="modal-content">
-        <h4>Confirm Action</h4>
-        <p id="modal-text">Are you sure you want to proceed?</p>
-        <div class="modal-actions">
-            <button id="modal-confirm-btn" class="cbi-button cbi-button-confirm">Confirm</button>
-            <button id="modal-cancel-btn" class="cbi-button cbi-button-cancel">Cancel</button>
-        </div>
-    </div>
-</div>
-
 <script type="text/javascript">
     // URLs for API calls
     var servicesURL = '<%=luci.dispatcher.build_url("admin", "peditxos", "serviceinstaller", "get_services")%>';
@@ -300,18 +229,11 @@
     var updateBtn = document.getElementById('update-list-btn');
     var refreshLuciBtn = document.getElementById('refresh-luci-btn');
     var searchBar = document.getElementById('search-bar');
-    var selfUpdateBtn = document.getElementById('self-update-btn');
-    
-    // Modal Elements
-    var modal = document.getElementById('confirmation-modal');
-    var modalText = document.getElementById('modal-text');
-    var modalConfirmBtn = document.getElementById('modal-confirm-btn');
-    var modalCancelBtn = document.getElementById('modal-cancel-btn');
+    var selfUpdateBtn = document.getElementById('self-update-btn'); // New Button
 
     // State variables
     var selectedAction = null;
     var isPolling = false;
-    var actionToConfirm = null;
 
     // --- Core Functions ---
 
@@ -387,7 +309,7 @@
             item.setAttribute('data-action', service.id);
             item.innerHTML = `
                 <div class="action-item-header">
-                    <img src="${service.icon_url}" alt="${service.name}" onerror="this.src='https://placehold.co/48x48/282a36/f8f8f2?text=ICON'; this.onerror=null;">
+                    <img src="${service.icon_url}" alt="${service.name}" onerror="this.src='https.placehold.co/48x48/282a36/f8f8f2?text=ICON'; this.onerror=null;">
                     <h4>${service.name}</h4>
                 </div>
                 <p>${service.description}</p>
@@ -415,18 +337,6 @@
                 serviceGrid.innerHTML = '<p style="color: var(--danger-color);">Error: ' + (data ? data.error : 'Could not fetch service list.') + '</p>';
             }
         });
-    }
-
-    // --- Modal Functions ---
-    function showConfirmationModal(text, action) {
-        modalText.innerText = text;
-        actionToConfirm = action;
-        modal.style.display = 'flex';
-    }
-
-    function hideConfirmationModal() {
-        modal.style.display = 'none';
-        actionToConfirm = null;
     }
 
     // --- Event Listeners ---
@@ -489,40 +399,26 @@
     updateBtn.addEventListener('click', function() {
         statusDiv.innerText = 'Updating app list...';
         startActionByName('update_service_list');
-        // We add a delay to give the sync script time to fetch the new file
         setTimeout(fetchServices, 3000);
     });
 
     refreshLuciBtn.addEventListener('click', function() {
-        showConfirmationModal(
-            "This will clear the LuCI cache and reload the page. Are you sure?",
-            'refresh_luci'
-        );
-    });
-
-    selfUpdateBtn.addEventListener('click', function() {
-        showConfirmationModal(
-            "Are you sure you want to update the store UI? This will replace the current view file.",
-            'self_update_view'
-        );
-    });
-    
-    // Modal Button Listeners
-    modalConfirmBtn.addEventListener('click', function() {
-        if (actionToConfirm) {
-            statusDiv.innerText = 'Starting ' + actionToConfirm + '...';
-            startActionByName(actionToConfirm);
-            
-            // Special handling for refresh_luci to reload the page
-            if (actionToConfirm === 'refresh_luci') {
-                setTimeout(function() { window.location.reload(); }, 2000);
+        statusDiv.innerText = 'Clearing LuCI cache and reloading...';
+        XHR.get(runURL, { action: 'refresh_luci' }, function(x, data) {
+            if (x && x.status === 200) {
+                setTimeout(function() { window.location.reload(); }, 1000);
+            } else {
+                statusDiv.innerText = 'Error refreshing LuCI.';
             }
-        }
-        hideConfirmationModal();
+        });
     });
 
-    modalCancelBtn.addEventListener('click', function() {
-        hideConfirmationModal();
+    // New event listener for the self-update button
+    selfUpdateBtn.addEventListener('click', function() {
+        if (confirm("Are you sure you want to update the store UI? This will replace the current view file.")) {
+            statusDiv.innerText = 'Starting UI self-update...';
+            startActionByName('self_update_view');
+        }
     });
 
 
