@@ -1,5 +1,13 @@
 [
   {
+    "id": "install_pxnotifier",
+    "name": "PXNotifier",
+    "description": "A real-time network monitoring tool for OpenWrt. It continuously checks your connection status via Passwall and sends instant alerts through ntfy, Telegram, and WhatsApp on any status change.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1759684468851-istockphoto-2151656410-612x612.jpg",
+    "version": "v60.0",
+    "script_url": "https://peditx.ir/projects/PXnotifier/code/install.sh"
+  },
+  {
     "id": "install_torplus",
     "name": "Install TORPlus",
     "description": "A tool to connect to the Tor network.",
@@ -70,14 +78,6 @@
     "icon_url": "https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/screenshots/m1.PNG",
     "version": "v1.2.3-01",
     "script_url": "https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/install.sh"
-  },
-  {
-    "id": "install_pxnotifier",
-    "name": "PXNotifier",
-    "description": "A real-time network monitoring tool for OpenWrt. It continuously checks your connection status via Passwall and sends instant alerts through ntfy, Telegram, and WhatsApp on any status change.",
-    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1759684468851-istockphoto-2151656410-612x612.jpg",
-    "version": "v60.0",
-    "script_url": "https://peditx.ir/projects/PXnotifier/code/install.sh"
   },
   {
     "id": "change_repo",
