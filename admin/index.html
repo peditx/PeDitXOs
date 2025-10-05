@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PeDitX CMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      body {
+        background-color: #0f172a;
+        color: #f8fafc;
+        font-family: "Inter", sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+      }
+
+      .card {
+        background-color: rgba(255, 255, 255, 0.08);
+        border-radius: 1rem;
+        padding: 2rem;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        text-align: center;
+      }
+
+      .btn {
+        display: inline-block;
+        margin-top: 1.5rem;
+        background: #10b981;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        transition: background 0.2s ease;
+        text-decoration: none;
+      }
+
+      .btn:hover {
+        background: #059669;
+      }
+
+      .cms-logo {
+        width: 120px;
+        height: 120px;
+        border-radius: 1rem;
+        background: linear-gradient(135deg, #10b981, #3b82f6);
+        color: white;
+        font-size: 2rem;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem auto;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      }
+
+      h1 {
+        font-size: 1.75rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        color: #d1d5db;
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+      }
+
+      @media (max-width: 600px) {
+        .cms-logo {
+          width: 90px;
+          height: 90px;
+          font-size: 1.5rem;
+        }
+        h1 {
+          font-size: 1.5rem;
+        }
+        p {
+          font-size: 0.85rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="card">
+      <div class="cms-logo">PX</div>
+      <h1>PeDitX CMS</h1>
+      <p>Access the dashboard to manage and edit your services</p>
+      <a href="/admin/cms.html" class="btn">Go to Admin Dashboard</a>
+    </div>
+  </body>
+</html>
