@@ -80,8 +80,8 @@
     "script_url": "https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/install.sh"
   },
   {
-    "id": "install_auroratheme",
-    "name": "Aurora Theme",
+    "id": "install_installauroratheme",
+    "name": "Install Aurora Theme",
     "description": "Aurora Theme is an OpenWrt LuCI theme for modern browsers blending snowcap purity with aurora charm",
     "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1759762003793-image_2025-10-06_181642711.png",
     "version": "v0.5.5",
