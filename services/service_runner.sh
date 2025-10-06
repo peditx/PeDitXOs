@@ -16,7 +16,7 @@ URL_AMNEZIAWG="https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/re
 URL_IRANIPS="https://raw.githubusercontent.com/peditx/iranIPS/refs/heads/main/.files/iranips.sh"
 URL_CARBONPX="https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/install.sh"
 URL_PEDITX="https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/install.sh"
-URL_AURORATHEME="https://peditx.ir/foreignscs/luci-theme-aurora/install.sh"
+URL_INSTALLAURORATHEME="https://peditx.ir/foreignscs/luci-theme-aurora/install.sh"
 # --- Dynamic URLs End ---
 
 
@@ -71,9 +71,9 @@ install_peditx() {
     cd /tmp && rm -f install.sh && wget -q "$URL_PEDITX" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
-install_auroratheme() {
-    echo "Downloading Aurora Theme components..."
-    cd /tmp && rm -f install.sh && wget -q "$URL_AURORATHEME" -O install.sh && chmod +x install.sh && sh install.sh
+install_installauroratheme() {
+    echo "Downloading Install Aurora Theme components..."
+    cd /tmp && rm -f install.sh && wget -q "$URL_INSTALLAURORATHEME" -O install.sh && chmod +x install.sh && sh install.sh
 }
 # --- Dynamic Functions End ---
 
@@ -140,7 +140,7 @@ case "$ACTION" in
     install_iranips) install_iranips ;;
     install_carbonpx) install_carbonpx ;;
     install_peditx) install_peditx ;;
-    install_auroratheme) install_auroratheme ;;
+    install_installauroratheme) install_installauroratheme ;;
 # --- Dynamic Cases End ---
 
 # --- Static Cases (Do not edit these) ---
