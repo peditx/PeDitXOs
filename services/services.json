@@ -88,6 +88,14 @@
     "script_url": "https://peditx.ir/foreignscs/luci-theme-aurora/install.sh"
   },
   {
+    "id": "install_installargontheme",
+    "name": "Install Argon Theme",
+    "description": "About Argon is a clean and tidy OpenWrt LuCI theme that allows users to customize their login interface with images or videos.",
+    "icon_url": "https://raw.githubusercontent.com/jerrykuku/luci-theme-argon/refs/heads/master/Screenshots/screenshot_pc.jpg",
+    "version": "Master",
+    "script_url": "https://peditx.ir/foreignscs/luci-theme-argon/install.sh"
+  },
+  {
     "id": "change_repo",
     "name": "Change to PeDitX Repo",
     "description": "Switches the package repository to PeDitX.",
