@@ -99,11 +99,6 @@ install_installargontheme() {
 	echo "Downloading Argon Theme components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_INSTALLARGONTHEME" -O install.sh && chmod +x install.sh && sh install.sh
 }
-
-install_openvpn() {
-	opkg update
-	opkg install luci-app-openvpn
-}
 # --- Dynamic Functions End ---
 
 # --- Dynamic Uninstall Functions Start ---
@@ -228,7 +223,6 @@ case "$ACTION" in
 	uninstall_installauroratheme) uninstall_installauroratheme ;;
 	install_installargontheme) install_installargontheme ;;
 	uninstall_installargontheme) uninstall_installargontheme ;;
-	install_openvpn) install_openvpn ;;
 # --- Dynamic Cases End ---
 
 # --- Static Cases (Do not edit these) ---
