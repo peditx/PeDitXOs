@@ -19,6 +19,8 @@
     "version": "v60.0",
     "publisher": "PeDitX",
     "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_pxnotifier",
+    "uninstall_script_url": "https://peditx.ir/projects/PXnotifier/code/uninstall.sh",
     "script_url": "https://peditx.ir/projects/PXnotifier/code/install.sh"
   },
   {
@@ -29,6 +31,8 @@
     "version": "v30.1",
     "publisher": "PeDitX",
     "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_installtorplus",
+    "uninstall_script_url": "https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/uninstall.sh",
     "script_url": "https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/install.sh"
   },
   {
@@ -39,6 +43,8 @@
     "version": "v15",
     "publisher": "PeDitX",
     "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_installsshplus",
+    "uninstall_script_url": "https://raw.githubusercontent.com/peditx/SshPlus/main/Files/uninstall_sshplus.sh",
     "script_url": "https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
   },
   {
@@ -49,6 +55,8 @@
     "version": "v15",
     "publisher": "PeDitX",
     "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_installaircast",
+    "uninstall_script_url": "https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_uninstall.sh",
     "script_url": "https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
   },
   {
@@ -57,6 +65,10 @@
     "description": "Cloudflare's Warp+ service.",
     "icon_url": "https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/icon/warp.png",
     "version": "v6.3",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_warp",
+    "uninstall_script_url": "https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/uninstall.sh",
     "script_url": "https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/install.sh"
   },
   {
@@ -65,6 +77,10 @@
     "description": "Cloudflare's Warp++ service. with fragment",
     "icon_url": "https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/icon/warp2.png",
     "version": "v9.3",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_warpplusplus",
+    "uninstall_script_url": "https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/uninstall.sh",
     "script_url": "https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/install.sh"
   },
   {
@@ -73,6 +89,8 @@
     "description": "AmneziaWG service for OpenWrt.",
     "icon_url": "https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/icon/amneziawg.png",
     "version": "v24.10.2",
+    "publisher": "Slava-Shchipunov",
+    "publisher_url": "https://github.com/Slava-Shchipunov/",
     "script_url": "https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh"
   },
   {
@@ -81,6 +99,8 @@
     "description": "Bypass iran ips for passwall2. after install this script you can use IRAN shunt in your Passwall2",
     "icon_url": "https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/icon/iran.png",
     "version": "v1.0.5",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
     "script_url": "https://raw.githubusercontent.com/peditx/iranIPS/refs/heads/main/.files/iranips.sh"
   },
   {
@@ -89,6 +109,8 @@
     "description": "CarbonPX theme is a Oled modern, mobile-optimized theme for OpenWrt, designed for both desktop and mobile devices.",
     "icon_url": "https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/screenshots/m1.PNG",
     "version": "v1.0.4-01",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
     "script_url": "https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/install.sh"
   },
   {
@@ -97,6 +119,8 @@
     "description": "PeDitX theme is a modern, mobile-optimized theme for OpenWrt, designed for both desktop and mobile devices.",
     "icon_url": "https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/screenshots/m1.PNG",
     "version": "v1.2.3-01",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
     "script_url": "https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/install.sh"
   },
   {
@@ -105,6 +129,10 @@
     "description": "Aurora Theme is an OpenWrt LuCI theme for modern browsers blending snowcap purity with aurora charm",
     "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1759762003793-image_2025-10-06_181642711.png",
     "version": "v0.5.5",
+    "publisher": "eamonxg",
+    "publisher_url": "https://github.com/eamonxg",
+    "uninstall_id": "uninstall_installauroratheme",
+    "uninstall_script_url": "https://peditx.ir/foreignscs/luci-theme-aurora/uninstall.sh",
     "script_url": "https://peditx.ir/foreignscs/luci-theme-aurora/install.sh"
   },
   {
@@ -113,6 +141,10 @@
     "description": "About Argon is a clean and tidy OpenWrt LuCI theme that allows users to customize their login interface with images or videos.",
     "icon_url": "https://raw.githubusercontent.com/jerrykuku/luci-theme-argon/refs/heads/master/Screenshots/screenshot_pc.jpg",
     "version": "Master",
+    "publisher": "jerrykuku",
+    "publisher_url": "https://github.com/jerrykuku",
+    "uninstall_id": "uninstall_installargontheme",
+    "uninstall_script_url": "https://peditx.ir/foreignscs/luci-theme-argon/uninstall.sh",
     "script_url": "https://peditx.ir/foreignscs/luci-theme-argon/install.sh"
   },
   {
