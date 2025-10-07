@@ -6,7 +6,7 @@
 ACTION="$1"
 
 # --- Dynamic URLs Start ---
-URL_INSTALLDNSJUMPER="https://peditx.ir/projects/DNSJumper/DNSJumper/code/install.sh"
+URL_INSTALLDNSJUMPER="https://peditx.ir/projects/DNSJumper/code/install.sh"
 URL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/install.sh"
 URL_TORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/install.sh"
 URL_SSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
