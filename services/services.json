@@ -96,6 +96,14 @@
     "script_url": "https://peditx.ir/foreignscs/luci-theme-argon/install.sh"
   },
   {
+    "id": "install_installdnsjumper",
+    "name": "Install DNSJumper",
+    "description": "An advanced DNS management panel for OpenWrt (LuCI) to test, sort, and easily change DNS with one click.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1759847113260-images (1).jpg",
+    "version": "v84.1",
+    "script_url": "https://peditx.ir/projects/DNSJumper/DNSJumper/code/install.sh"
+  },
+  {
     "id": "change_repo",
     "name": "Change to PeDitX Repo",
     "description": "Switches the package repository to PeDitX.",
