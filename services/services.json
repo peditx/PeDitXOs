@@ -32,19 +32,23 @@
     "script_url": "https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/install.sh"
   },
   {
-    "id": "install_sshplus",
+    "id": "install_installsshplus",
     "name": "Install SSHPlus",
     "description": "Advanced SSH management tool.",
     "icon_url": "https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/main/icon/sshplus.png",
     "version": "v15",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
     "script_url": "https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
   },
   {
-    "id": "install_aircast",
+    "id": "install_installaircast",
     "name": "Install Air-Cast",
     "description": "A service for audio and video streaming.",
     "icon_url": "https://raw.githubusercontent.com/peditx/aircast-openwrt/refs/heads/main/icon/aircast.png",
     "version": "v15",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
     "script_url": "https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
   },
   {
@@ -110,6 +114,15 @@
     "icon_url": "https://raw.githubusercontent.com/jerrykuku/luci-theme-argon/refs/heads/master/Screenshots/screenshot_pc.jpg",
     "version": "Master",
     "script_url": "https://peditx.ir/foreignscs/luci-theme-argon/install.sh"
+  },
+  {
+    "id": "install_pxnotifier1",
+    "name": "PXNotifier1",
+    "description": "11",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1759762003793-image_2025-10-06_181642711.png",
+    "version": "1",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx"
   },
   {
     "id": "change_repo",
