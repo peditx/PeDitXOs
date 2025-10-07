@@ -1,15 +1,15 @@
 [
   {
     "id": "install_installdnsjumper",
-    "name": "Install DNSJumper",
+    "name": "DNSJumper",
     "description": "An advanced DNS management panel for OpenWrt (LuCI) to test, sort, and easily change DNS with one click.",
     "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1759847113260-images (1).jpg",
     "version": "v84.1",
-    "script_url": "https://peditx.ir/projects/DNSJumper/code/install.sh",
     "publisher": "PeDitX",
     "publisher_url": "https://github.com/peditx",
     "uninstall_id": "uninstall_installdnsjumper",
-    "uninstall_script_url": "https://www.google.com/search?q=https://peditx.ir/projects/DNSJumper/code/uninstall.sh"
+    "uninstall_script_url": "https://www.google.com/search?q=https://peditx.ir/projects/DNSJumper/code/uninstall.sh",
+    "script_url": "https://peditx.ir/projects/DNSJumper/code/install.sh"
   },
   {
     "id": "install_pxnotifier",
@@ -25,7 +25,7 @@
   },
   {
     "id": "install_installtorplus",
-    "name": "Install TORPlus",
+    "name": "TORPlus",
     "description": "A tool to connect to the Tor network.",
     "icon_url": "https://raw.githubusercontent.com/peditx/openwrt-torplus/refs/heads/main/icon/tor.png",
     "version": "v30.1",
@@ -37,7 +37,7 @@
   },
   {
     "id": "install_installsshplus",
-    "name": "Install SSHPlus",
+    "name": "SSHPlus",
     "description": "Advanced SSH management tool.",
     "icon_url": "https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/main/icon/sshplus.png",
     "version": "v15",
@@ -49,7 +49,7 @@
   },
   {
     "id": "install_installaircast",
-    "name": "Install Air-Cast",
+    "name": "Air-Cast",
     "description": "A service for audio and video streaming.",
     "icon_url": "https://raw.githubusercontent.com/peditx/aircast-openwrt/refs/heads/main/icon/aircast.png",
     "version": "v15",
@@ -61,7 +61,7 @@
   },
   {
     "id": "install_warp",
-    "name": "Install Warp+",
+    "name": "Warp+",
     "description": "Cloudflare's Warp+ service.",
     "icon_url": "https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/icon/warp.png",
     "version": "v6.3",
@@ -73,7 +73,7 @@
   },
   {
     "id": "install_warpplusplus",
-    "name": "Install Warp++",
+    "name": "Warp++",
     "description": "Cloudflare's Warp++ service. with fragment",
     "icon_url": "https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/icon/warp2.png",
     "version": "v9.3",
@@ -85,7 +85,7 @@
   },
   {
     "id": "install_amneziawg",
-    "name": "Install AmneziaWG",
+    "name": "AmneziaWG",
     "description": "AmneziaWG service for OpenWrt.",
     "icon_url": "https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/icon/amneziawg.png",
     "version": "v24.10.2",
@@ -95,7 +95,7 @@
   },
   {
     "id": "install_iranips",
-    "name": "Install Iran Rule IPS for Passwall2",
+    "name": "Iran Rule IPS for Passwall2",
     "description": "Bypass iran ips for passwall2. after install this script you can use IRAN shunt in your Passwall2",
     "icon_url": "https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/icon/iran.png",
     "version": "v1.0.5",
@@ -105,7 +105,7 @@
   },
   {
     "id": "install_carbonpx",
-    "name": "Install CarbonPX Theme",
+    "name": "CarbonPX Theme",
     "description": "CarbonPX theme is a Oled modern, mobile-optimized theme for OpenWrt, designed for both desktop and mobile devices.",
     "icon_url": "https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/screenshots/m1.PNG",
     "version": "v1.0.4-01",
@@ -115,7 +115,7 @@
   },
   {
     "id": "install_peditx",
-    "name": "Install PeDitX Theme",
+    "name": "PeDitX Theme",
     "description": "PeDitX theme is a modern, mobile-optimized theme for OpenWrt, designed for both desktop and mobile devices.",
     "icon_url": "https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/screenshots/m1.PNG",
     "version": "v1.2.3-01",
@@ -125,7 +125,7 @@
   },
   {
     "id": "install_installauroratheme",
-    "name": "Install Aurora Theme",
+    "name": "Aurora Theme",
     "description": "Aurora Theme is an OpenWrt LuCI theme for modern browsers blending snowcap purity with aurora charm",
     "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1759762003793-image_2025-10-06_181642711.png",
     "version": "v0.5.5",
@@ -137,7 +137,7 @@
   },
   {
     "id": "install_installargontheme",
-    "name": "Install Argon Theme",
+    "name": "Argon Theme",
     "description": "About Argon is a clean and tidy OpenWrt LuCI theme that allows users to customize their login interface with images or videos.",
     "icon_url": "https://raw.githubusercontent.com/jerrykuku/luci-theme-argon/refs/heads/master/Screenshots/screenshot_pc.jpg",
     "version": "Master",
@@ -146,6 +146,15 @@
     "uninstall_id": "uninstall_installargontheme",
     "uninstall_script_url": "https://peditx.ir/foreignscs/luci-theme-argon/uninstall.sh",
     "script_url": "https://peditx.ir/foreignscs/luci-theme-argon/install.sh"
+  },
+  {
+    "id": "install_openvpn",
+    "name": "OpenVPN",
+    "description": "openvpn installer",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1759857777814-openvpn_logo_feaa0a35e6.png",
+    "version": "Master",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx"
   },
   {
     "id": "change_repo",
