@@ -23,6 +23,14 @@ URL_INSTALL_INSTALLARGONTHEME="https://peditx.ir/foreignscs/luci-theme-argon/ins
 
 # --- Dynamic Uninstall URLs Start ---
 URL_UNINSTALL_INSTALLDNSJUMPER="https://www.google.com/search?q=https://peditx.ir/projects/DNSJumper/code/uninstall.sh"
+URL_UNINSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/uninstall.sh"
+URL_UNINSTALL_INSTALLTORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/uninstall.sh"
+URL_UNINSTALL_INSTALLSSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/uninstall_sshplus.sh"
+URL_UNINSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_uninstall.sh"
+URL_UNINSTALL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/uninstall.sh"
+URL_UNINSTALL_WARPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/uninstall.sh"
+URL_UNINSTALL_INSTALLAURORATHEME="https://peditx.ir/foreignscs/luci-theme-aurora/uninstall.sh"
+URL_UNINSTALL_INSTALLARGONTHEME="https://peditx.ir/foreignscs/luci-theme-argon/uninstall.sh"
 # --- Dynamic Uninstall URLs End ---
 
 
@@ -98,6 +106,46 @@ uninstall_installdnsjumper() {
 	echo "Downloading Uninstall Install DNSJumper components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_INSTALLDNSJUMPER" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
+
+uninstall_pxnotifier() {
+	echo "Downloading Uninstall PXNotifier components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_PXNOTIFIER" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_installtorplus() {
+	echo "Downloading Uninstall Install TORPlus components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_INSTALLTORPLUS" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_installsshplus() {
+	echo "Downloading Uninstall Install SSHPlus components..."
+	cd /tmp && rm -f uninstall_sshplus.sh && wget -q "$URL_UNINSTALL_INSTALLSSHPLUS" -O uninstall_sshplus.sh && chmod +x uninstall_sshplus.sh && sh uninstall_sshplus.sh
+}
+
+uninstall_installaircast() {
+	echo "Downloading Uninstall Install Air-Cast components..."
+	cd /tmp && rm -f aircast_uninstall.sh && wget -q "$URL_UNINSTALL_INSTALLAIRCAST" -O aircast_uninstall.sh && chmod +x aircast_uninstall.sh && sh aircast_uninstall.sh
+}
+
+uninstall_warp() {
+	echo "Downloading Uninstall Install Warp+ components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_WARP" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_warpplusplus() {
+	echo "Downloading Uninstall Install Warp++ components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_WARPPLUSPLUS" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_installauroratheme() {
+	echo "Downloading Uninstall Install Aurora Theme components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_INSTALLAURORATHEME" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_installargontheme() {
+	echo "Downloading Uninstall Install Argon Theme components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_INSTALLARGONTHEME" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
 # --- Dynamic Uninstall Functions End ---
 
 
@@ -156,17 +204,25 @@ case "$ACTION" in
 	install_installdnsjumper) install_installdnsjumper ;;
 	uninstall_installdnsjumper) uninstall_installdnsjumper ;;
 	install_pxnotifier) install_pxnotifier ;;
+	uninstall_pxnotifier) uninstall_pxnotifier ;;
 	install_installtorplus) install_installtorplus ;;
+	uninstall_installtorplus) uninstall_installtorplus ;;
 	install_installsshplus) install_installsshplus ;;
+	uninstall_installsshplus) uninstall_installsshplus ;;
 	install_installaircast) install_installaircast ;;
+	uninstall_installaircast) uninstall_installaircast ;;
 	install_warp) install_warp ;;
+	uninstall_warp) uninstall_warp ;;
 	install_warpplusplus) install_warpplusplus ;;
+	uninstall_warpplusplus) uninstall_warpplusplus ;;
 	install_amneziawg) install_amneziawg ;;
 	install_iranips) install_iranips ;;
 	install_carbonpx) install_carbonpx ;;
 	install_peditx) install_peditx ;;
 	install_installauroratheme) install_installauroratheme ;;
+	uninstall_installauroratheme) uninstall_installauroratheme ;;
 	install_installargontheme) install_installargontheme ;;
+	uninstall_installargontheme) uninstall_installargontheme ;;
 # --- Dynamic Cases End ---
 
 # --- Static Cases (Do not edit these) ---
