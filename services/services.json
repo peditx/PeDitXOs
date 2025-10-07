@@ -5,7 +5,11 @@
     "description": "An advanced DNS management panel for OpenWrt (LuCI) to test, sort, and easily change DNS with one click.",
     "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1759847113260-images (1).jpg",
     "version": "v84.1",
-    "script_url": "https://peditx.ir/projects/DNSJumper/code/install.sh"
+    "script_url": "https://peditx.ir/projects/DNSJumper/code/install.sh",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_installdnsjumper",
+    "uninstall_script_url": "https://www.google.com/search?q=https://peditx.ir/projects/DNSJumper/code/uninstall.sh"
   },
   {
     "id": "install_pxnotifier",
