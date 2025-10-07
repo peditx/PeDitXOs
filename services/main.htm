@@ -7,10 +7,10 @@
 		--card-bg: #3a3c51;
 		--header-bg: #21222c;
 		--text-color: #f8f8f2;
-		--primary-color: #50fa7b;   /* Green */
+		--primary-color: #50fa7b;	/* Green */
 		--secondary-color: #ff79c6; /* Pink */
 		--danger-color: #ff5555;	/* Red */
-		--warning-color: #f1fa8c;   /* Yellow */
+		--warning-color: #f1fa8c;	/* Yellow */
 		--info-color: #8be9fd;	  /* Cyan */
 		--purple-color: #bd93f9;	/* Purple */
 		--border-color: #44475a;
@@ -43,11 +43,10 @@
 		border-radius: 12px; 
 		display: flex; 
 		flex-direction: column; 
-		cursor: pointer; 
 		border: 1px solid var(--border-color); 
 		transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-		flex-basis: 300px; /* Increased width for new elements */
-		flex-shrink: 0;
+		flex-basis: 300px; /* A bit wider for new content */
+		flex-grow: 1;
 	}
 	.action-item:hover { 
 		transform: translateY(-5px); 
@@ -65,29 +64,18 @@
 	
 	.action-item p { font-size: 0.9em; color: #ccc; flex-grow: 1; margin-bottom: 15px; }
 	
-	/* --- NEW: Publisher Styles --- */
-	.action-item-publisher {
-		font-size: 0.85em;
-		color: var(--info-color);
-		margin-bottom: 15px;
-	}
-	.action-item-publisher a {
-		color: var(--info-color);
-		text-decoration: none;
-		transition: color 0.2s, text-decoration 0.2s;
-	}
-	.action-item-publisher a:hover {
-		color: #a2f2ff;
-		text-decoration: underline;
-	}
-
 	.action-item-footer { 
 		margin-top: auto; 
 		font-size: 0.8em; 
-		color: var(--purple-color); 
+		color: #bd93f9;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 5px;
 	}
 	
-	.execute-bar { margin-top: 25px; text-align: center; display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; }
+	.execute-bar { margin-top: 25px; display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap; }
 
 	@keyframes pulse { 
 		0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 174, 66, 0.7); } 
@@ -96,31 +84,25 @@
 	}
 
 	.peditx-main-button { 
-		font-size: 18px; 
-		padding: 12px 40px; 
+		font-size: 16px; 
+		padding: 10px 30px; 
 		font-weight: bold; 
 		border: none; 
 		border-radius: 50px; 
 		box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
-		transition: background 0.3s ease, transform 0.2s ease; 
+		transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease; 
 		cursor: pointer; 
 		display: inline-flex; 
 		align-items: center; 
 		justify-content: center;
 		text-shadow: 0 1px 1px rgba(0,0,0,0.2);
 	}
-	#execute-button { 
-		background: linear-gradient(135deg, var(--orange-gradient-start), var(--orange-gradient-end));
-		color: var(--header-bg);
-		animation: pulse 2.5s infinite; 
-	}
-	#execute-button:hover { 
-		background: linear-gradient(135deg, var(--orange-gradient-end), #e87a00); 
+	.peditx-main-button:hover {
 		transform: translateY(-2px);
-		animation-play-state: paused; 
+		box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 	}
-	#execute-button:disabled { 
-		background: #555; 
+	.peditx-main-button:disabled { 
+		background: #555 !important; 
 		cursor: not-allowed; 
 		box-shadow: none; 
 		transform: none; 
@@ -128,45 +110,41 @@
 		color: #999; 
 	}
 	
-	/* --- NEW: Uninstall Button Styles --- */
+	#execute-button { 
+		background: linear-gradient(135deg, var(--orange-gradient-start), var(--orange-gradient-end));
+		color: var(--header-bg);
+		animation: pulse 2.5s infinite; 
+	}
+	#execute-button:hover { 
+		background: linear-gradient(135deg, var(--orange-gradient-end), #e87a00); 
+		animation-play-state: paused; 
+	}
+
+	/* --- UNINSTALL BUTTON --- */
 	#uninstall-button {
 		background: var(--danger-color);
 		color: var(--text-color);
 	}
 	#uninstall-button:hover {
 		background: #ff6e6e;
-		transform: translateY(-2px);
 	}
-	#uninstall-button:disabled {
-		background: #555;
-		cursor: not-allowed;
-		transform: none;
-		color: #999;
-	}
-
+	
 	#stop-button { 
 		background: var(--danger-color); 
 		color: var(--text-color);
 	}
 	#stop-button:hover {
 		background: #ff6e6e;
-		transform: translateY(-2px);
 	}
 
 	.peditx-secondary-button {
 		background: var(--info-color);
 		color: var(--header-bg);
-		font-size: 16px;
-		padding: 10px 30px;
+		font-size: 14px;
+		padding: 8px 25px;
 	}
 	.peditx-secondary-button:hover {
 		background: #a2f2ff;
-		transform: translateY(-2px);
-	}
-	.peditx-secondary-button:disabled {
-		background: #555;
-		cursor: not-allowed;
-		transform: none;
 	}
 
 	#refresh-luci-btn {
@@ -177,12 +155,9 @@
 		background: #6aff8f;
 	}
 
-	/* Style for the new self-update button */
 	#self-update-btn {
 		background: #6272a4; /* A different shade of blue/purple */
 		color: var(--text-color);
-		font-size: 14px;
-		padding: 8px 20px;
 	}
 	#self-update-btn:hover {
 		background: #7184c2;
@@ -197,7 +172,6 @@
 	.log-controls label { margin-right: 10px; cursor: pointer; user-select: none; }
 	.log-controls input[type="checkbox"] { vertical-align: middle; margin-right: 5px; accent-color: var(--secondary-color); }
 
-	/* Search bar style */
 	#search-bar {
 		width: 100%; 
 		padding: 12px; 
@@ -218,7 +192,7 @@
 	<div class="cbi-map-title">
 		<h2>PeDitXOS Store</h2>
 	</div>
-	<p>Select a service to install or uninstall. The list is fetched from an external source.</p>
+	<p>Select a service to install. The list is fetched from an external source.</p>
 	
 	<div class="cbi-input-section" style="margin-bottom: 20px;">
 		<input type="text" id="search-bar" class="cbi-input-text" placeholder="Search for a service...">
@@ -229,16 +203,15 @@
 	</div>
 
 	<div class="execute-bar">
-		<button id="self-update-btn" class="peditx-main-button">Update UI</button>
+		<button id="self-update-btn" class="peditx-main-button peditx-secondary-button">Update UI</button>
 		<button id="update-list-btn" class="peditx-main-button peditx-secondary-button">Update List</button>
-		<!-- NEW: Uninstall Button Added -->
-		<button id="uninstall-button" class="peditx-main-button">Uninstall Selected</button>
 		<button id="execute-button" class="peditx-main-button">Install Selected</button>
+		<button id="uninstall-button" class="peditx-main-button" style="display:none;">Uninstall Selected</button>
 		<button id="refresh-luci-btn" class="peditx-main-button peditx-secondary-button">Refresh LuCI</button>
 		<button id="stop-button" class="peditx-main-button" style="display:none;">Stop</button>
 	</div>
 
-	<div id="peditx-status" class="peditx-status">Ready. Select a service and choose an action.</div>
+	<div id="peditx-status" class="peditx-status">Ready. Select a service and press Install.</div>
 	<div class="log-controls">
 		<div>
 			<label for="auto-refresh-toggle"><input type="checkbox" id="auto-refresh-toggle" checked> Auto Refresh Log</label>
@@ -272,7 +245,7 @@
 
 	// State variables
 	var selectedAction = null;
-	var selectedUninstallAction = null; // New state for uninstall
+	var selectedUninstallAction = null;
 	var isPolling = false;
 
 	// --- Core Functions ---
@@ -295,7 +268,7 @@
 			if (data.running) {
 				if (!isPolling) isPolling = true;
 				startButton.disabled = true;
-				uninstallButton.disabled = true; // Disable uninstall while running
+				uninstallButton.disabled = true;
 				stopButton.style.display = 'inline-flex';
 				updateBtn.disabled = true;
 				refreshLuciBtn.disabled = true;
@@ -307,8 +280,8 @@
 					}
 					isPolling = false;
 				}
-				startButton.disabled = (selectedAction === null);
-				uninstallButton.disabled = (selectedUninstallAction === null);
+				startButton.disabled = false;
+				uninstallButton.disabled = false;
 				stopButton.style.display = 'none';
 				updateBtn.disabled = false;
 				refreshLuciBtn.disabled = false;
@@ -325,10 +298,10 @@
 		});
 	}
 	
-	function startActionByName(actionName, actionType) {
+	function startActionByName(actionName) {
 		XHR.get(runURL, { action: actionName }, function(x, data) {
 			if (x && x.status === 200 && data.success) {
-				statusDiv.innerText = 'Starting ' + actionType + ' for ' + actionName + '...';
+				statusDiv.innerText = 'Starting ' + actionName + '...';
 				if (!isPolling) {
 					pollStatus(true);
 				}
@@ -353,37 +326,34 @@
 				item.setAttribute('data-uninstall-action', service.uninstall_id);
 			}
 
-			// --- NEW: Publisher HTML ---
-			let publisherHtml = '';
+			// Publisher Info
+			var publisherHTML = '';
 			if (service.publisher && service.publisher_url) {
-				publisherHtml = `<div class="action-item-publisher">Publisher: <a href="${service.publisher_url}" target="_blank" rel="noopener noreferrer">${service.publisher}</a></div>`;
+				publisherHTML = `<span>by <a href="${service.publisher_url}" target="_blank" style="color: var(--secondary-color); text-decoration: none;">${service.publisher}</a></span>`;
 			} else if (service.publisher) {
-				publisherHtml = `<div class="action-item-publisher">Publisher: ${service.publisher}</div>`;
+				publisherHTML = `<span>by ${service.publisher}</span>`;
 			}
-			
+
 			item.innerHTML = `
 				<div class="action-item-header">
-					<img src="${service.icon_url}" alt="${service.name}" onerror="this.src='https.placehold.co/48x48/282a36/f8f8f2?text=ICON'; this.onerror=null;">
+					<img src="${service.icon_url}" alt="${service.name}" onerror="this.src='https://placehold.co/48x48/282a36/f8f8f2?text=ICON'; this.onerror=null;">
 					<h4>${service.name}</h4>
 				</div>
 				<p>${service.description}</p>
-				${publisherHtml}
 				<div class="action-item-footer">
 					<span>Version: ${service.version || 'N/A'}</span>
+					${publisherHTML}
 				</div>
 			`;
 			item.addEventListener('click', function() {
 				if (isPolling) return;
 				document.querySelectorAll('.action-item').forEach(el => el.classList.remove('selected'));
 				this.classList.add('selected');
-				
 				selectedAction = this.getAttribute('data-action');
 				selectedUninstallAction = this.getAttribute('data-uninstall-action');
-
-				startButton.disabled = false;
-				uninstallButton.disabled = (selectedUninstallAction === null);
 				
-				statusDiv.innerText = `Selected: ${service.name}. Choose an action.`;
+				statusDiv.innerText = `Selected: ${service.name}.`;
+				uninstallButton.style.display = selectedUninstallAction ? 'inline-flex' : 'none';
 			});
 			serviceGrid.appendChild(item);
 		});
@@ -428,22 +398,22 @@
 			}, 3000);
 			return;
 		}
-		startActionByName(selectedAction, 'installation');
+		startActionByName(selectedAction);
 	});
 
-	// --- NEW: Uninstall Button Event Listener ---
+	// New listener for the Uninstall button
 	uninstallButton.addEventListener('click', function() {
 		if (!selectedUninstallAction) {
-			statusDiv.innerText = 'The selected service does not have an uninstall option.';
+			statusDiv.innerText = 'This service does not have an uninstaller.';
 			statusDiv.style.color = 'var(--danger-color)';
-			setTimeout(() => { 
-				statusDiv.innerText = 'Ready. Select a service and choose an action.';
+			setTimeout(() => {
+				statusDiv.innerText = 'Ready.';
 				statusDiv.style.color = 'var(--warning-color)';
 			}, 3000);
 			return;
 		}
 		if (confirm("Are you sure you want to uninstall this service?")) {
-			startActionByName(selectedUninstallAction, 'uninstallation');
+			startActionByName(selectedUninstallAction);
 		}
 	});
 
@@ -476,7 +446,7 @@
 
 	updateBtn.addEventListener('click', function() {
 		statusDiv.innerText = 'Updating app list...';
-		startActionByName('update_service_list', 'update');
+		startActionByName('update_service_list');
 		setTimeout(fetchServices, 3000);
 	});
 
@@ -494,7 +464,7 @@
 	selfUpdateBtn.addEventListener('click', function() {
 		if (confirm("Are you sure you want to update the store UI? This will replace the current view file.")) {
 			statusDiv.innerText = 'Starting UI self-update...';
-			startActionByName('self_update_view', 'self-update');
+			startActionByName('self_update_view');
 		}
 	});
 
@@ -502,8 +472,6 @@
 	// --- Initial Load ---
 	fetchServices();
 	pollStatus(true);
-	// Initially disable buttons until a selection is made
-	startButton.disabled = true;
-	uninstallButton.disabled = true;
 </script>
 <%+footer%>
+
