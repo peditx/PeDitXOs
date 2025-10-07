@@ -148,15 +148,6 @@
     "script_url": "https://peditx.ir/foreignscs/luci-theme-argon/install.sh"
   },
   {
-    "id": "install_openvpn",
-    "name": "OpenVPN",
-    "description": "openvpn installer",
-    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1759857777814-openvpn_logo_feaa0a35e6.png",
-    "version": "Master",
-    "publisher": "PeDitX",
-    "publisher_url": "https://github.com/peditx"
-  },
-  {
     "id": "change_repo",
     "name": "Change to PeDitX Repo",
     "description": "Switches the package repository to PeDitX.",
