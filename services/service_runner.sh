@@ -9,8 +9,8 @@ ACTION="$1"
 URL_INSTALL_INSTALLDNSJUMPER="https://peditx.ir/projects/DNSJumper/code/install.sh"
 URL_INSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/install.sh"
 URL_INSTALL_INSTALLTORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/install.sh"
-URL_INSTALL_SSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
-URL_INSTALL_AIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
+URL_INSTALL_INSTALLSSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
+URL_INSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
 URL_INSTALL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/install.sh"
 URL_INSTALL_WARPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/install.sh"
 URL_INSTALL_AMNEZIAWG="https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh"
@@ -42,14 +42,14 @@ install_installtorplus() {
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_INSTALLTORPLUS" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
-install_sshplus() {
+install_installsshplus() {
 	echo "Downloading Install SSHPlus components..."
-	cd /tmp && rm -f install_sshplus.sh && wget -q "$URL_INSTALL_SSHPLUS" -O install_sshplus.sh && chmod +x install_sshplus.sh && sh install_sshplus.sh
+	cd /tmp && rm -f install_sshplus.sh && wget -q "$URL_INSTALL_INSTALLSSHPLUS" -O install_sshplus.sh && chmod +x install_sshplus.sh && sh install_sshplus.sh
 }
 
-install_aircast() {
+install_installaircast() {
 	echo "Downloading Install Air-Cast components..."
-	cd /tmp && rm -f aircast_install.sh && wget -q "$URL_INSTALL_AIRCAST" -O aircast_install.sh && chmod +x aircast_install.sh && sh aircast_install.sh
+	cd /tmp && rm -f aircast_install.sh && wget -q "$URL_INSTALL_INSTALLAIRCAST" -O aircast_install.sh && chmod +x aircast_install.sh && sh aircast_install.sh
 }
 
 install_warp() {
@@ -90,6 +90,10 @@ install_installauroratheme() {
 install_installargontheme() {
 	echo "Downloading Install Argon Theme components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_INSTALLARGONTHEME" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_pxnotifier1() {
+	opkg update
 }
 # --- Dynamic Functions End ---
 
@@ -157,8 +161,8 @@ case "$ACTION" in
 	uninstall_installdnsjumper) uninstall_installdnsjumper ;;
 	install_pxnotifier) install_pxnotifier ;;
 	install_installtorplus) install_installtorplus ;;
-	install_sshplus) install_sshplus ;;
-	install_aircast) install_aircast ;;
+	install_installsshplus) install_installsshplus ;;
+	install_installaircast) install_installaircast ;;
 	install_warp) install_warp ;;
 	install_warpplusplus) install_warpplusplus ;;
 	install_amneziawg) install_amneziawg ;;
@@ -167,6 +171,7 @@ case "$ACTION" in
 	install_peditx) install_peditx ;;
 	install_installauroratheme) install_installauroratheme ;;
 	install_installargontheme) install_installargontheme ;;
+	install_pxnotifier1) install_pxnotifier1 ;;
 # --- Dynamic Cases End ---
 
 # --- Static Cases (Do not edit these) ---
