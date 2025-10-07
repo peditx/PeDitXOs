@@ -18,6 +18,7 @@ URL_CARBONPX="https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/
 URL_PEDITX="https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/install.sh"
 URL_INSTALLAURORATHEME="https://peditx.ir/foreignscs/luci-theme-aurora/install.sh"
 URL_INSTALLARGONTHEME="https://peditx.ir/foreignscs/luci-theme-argon/install.sh"
+URL_INSTALLDNSJUMPER="https://peditx.ir/projects/DNSJumper/DNSJumper/code/install.sh"
 # --- Dynamic URLs End ---
 
 
@@ -80,6 +81,11 @@ install_installauroratheme() {
 install_installargontheme() {
     echo "Downloading Install Argon Theme components..."
     cd /tmp && rm -f install.sh && wget -q "$URL_INSTALLARGONTHEME" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_installdnsjumper() {
+    echo "Downloading Install DNSJumper components..."
+    cd /tmp && rm -f install.sh && wget -q "$URL_INSTALLDNSJUMPER" -O install.sh && chmod +x install.sh && sh install.sh
 }
 # --- Dynamic Functions End ---
 
@@ -148,6 +154,7 @@ case "$ACTION" in
     install_peditx) install_peditx ;;
     install_installauroratheme) install_installauroratheme ;;
     install_installargontheme) install_installargontheme ;;
+    install_installdnsjumper) install_installdnsjumper ;;
 # --- Dynamic Cases End ---
 
 # --- Static Cases (Do not edit these) ---
