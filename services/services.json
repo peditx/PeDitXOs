@@ -17,6 +17,8 @@
     "description": "A real-time network monitoring tool for OpenWrt. It continuously checks your connection status via Passwall and sends instant alerts through ntfy, Telegram, and WhatsApp on any status change.",
     "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1759684468851-istockphoto-2151656410-612x612.jpg",
     "version": "v60.0",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
     "script_url": "https://peditx.ir/projects/PXnotifier/code/install.sh"
   },
   {
