@@ -116,15 +116,6 @@
     "script_url": "https://peditx.ir/foreignscs/luci-theme-argon/install.sh"
   },
   {
-    "id": "install_pxnotifier1",
-    "name": "PXNotifier1",
-    "description": "11",
-    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1759762003793-image_2025-10-06_181642711.png",
-    "version": "1",
-    "publisher": "PeDitX",
-    "publisher_url": "https://github.com/peditx"
-  },
-  {
     "id": "change_repo",
     "name": "Change to PeDitX Repo",
     "description": "Switches the package repository to PeDitX.",
