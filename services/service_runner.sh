@@ -36,7 +36,7 @@ URL_UNINSTALL_INSTALLARGONTHEME="https://peditx.ir/foreignscs/luci-theme-argon/u
 
 # --- Dynamic Functions Start ---
 install_installdnsjumper() {
-	echo "Downloading Install DNSJumper components..."
+	echo "Downloading DNSJumper components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_INSTALLDNSJUMPER" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
@@ -46,64 +46,69 @@ install_pxnotifier() {
 }
 
 install_installtorplus() {
-	echo "Downloading Install TORPlus components..."
+	echo "Downloading TORPlus components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_INSTALLTORPLUS" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_installsshplus() {
-	echo "Downloading Install SSHPlus components..."
+	echo "Downloading SSHPlus components..."
 	cd /tmp && rm -f install_sshplus.sh && wget -q "$URL_INSTALL_INSTALLSSHPLUS" -O install_sshplus.sh && chmod +x install_sshplus.sh && sh install_sshplus.sh
 }
 
 install_installaircast() {
-	echo "Downloading Install Air-Cast components..."
+	echo "Downloading Air-Cast components..."
 	cd /tmp && rm -f aircast_install.sh && wget -q "$URL_INSTALL_INSTALLAIRCAST" -O aircast_install.sh && chmod +x aircast_install.sh && sh aircast_install.sh
 }
 
 install_warp() {
-	echo "Downloading Install Warp+ components..."
+	echo "Downloading Warp+ components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_WARP" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_warpplusplus() {
-	echo "Downloading Install Warp++ components..."
+	echo "Downloading Warp++ components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_WARPPLUSPLUS" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_amneziawg() {
-	echo "Downloading Install AmneziaWG components..."
+	echo "Downloading AmneziaWG components..."
 	cd /tmp && rm -f amneziawg-install.sh && wget -q "$URL_INSTALL_AMNEZIAWG" -O amneziawg-install.sh && chmod +x amneziawg-install.sh && sh amneziawg-install.sh
 }
 
 install_iranips() {
-	echo "Downloading Install Iran Rule IPS for Passwall2 components..."
+	echo "Downloading Iran Rule IPS for Passwall2 components..."
 	cd /tmp && rm -f iranips.sh && wget -q "$URL_INSTALL_IRANIPS" -O iranips.sh && chmod +x iranips.sh && sh iranips.sh
 }
 
 install_carbonpx() {
-	echo "Downloading Install CarbonPX Theme components..."
+	echo "Downloading CarbonPX Theme components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_CARBONPX" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_peditx() {
-	echo "Downloading Install PeDitX Theme components..."
+	echo "Downloading PeDitX Theme components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_PEDITX" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_installauroratheme() {
-	echo "Downloading Install Aurora Theme components..."
+	echo "Downloading Aurora Theme components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_INSTALLAURORATHEME" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_installargontheme() {
-	echo "Downloading Install Argon Theme components..."
+	echo "Downloading Argon Theme components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_INSTALLARGONTHEME" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_openvpn() {
+	opkg update
+	opkg install luci-app-openvpn
 }
 # --- Dynamic Functions End ---
 
 # --- Dynamic Uninstall Functions Start ---
 uninstall_installdnsjumper() {
-	echo "Downloading Uninstall Install DNSJumper components..."
+	echo "Downloading Uninstall DNSJumper components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_INSTALLDNSJUMPER" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
@@ -113,37 +118,37 @@ uninstall_pxnotifier() {
 }
 
 uninstall_installtorplus() {
-	echo "Downloading Uninstall Install TORPlus components..."
+	echo "Downloading Uninstall TORPlus components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_INSTALLTORPLUS" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
 uninstall_installsshplus() {
-	echo "Downloading Uninstall Install SSHPlus components..."
+	echo "Downloading Uninstall SSHPlus components..."
 	cd /tmp && rm -f uninstall_sshplus.sh && wget -q "$URL_UNINSTALL_INSTALLSSHPLUS" -O uninstall_sshplus.sh && chmod +x uninstall_sshplus.sh && sh uninstall_sshplus.sh
 }
 
 uninstall_installaircast() {
-	echo "Downloading Uninstall Install Air-Cast components..."
+	echo "Downloading Uninstall Air-Cast components..."
 	cd /tmp && rm -f aircast_uninstall.sh && wget -q "$URL_UNINSTALL_INSTALLAIRCAST" -O aircast_uninstall.sh && chmod +x aircast_uninstall.sh && sh aircast_uninstall.sh
 }
 
 uninstall_warp() {
-	echo "Downloading Uninstall Install Warp+ components..."
+	echo "Downloading Uninstall Warp+ components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_WARP" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
 uninstall_warpplusplus() {
-	echo "Downloading Uninstall Install Warp++ components..."
+	echo "Downloading Uninstall Warp++ components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_WARPPLUSPLUS" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
 uninstall_installauroratheme() {
-	echo "Downloading Uninstall Install Aurora Theme components..."
+	echo "Downloading Uninstall Aurora Theme components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_INSTALLAURORATHEME" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
 uninstall_installargontheme() {
-	echo "Downloading Uninstall Install Argon Theme components..."
+	echo "Downloading Uninstall Argon Theme components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_INSTALLARGONTHEME" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 # --- Dynamic Uninstall Functions End ---
@@ -223,6 +228,7 @@ case "$ACTION" in
 	uninstall_installauroratheme) uninstall_installauroratheme ;;
 	install_installargontheme) install_installargontheme ;;
 	uninstall_installargontheme) uninstall_installargontheme ;;
+	install_openvpn) install_openvpn ;;
 # --- Dynamic Cases End ---
 
 # --- Static Cases (Do not edit these) ---
