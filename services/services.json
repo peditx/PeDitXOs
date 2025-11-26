@@ -24,6 +24,18 @@
     "script_url": "https://peditx.ir/projects/PXnotifier/code/install.sh"
   },
   {
+    "id": "install_openvpnplus",
+    "name": "OpenVPN Plus",
+    "description": "This program installs OpenVPN in a way that enables firewall control and rule management via Passwall and Passwall2.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1764162160375-kisspng-openvpn-virtual-private-network-computer-software-tunnel-5ab9974d2b5f56.9725812215221123331777.jpg",
+    "version": "v1.0.1",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_openvpnplus",
+    "uninstall_script_url": "https://pedtx.ir/projects/OpenVPN_Plus/uninstall.sh",
+    "script_url": "https://pedtx.ir/projects/OpenVPN_Plus/install.sh"
+  },
+  {
     "id": "install_installtorplus",
     "name": "TORPlus",
     "description": "A tool to connect to the Tor network.",
