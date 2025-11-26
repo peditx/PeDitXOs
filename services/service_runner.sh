@@ -8,7 +8,7 @@ ACTION="$1"
 # --- Dynamic URLs Start ---
 URL_INSTALL_INSTALLDNSJUMPER="https://peditx.ir/projects/DNSJumper/code/install.sh"
 URL_INSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/install.sh"
-URL_INSTALL_OPENVPNPLUS="https://pedtx.ir/projects/OpenVPN_Plus/install.sh"
+URL_INSTALL_OPENVPNPLUS="https://peditx.ir/projects/OpenVPN_Plus/install.sh"
 URL_INSTALL_INSTALLTORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/install.sh"
 URL_INSTALL_INSTALLSSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
 URL_INSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
@@ -25,7 +25,7 @@ URL_INSTALL_INSTALLARGONTHEME="https://peditx.ir/foreignscs/luci-theme-argon/ins
 # --- Dynamic Uninstall URLs Start ---
 URL_UNINSTALL_INSTALLDNSJUMPER="https://www.google.com/search?q=https://peditx.ir/projects/DNSJumper/code/uninstall.sh"
 URL_UNINSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/uninstall.sh"
-URL_UNINSTALL_OPENVPNPLUS="https://pedtx.ir/projects/OpenVPN_Plus/uninstall.sh"
+URL_UNINSTALL_OPENVPNPLUS="https://peditx.ir/projects/OpenVPN_Plus/uninstall.sh"
 URL_UNINSTALL_INSTALLTORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/uninstall.sh"
 URL_UNINSTALL_INSTALLSSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/uninstall_sshplus.sh"
 URL_UNINSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_uninstall.sh"
