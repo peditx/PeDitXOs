@@ -32,8 +32,8 @@
     "publisher": "PeDitX",
     "publisher_url": "https://github.com/peditx",
     "uninstall_id": "uninstall_openvpnplus",
-    "uninstall_script_url": "https://pedtx.ir/projects/OpenVPN_Plus/uninstall.sh",
-    "script_url": "https://pedtx.ir/projects/OpenVPN_Plus/install.sh"
+    "uninstall_script_url": "https://peditx.ir/projects/OpenVPN_Plus/uninstall.sh",
+    "script_url": "https://peditx.ir/projects/OpenVPN_Plus/install.sh"
   },
   {
     "id": "install_installtorplus",
