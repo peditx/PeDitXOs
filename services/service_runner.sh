@@ -14,6 +14,7 @@ URL_INSTALL_INSTALLSSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/mai
 URL_INSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
 URL_INSTALL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/install.sh"
 URL_INSTALL_WARPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/install.sh"
+URL_INSTALL_OPENCLASHPLUS="https://peditx.ir/foreignscs/OpenClash/install.sh"
 URL_INSTALL_AMNEZIAWG="https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh"
 URL_INSTALL_IRANIPS="https://raw.githubusercontent.com/peditx/iranIPS/refs/heads/main/.files/iranips.sh"
 URL_INSTALL_CARBONPX="https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/install.sh"
@@ -31,6 +32,7 @@ URL_UNINSTALL_INSTALLSSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/m
 URL_UNINSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_uninstall.sh"
 URL_UNINSTALL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/uninstall.sh"
 URL_UNINSTALL_WARPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/uninstall.sh"
+URL_UNINSTALL_OPENCLASHPLUS="https://peditx.ir/foreignscs/OpenClash/uninstall.sh"
 URL_UNINSTALL_INSTALLAURORATHEME="https://peditx.ir/foreignscs/luci-theme-aurora/uninstall.sh"
 URL_UNINSTALL_INSTALLARGONTHEME="https://peditx.ir/foreignscs/luci-theme-argon/uninstall.sh"
 # --- Dynamic Uninstall URLs End ---
@@ -75,6 +77,11 @@ install_warp() {
 install_warpplusplus() {
 	echo "Downloading Warp++ components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_WARPPLUSPLUS" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_openclashplus() {
+	echo "Downloading OpenClash Plus components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_OPENCLASHPLUS" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_amneziawg() {
@@ -147,6 +154,11 @@ uninstall_warp() {
 uninstall_warpplusplus() {
 	echo "Downloading Uninstall Warp++ components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_WARPPLUSPLUS" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_openclashplus() {
+	echo "Downloading Uninstall OpenClash Plus components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_OPENCLASHPLUS" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
 uninstall_installauroratheme() {
@@ -229,6 +241,8 @@ case "$ACTION" in
 	uninstall_warp) uninstall_warp ;;
 	install_warpplusplus) install_warpplusplus ;;
 	uninstall_warpplusplus) uninstall_warpplusplus ;;
+	install_openclashplus) install_openclashplus ;;
+	uninstall_openclashplus) uninstall_openclashplus ;;
 	install_amneziawg) install_amneziawg ;;
 	install_iranips) install_iranips ;;
 	install_carbonpx) install_carbonpx ;;
