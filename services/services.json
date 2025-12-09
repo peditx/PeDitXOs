@@ -96,6 +96,18 @@
     "script_url": "https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/install.sh"
   },
   {
+    "id": "install_openclashplus",
+    "name": "OpenClash Plus",
+    "description": "Easy install Clash Client For OpenWrt (full UI for apk and ipk)",
+    "icon_url": "https://raw.githubusercontent.com/vernesong/OpenClash/dev/img/logo.png",
+    "version": "v0.04",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_openclashplus",
+    "uninstall_script_url": "https://peditx.ir/foreignscs/OpenClash/uninstall.sh",
+    "script_url": "https://peditx.ir/foreignscs/OpenClash/install.sh"
+  },
+  {
     "id": "install_amneziawg",
     "name": "AmneziaWG",
     "description": "AmneziaWG service for OpenWrt.",
