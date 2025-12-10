@@ -72,6 +72,18 @@
     "script_url": "https://peditx.ir/projects/SStp-Plus/install.sh"
   },
   {
+    "id": "install_ikev2plus",
+    "name": "IKEv2 Plus",
+    "description": "This program installs IKEv2 in a way that enables firewall control and rule management via Passwall and Passwall2.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765342994211-image_2025-10-11_215938211.png",
+    "version": "v1.0.1",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_ikev2plus",
+    "uninstall_script_url": "https://peditx.ir/projects/IKEv2-Plus/uninstall.sh",
+    "script_url": "https://peditx.ir/projects/IKEv2-Plus/install.sh"
+  },
+  {
     "id": "install_openvpnplus",
     "name": "OpenVPN Plus",
     "description": "This program installs OpenVPN in a way that enables firewall control and rule management via Passwall and Passwall2.",
