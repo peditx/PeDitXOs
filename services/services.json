@@ -24,6 +24,18 @@
     "script_url": "https://peditx.ir/projects/PXnotifier/code/install.sh"
   },
   {
+    "id": "install_installaircast",
+    "name": "Air-Cast",
+    "description": "A service for audio and video streaming.",
+    "icon_url": "https://raw.githubusercontent.com/peditx/aircast-openwrt/refs/heads/main/icon/aircast.png",
+    "version": "v15",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_installaircast",
+    "uninstall_script_url": "https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_uninstall.sh",
+    "script_url": "https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
+  },
+  {
     "id": "install_wireguardplus",
     "name": "WireGuard Plus",
     "description": "This program installs WireGuard in a way that enables firewall control and rule management via Passwall and Passwall2.",
@@ -94,18 +106,6 @@
     "uninstall_id": "uninstall_installsshplus",
     "uninstall_script_url": "https://raw.githubusercontent.com/peditx/SshPlus/main/Files/uninstall_sshplus.sh",
     "script_url": "https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
-  },
-  {
-    "id": "install_installaircast",
-    "name": "Air-Cast",
-    "description": "A service for audio and video streaming.",
-    "icon_url": "https://raw.githubusercontent.com/peditx/aircast-openwrt/refs/heads/main/icon/aircast.png",
-    "version": "v15",
-    "publisher": "PeDitX",
-    "publisher_url": "https://github.com/peditx",
-    "uninstall_id": "uninstall_installaircast",
-    "uninstall_script_url": "https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_uninstall.sh",
-    "script_url": "https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
   },
   {
     "id": "install_warp",
