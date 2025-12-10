@@ -48,6 +48,18 @@
     "script_url": "https://peditx.ir/projects/L2tp-Plus/install.sh"
   },
   {
+    "id": "install_sstpplus",
+    "name": "SStp Plus",
+    "description": "This program installs SStp VPN in a way that enables firewall control and rule management via Passwall and Passwall2.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765336991863-SSTP_Logo_New_-_02.png",
+    "version": "v1.0.1",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_sstpplus",
+    "uninstall_script_url": "https://peditx.ir/projects/SStp-Plus/uninstall.sh",
+    "script_url": "https://peditx.ir/projects/SStp-Plus/install.sh"
+  },
+  {
     "id": "install_openvpnplus",
     "name": "OpenVPN Plus",
     "description": "This program installs OpenVPN in a way that enables firewall control and rule management via Passwall and Passwall2.",
