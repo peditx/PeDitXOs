@@ -12,6 +12,7 @@ URL_INSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-ope
 URL_INSTALL_WIREGUARDPLUS="https://peditx.ir/projects/WireGuard-Plus/install.sh"
 URL_INSTALL_L2TPPLUS="https://peditx.ir/projects/L2tp-Plus/install.sh"
 URL_INSTALL_SSTPPLUS="https://peditx.ir/projects/SStp-Plus/install.sh"
+URL_INSTALL_IKEV2PLUS="https://peditx.ir/projects/IKEv2-Plus/install.sh"
 URL_INSTALL_OPENVPNPLUS="https://peditx.ir/projects/OpenVPN_Plus/install.sh"
 URL_INSTALL_INSTALLTORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/install.sh"
 URL_INSTALL_INSTALLSSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
@@ -33,6 +34,7 @@ URL_UNINSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-o
 URL_UNINSTALL_WIREGUARDPLUS="https://peditx.ir/projects/WireGuard-Plus/uninstall.sh"
 URL_UNINSTALL_L2TPPLUS="https://peditx.ir/projects/L2tp-Plus/uninstall.sh"
 URL_UNINSTALL_SSTPPLUS="https://peditx.ir/projects/SStp-Plus/uninstall.sh"
+URL_UNINSTALL_IKEV2PLUS="https://peditx.ir/projects/IKEv2-Plus/uninstall.sh"
 URL_UNINSTALL_OPENVPNPLUS="https://peditx.ir/projects/OpenVPN_Plus/uninstall.sh"
 URL_UNINSTALL_INSTALLTORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/uninstall.sh"
 URL_UNINSTALL_INSTALLSSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/uninstall_sshplus.sh"
@@ -73,6 +75,11 @@ install_l2tpplus() {
 install_sstpplus() {
 	echo "Downloading SStp Plus components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_SSTPPLUS" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_ikev2plus() {
+	echo "Downloading IKEv2 Plus components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_IKEV2PLUS" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_openvpnplus() {
@@ -165,6 +172,11 @@ uninstall_l2tpplus() {
 uninstall_sstpplus() {
 	echo "Downloading Uninstall SStp Plus components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_SSTPPLUS" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_ikev2plus() {
+	echo "Downloading Uninstall IKEv2 Plus components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_IKEV2PLUS" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
 uninstall_openvpnplus() {
@@ -273,6 +285,8 @@ case "$ACTION" in
 	uninstall_l2tpplus) uninstall_l2tpplus ;;
 	install_sstpplus) install_sstpplus ;;
 	uninstall_sstpplus) uninstall_sstpplus ;;
+	install_ikev2plus) install_ikev2plus ;;
+	uninstall_ikev2plus) uninstall_ikev2plus ;;
 	install_openvpnplus) install_openvpnplus ;;
 	uninstall_openvpnplus) uninstall_openvpnplus ;;
 	install_installtorplus) install_installtorplus ;;
