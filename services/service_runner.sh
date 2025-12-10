@@ -8,6 +8,7 @@ ACTION="$1"
 # --- Dynamic URLs Start ---
 URL_INSTALL_INSTALLDNSJUMPER="https://peditx.ir/projects/DNSJumper/code/install.sh"
 URL_INSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/install.sh"
+URL_INSTALL_WIREGUARDPLUS="https://peditx.ir/projects/WireGuard-Plus/install.sh"
 URL_INSTALL_OPENVPNPLUS="https://peditx.ir/projects/OpenVPN_Plus/install.sh"
 URL_INSTALL_INSTALLTORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/install.sh"
 URL_INSTALL_INSTALLSSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
@@ -26,6 +27,7 @@ URL_INSTALL_INSTALLARGONTHEME="https://peditx.ir/foreignscs/luci-theme-argon/ins
 # --- Dynamic Uninstall URLs Start ---
 URL_UNINSTALL_INSTALLDNSJUMPER="https://www.google.com/search?q=https://peditx.ir/projects/DNSJumper/code/uninstall.sh"
 URL_UNINSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/uninstall.sh"
+URL_UNINSTALL_WIREGUARDPLUS="https://peditx.ir/projects/WireGuard-Plus/uninstall.sh"
 URL_UNINSTALL_OPENVPNPLUS="https://peditx.ir/projects/OpenVPN_Plus/uninstall.sh"
 URL_UNINSTALL_INSTALLTORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/uninstall.sh"
 URL_UNINSTALL_INSTALLSSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/uninstall_sshplus.sh"
@@ -47,6 +49,11 @@ install_installdnsjumper() {
 install_pxnotifier() {
 	echo "Downloading PXNotifier components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_PXNOTIFIER" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_wireguardplus() {
+	echo "Downloading WireGuard Plus components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_WIREGUARDPLUS" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_openvpnplus() {
@@ -124,6 +131,11 @@ uninstall_installdnsjumper() {
 uninstall_pxnotifier() {
 	echo "Downloading Uninstall PXNotifier components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_PXNOTIFIER" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_wireguardplus() {
+	echo "Downloading Uninstall WireGuard Plus components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_WIREGUARDPLUS" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
 uninstall_openvpnplus() {
@@ -229,6 +241,8 @@ case "$ACTION" in
 	uninstall_installdnsjumper) uninstall_installdnsjumper ;;
 	install_pxnotifier) install_pxnotifier ;;
 	uninstall_pxnotifier) uninstall_pxnotifier ;;
+	install_wireguardplus) install_wireguardplus ;;
+	uninstall_wireguardplus) uninstall_wireguardplus ;;
 	install_openvpnplus) install_openvpnplus ;;
 	uninstall_openvpnplus) uninstall_openvpnplus ;;
 	install_installtorplus) install_installtorplus ;;
