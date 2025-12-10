@@ -8,13 +8,13 @@ ACTION="$1"
 # --- Dynamic URLs Start ---
 URL_INSTALL_INSTALLDNSJUMPER="https://peditx.ir/projects/DNSJumper/code/install.sh"
 URL_INSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/install.sh"
+URL_INSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
 URL_INSTALL_WIREGUARDPLUS="https://peditx.ir/projects/WireGuard-Plus/install.sh"
 URL_INSTALL_L2TPPLUS="https://peditx.ir/projects/L2tp-Plus/install.sh"
 URL_INSTALL_SSTPPLUS="https://peditx.ir/projects/SStp-Plus/install.sh"
 URL_INSTALL_OPENVPNPLUS="https://peditx.ir/projects/OpenVPN_Plus/install.sh"
 URL_INSTALL_INSTALLTORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/install.sh"
 URL_INSTALL_INSTALLSSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
-URL_INSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
 URL_INSTALL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/install.sh"
 URL_INSTALL_WARPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/install.sh"
 URL_INSTALL_OPENCLASHPLUS="https://peditx.ir/foreignscs/OpenClash/install.sh"
@@ -29,13 +29,13 @@ URL_INSTALL_INSTALLARGONTHEME="https://peditx.ir/foreignscs/luci-theme-argon/ins
 # --- Dynamic Uninstall URLs Start ---
 URL_UNINSTALL_INSTALLDNSJUMPER="https://www.google.com/search?q=https://peditx.ir/projects/DNSJumper/code/uninstall.sh"
 URL_UNINSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/uninstall.sh"
+URL_UNINSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_uninstall.sh"
 URL_UNINSTALL_WIREGUARDPLUS="https://peditx.ir/projects/WireGuard-Plus/uninstall.sh"
 URL_UNINSTALL_L2TPPLUS="https://peditx.ir/projects/L2tp-Plus/uninstall.sh"
 URL_UNINSTALL_SSTPPLUS="https://peditx.ir/projects/SStp-Plus/uninstall.sh"
 URL_UNINSTALL_OPENVPNPLUS="https://peditx.ir/projects/OpenVPN_Plus/uninstall.sh"
 URL_UNINSTALL_INSTALLTORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/uninstall.sh"
 URL_UNINSTALL_INSTALLSSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/uninstall_sshplus.sh"
-URL_UNINSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_uninstall.sh"
 URL_UNINSTALL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/uninstall.sh"
 URL_UNINSTALL_WARPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/uninstall.sh"
 URL_UNINSTALL_OPENCLASHPLUS="https://peditx.ir/foreignscs/OpenClash/uninstall.sh"
@@ -53,6 +53,11 @@ install_installdnsjumper() {
 install_pxnotifier() {
 	echo "Downloading PXNotifier components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_PXNOTIFIER" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_installaircast() {
+	echo "Downloading Air-Cast components..."
+	cd /tmp && rm -f aircast_install.sh && wget -q "$URL_INSTALL_INSTALLAIRCAST" -O aircast_install.sh && chmod +x aircast_install.sh && sh aircast_install.sh
 }
 
 install_wireguardplus() {
@@ -83,11 +88,6 @@ install_installtorplus() {
 install_installsshplus() {
 	echo "Downloading SSHPlus components..."
 	cd /tmp && rm -f install_sshplus.sh && wget -q "$URL_INSTALL_INSTALLSSHPLUS" -O install_sshplus.sh && chmod +x install_sshplus.sh && sh install_sshplus.sh
-}
-
-install_installaircast() {
-	echo "Downloading Air-Cast components..."
-	cd /tmp && rm -f aircast_install.sh && wget -q "$URL_INSTALL_INSTALLAIRCAST" -O aircast_install.sh && chmod +x aircast_install.sh && sh aircast_install.sh
 }
 
 install_warp() {
@@ -147,6 +147,11 @@ uninstall_pxnotifier() {
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_PXNOTIFIER" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
+uninstall_installaircast() {
+	echo "Downloading Uninstall Air-Cast components..."
+	cd /tmp && rm -f aircast_uninstall.sh && wget -q "$URL_UNINSTALL_INSTALLAIRCAST" -O aircast_uninstall.sh && chmod +x aircast_uninstall.sh && sh aircast_uninstall.sh
+}
+
 uninstall_wireguardplus() {
 	echo "Downloading Uninstall WireGuard Plus components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_WIREGUARDPLUS" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
@@ -175,11 +180,6 @@ uninstall_installtorplus() {
 uninstall_installsshplus() {
 	echo "Downloading Uninstall SSHPlus components..."
 	cd /tmp && rm -f uninstall_sshplus.sh && wget -q "$URL_UNINSTALL_INSTALLSSHPLUS" -O uninstall_sshplus.sh && chmod +x uninstall_sshplus.sh && sh uninstall_sshplus.sh
-}
-
-uninstall_installaircast() {
-	echo "Downloading Uninstall Air-Cast components..."
-	cd /tmp && rm -f aircast_uninstall.sh && wget -q "$URL_UNINSTALL_INSTALLAIRCAST" -O aircast_uninstall.sh && chmod +x aircast_uninstall.sh && sh aircast_uninstall.sh
 }
 
 uninstall_warp() {
@@ -265,6 +265,8 @@ case "$ACTION" in
 	uninstall_installdnsjumper) uninstall_installdnsjumper ;;
 	install_pxnotifier) install_pxnotifier ;;
 	uninstall_pxnotifier) uninstall_pxnotifier ;;
+	install_installaircast) install_installaircast ;;
+	uninstall_installaircast) uninstall_installaircast ;;
 	install_wireguardplus) install_wireguardplus ;;
 	uninstall_wireguardplus) uninstall_wireguardplus ;;
 	install_l2tpplus) install_l2tpplus ;;
@@ -277,8 +279,6 @@ case "$ACTION" in
 	uninstall_installtorplus) uninstall_installtorplus ;;
 	install_installsshplus) install_installsshplus ;;
 	uninstall_installsshplus) uninstall_installsshplus ;;
-	install_installaircast) install_installaircast ;;
-	uninstall_installaircast) uninstall_installaircast ;;
 	install_warp) install_warp ;;
 	uninstall_warp) uninstall_warp ;;
 	install_warpplusplus) install_warpplusplus ;;
