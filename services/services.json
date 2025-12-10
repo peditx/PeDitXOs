@@ -36,11 +36,23 @@
     "script_url": "https://peditx.ir/projects/WireGuard-Plus/install.sh"
   },
   {
+    "id": "install_l2tpplus",
+    "name": "L2tp Plus",
+    "description": "This program installs L2tp VPN in a way that enables firewall control and rule management via Passwall and Passwall2.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765336637414-25b3341506f9d7c1.png",
+    "version": "v1.0.1",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_l2tpplus",
+    "uninstall_script_url": "https://peditx.ir/projects/L2tp-Plus/uninstall.sh",
+    "script_url": "https://peditx.ir/projects/L2tp-Plus/install.sh"
+  },
+  {
     "id": "install_openvpnplus",
     "name": "OpenVPN Plus",
     "description": "This program installs OpenVPN in a way that enables firewall control and rule management via Passwall and Passwall2.",
     "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1764162160375-kisspng-openvpn-virtual-private-network-computer-software-tunnel-5ab9974d2b5f56.9725812215221123331777.jpg",
-    "version": "v1.0.1",
+    "version": "v2.0.1",
     "publisher": "PeDitX",
     "publisher_url": "https://github.com/peditx",
     "uninstall_id": "uninstall_openvpnplus",
