@@ -24,6 +24,18 @@
     "script_url": "https://peditx.ir/projects/PXnotifier/code/install.sh"
   },
   {
+    "id": "install_wireguardplus",
+    "name": "WireGuard Plus",
+    "description": "This program installs WireGuard in a way that enables firewall control and rule management via Passwall and Passwall2.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765336255061-WireGuard_Logo.png",
+    "version": "v1.0.1",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_wireguardplus",
+    "uninstall_script_url": "https://peditx.ir/projects/WireGuard-Plus/uninstall.sh",
+    "script_url": "https://peditx.ir/projects/WireGuard-Plus/install.sh"
+  },
+  {
     "id": "install_openvpnplus",
     "name": "OpenVPN Plus",
     "description": "This program installs OpenVPN in a way that enables firewall control and rule management via Passwall and Passwall2.",
