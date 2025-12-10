@@ -10,6 +10,7 @@ URL_INSTALL_INSTALLDNSJUMPER="https://peditx.ir/projects/DNSJumper/code/install.
 URL_INSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/install.sh"
 URL_INSTALL_WIREGUARDPLUS="https://peditx.ir/projects/WireGuard-Plus/install.sh"
 URL_INSTALL_L2TPPLUS="https://peditx.ir/projects/L2tp-Plus/install.sh"
+URL_INSTALL_SSTPPLUS="https://peditx.ir/projects/SStp-Plus/install.sh"
 URL_INSTALL_OPENVPNPLUS="https://peditx.ir/projects/OpenVPN_Plus/install.sh"
 URL_INSTALL_INSTALLTORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/install.sh"
 URL_INSTALL_INSTALLSSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
@@ -30,6 +31,7 @@ URL_UNINSTALL_INSTALLDNSJUMPER="https://www.google.com/search?q=https://peditx.i
 URL_UNINSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/uninstall.sh"
 URL_UNINSTALL_WIREGUARDPLUS="https://peditx.ir/projects/WireGuard-Plus/uninstall.sh"
 URL_UNINSTALL_L2TPPLUS="https://peditx.ir/projects/L2tp-Plus/uninstall.sh"
+URL_UNINSTALL_SSTPPLUS="https://peditx.ir/projects/SStp-Plus/uninstall.sh"
 URL_UNINSTALL_OPENVPNPLUS="https://peditx.ir/projects/OpenVPN_Plus/uninstall.sh"
 URL_UNINSTALL_INSTALLTORPLUS="https://raw.githubusercontent.com/peditx/openwrt-torplus/main/.Files/uninstall.sh"
 URL_UNINSTALL_INSTALLSSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/uninstall_sshplus.sh"
@@ -61,6 +63,11 @@ install_wireguardplus() {
 install_l2tpplus() {
 	echo "Downloading L2tp Plus components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_L2TPPLUS" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_sstpplus() {
+	echo "Downloading SStp Plus components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_SSTPPLUS" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_openvpnplus() {
@@ -148,6 +155,11 @@ uninstall_wireguardplus() {
 uninstall_l2tpplus() {
 	echo "Downloading Uninstall L2tp Plus components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_L2TPPLUS" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_sstpplus() {
+	echo "Downloading Uninstall SStp Plus components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_SSTPPLUS" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
 uninstall_openvpnplus() {
@@ -257,6 +269,8 @@ case "$ACTION" in
 	uninstall_wireguardplus) uninstall_wireguardplus ;;
 	install_l2tpplus) install_l2tpplus ;;
 	uninstall_l2tpplus) uninstall_l2tpplus ;;
+	install_sstpplus) install_sstpplus ;;
+	uninstall_sstpplus) uninstall_sstpplus ;;
 	install_openvpnplus) install_openvpnplus ;;
 	uninstall_openvpnplus) uninstall_openvpnplus ;;
 	install_installtorplus) install_installtorplus ;;
