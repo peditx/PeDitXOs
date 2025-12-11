@@ -10,6 +10,7 @@ URL_INSTALL_INSTALLDNSJUMPER="https://peditx.ir/projects/DNSJumper/code/install.
 URL_INSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/install.sh"
 URL_INSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
 URL_INSTALL_ADGUARDHOME="https://peditx.ir/projects/AdGuard-Home/install.sh"
+URL_INSTALL_NEXTCLOUD="https://peditx.ir/projects/NextCloud/install.sh"
 URL_INSTALL_HOMEASSISTANT="https://peditx.ir/projects/Home%20Assistant-x86-pi/install.sh"
 URL_INSTALL_PORTAINER="https://peditx.ir/projects/Portainer-x86-pi/install.sh"
 URL_INSTALL_DOCKER="https://peditx.ir/projects/docker/install.sh"
@@ -36,6 +37,7 @@ URL_UNINSTALL_INSTALLDNSJUMPER="https://peditx.ir/projects/DNSJumper/code/uninst
 URL_UNINSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/uninstall.sh"
 URL_UNINSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_uninstall.sh"
 URL_UNINSTALL_ADGUARDHOME="https://peditx.ir/projects/AdGuard-Home/uninstall.sh"
+URL_UNINSTALL_NEXTCLOUD="https://peditx.ir/projects/NextCloud/uninstall.sh"
 URL_UNINSTALL_HOMEASSISTANT="https://peditx.ir/projects/Home%20Assistant-x86-pi/uninstall.sh"
 URL_UNINSTALL_PORTAINER="https://peditx.ir/projects/Portainer-x86-pi/uninstall.sh"
 URL_UNINSTALL_DOCKER="https://peditx.ir/projects/docker/uninstall.sh"
@@ -73,6 +75,11 @@ install_installaircast() {
 install_adguardhome() {
 	echo "Downloading AdGuard Home components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_ADGUARDHOME" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_nextcloud() {
+	echo "Downloading NextCloud components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_NEXTCLOUD" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_homeassistant() {
@@ -190,6 +197,11 @@ uninstall_installaircast() {
 uninstall_adguardhome() {
 	echo "Downloading Uninstall AdGuard Home components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_ADGUARDHOME" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_nextcloud() {
+	echo "Downloading Uninstall NextCloud components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_NEXTCLOUD" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
 uninstall_homeassistant() {
@@ -329,6 +341,8 @@ case "$ACTION" in
 	uninstall_installaircast) uninstall_installaircast ;;
 	install_adguardhome) install_adguardhome ;;
 	uninstall_adguardhome) uninstall_adguardhome ;;
+	install_nextcloud) install_nextcloud ;;
+	uninstall_nextcloud) uninstall_nextcloud ;;
 	install_homeassistant) install_homeassistant ;;
 	uninstall_homeassistant) uninstall_homeassistant ;;
 	install_portainer) install_portainer ;;
