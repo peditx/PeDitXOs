@@ -8,7 +8,7 @@
     "publisher": "PeDitX",
     "publisher_url": "https://github.com/peditx",
     "uninstall_id": "uninstall_installdnsjumper",
-    "uninstall_script_url": "https://www.google.com/search?q=https://peditx.ir/projects/DNSJumper/code/uninstall.sh",
+    "uninstall_script_url": "https://peditx.ir/projects/DNSJumper/code/uninstall.sh",
     "script_url": "https://peditx.ir/projects/DNSJumper/code/install.sh"
   },
   {
