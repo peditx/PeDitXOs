@@ -48,9 +48,21 @@
     "script_url": "https://peditx.ir/projects/AdGuard-Home/install.sh"
   },
   {
+    "id": "install_nextcloud",
+    "name": "NextCloud",
+    "description": "NextCloud Installation [Docker] on OpenWrt For optimal performance, it is recommended to use x86/64 architecture or Single Board Computers (SBCs) such as Raspberry Pi or NanoPi.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765448587532-1920x1080bb-80.png",
+    "version": "v1.0.1",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_nextcloud",
+    "uninstall_script_url": "https://peditx.ir/projects/NextCloud/uninstall.sh",
+    "script_url": "https://peditx.ir/projects/NextCloud/install.sh"
+  },
+  {
     "id": "install_homeassistant",
     "name": "Home Assistant",
-    "description": "Home Assistant Installation on OpenWrt For optimal performance, it is recommended to use x86/64 architecture or Single Board Computers (SBCs) such as Raspberry Pi or NanoPi.",
+    "description": "Home Assistant Installation [Docker] on OpenWrt For optimal performance, it is recommended to use x86/64 architecture or Single Board Computers (SBCs) such as Raspberry Pi or NanoPi.",
     "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765436961306-New_Home_Assistant_logo.svg.png",
     "version": "v1.0.1",
     "publisher": "PeDitX",
@@ -62,7 +74,7 @@
   {
     "id": "install_portainer",
     "name": "Portainer ",
-    "description": "Portainer Installation on OpenWrt For optimal performance, it is recommended to use x86/64 architecture or Single Board Computers (SBCs) such as Raspberry Pi or NanoPi.",
+    "description": "Portainer Installation [Docker] on OpenWrt For optimal performance, it is recommended to use x86/64 architecture or Single Board Computers (SBCs) such as Raspberry Pi or NanoPi.",
     "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765437352207-portainer_logo.png",
     "version": "v1.0.1",
     "publisher": "PeDitX",
