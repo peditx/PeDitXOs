@@ -48,6 +48,18 @@
     "script_url": "https://peditx.ir/projects/Home%20Assistant-x86-pi/install.sh"
   },
   {
+    "id": "install_portainer",
+    "name": "Portainer ",
+    "description": "Portainer Installation on OpenWrt For optimal performance, it is recommended to use x86/64 architecture or Single Board Computers (SBCs) such as Raspberry Pi or NanoPi.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765437352207-portainer_logo.png",
+    "version": "v1.0.1",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_portainer",
+    "uninstall_script_url": "https://peditx.ir/projects/Portainer-x86-pi/uninstall.sh",
+    "script_url": "https://peditx.ir/projects/Portainer-x86-pi/install.sh"
+  },
+  {
     "id": "install_wireguardplus",
     "name": "WireGuard Plus",
     "description": "This program installs WireGuard in a way that enables firewall control and rule management via Passwall and Passwall2.",
