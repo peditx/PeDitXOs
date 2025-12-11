@@ -60,6 +60,18 @@
     "script_url": "https://peditx.ir/projects/Portainer-x86-pi/install.sh"
   },
   {
+    "id": "install_docker",
+    "name": "Docker",
+    "description": "Docker Installation on OpenWrt For optimal performance, it is recommended to use x86/64 architecture or Single Board Computers (SBCs) such as Raspberry Pi or NanoPi.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765437549790-docker-logo-png_seeklogo-273037.png",
+    "version": "v1.0.1",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_docker",
+    "uninstall_script_url": "https://peditx.ir/projects/docker/uninstall.sh",
+    "script_url": "https://peditx.ir/projects/docker/install.sh"
+  },
+  {
     "id": "install_wireguardplus",
     "name": "WireGuard Plus",
     "description": "This program installs WireGuard in a way that enables firewall control and rule management via Passwall and Passwall2.",
