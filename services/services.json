@@ -36,6 +36,18 @@
     "script_url": "https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
   },
   {
+    "id": "install_adguardhome",
+    "name": "AdGuard Home",
+    "description": "AdGuard Home Installation on OpenWrt For optimal performance, it is recommended to use x86/64 architecture or Single Board Computers (SBCs) such as Raspberry Pi or NanoPi.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765441885035-adguard.logo_.jpg",
+    "version": "v1.0.1",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_adguardhome",
+    "uninstall_script_url": "https://peditx.ir/projects/AdGuard-Home/uninstall.sh",
+    "script_url": "https://peditx.ir/projects/AdGuard-Home/install.sh"
+  },
+  {
     "id": "install_homeassistant",
     "name": "Home Assistant",
     "description": "Home Assistant Installation on OpenWrt For optimal performance, it is recommended to use x86/64 architecture or Single Board Computers (SBCs) such as Raspberry Pi or NanoPi.",
