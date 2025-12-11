@@ -11,6 +11,7 @@ URL_INSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/install.sh"
 URL_INSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
 URL_INSTALL_HOMEASSISTANT="https://peditx.ir/projects/Home%20Assistant-x86-pi/install.sh"
 URL_INSTALL_PORTAINER="https://peditx.ir/projects/Portainer-x86-pi/install.sh"
+URL_INSTALL_DOCKER="https://peditx.ir/projects/docker/install.sh"
 URL_INSTALL_WIREGUARDPLUS="https://peditx.ir/projects/WireGuard-Plus/install.sh"
 URL_INSTALL_L2TPPLUS="https://peditx.ir/projects/L2tp-Plus/install.sh"
 URL_INSTALL_SSTPPLUS="https://peditx.ir/projects/SStp-Plus/install.sh"
@@ -35,6 +36,7 @@ URL_UNINSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/uninstall.s
 URL_UNINSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_uninstall.sh"
 URL_UNINSTALL_HOMEASSISTANT="https://peditx.ir/projects/Home%20Assistant-x86-pi/uninstall.sh"
 URL_UNINSTALL_PORTAINER="https://peditx.ir/projects/Portainer-x86-pi/uninstall.sh"
+URL_UNINSTALL_DOCKER="https://peditx.ir/projects/docker/uninstall.sh"
 URL_UNINSTALL_WIREGUARDPLUS="https://peditx.ir/projects/WireGuard-Plus/uninstall.sh"
 URL_UNINSTALL_L2TPPLUS="https://peditx.ir/projects/L2tp-Plus/uninstall.sh"
 URL_UNINSTALL_SSTPPLUS="https://peditx.ir/projects/SStp-Plus/uninstall.sh"
@@ -74,6 +76,11 @@ install_homeassistant() {
 install_portainer() {
 	echo "Downloading Portainer  components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_PORTAINER" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_docker() {
+	echo "Downloading Docker components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_DOCKER" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_wireguardplus() {
@@ -181,6 +188,11 @@ uninstall_homeassistant() {
 uninstall_portainer() {
 	echo "Downloading Uninstall Portainer  components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_PORTAINER" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_docker() {
+	echo "Downloading Uninstall Docker components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_DOCKER" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
 uninstall_wireguardplus() {
@@ -307,6 +319,8 @@ case "$ACTION" in
 	uninstall_homeassistant) uninstall_homeassistant ;;
 	install_portainer) install_portainer ;;
 	uninstall_portainer) uninstall_portainer ;;
+	install_docker) install_docker ;;
+	uninstall_docker) uninstall_docker ;;
 	install_wireguardplus) install_wireguardplus ;;
 	uninstall_wireguardplus) uninstall_wireguardplus ;;
 	install_l2tpplus) install_l2tpplus ;;
