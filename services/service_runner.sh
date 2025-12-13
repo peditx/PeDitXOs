@@ -13,6 +13,7 @@ URL_INSTALL_ADGUARDHOME="https://peditx.ir/projects/AdGuard-Home/install.sh"
 URL_INSTALL_NEXTCLOUD="https://peditx.ir/projects/NextCloud/install.sh"
 URL_INSTALL_HOMEASSISTANT="https://peditx.ir/projects/Home%20Assistant-x86-pi/install.sh"
 URL_INSTALL_MOSQUITTOMQTT="https://peditx.ir/projects/Mosquitto/install.sh"
+URL_INSTALL_NODERED="https://peditx.ir/projects/Node-Red/install.sh"
 URL_INSTALL_PORTAINER="https://peditx.ir/projects/Portainer-x86-pi/install.sh"
 URL_INSTALL_DOCKER="https://peditx.ir/projects/docker/install.sh"
 URL_INSTALL_WIREGUARDPLUS="https://peditx.ir/projects/WireGuard-Plus/install.sh"
@@ -41,6 +42,7 @@ URL_UNINSTALL_ADGUARDHOME="https://peditx.ir/projects/AdGuard-Home/uninstall.sh"
 URL_UNINSTALL_NEXTCLOUD="https://peditx.ir/projects/NextCloud/uninstall.sh"
 URL_UNINSTALL_HOMEASSISTANT="https://peditx.ir/projects/Home%20Assistant-x86-pi/uninstall.sh"
 URL_UNINSTALL_MOSQUITTOMQTT="https://peditx.ir/projects/Mosquitto/uninstall.sh"
+URL_UNINSTALL_NODERED="https://peditx.ir/projects/Node-Red/uninstall.sh"
 URL_UNINSTALL_PORTAINER="https://peditx.ir/projects/Portainer-x86-pi/uninstall.sh"
 URL_UNINSTALL_DOCKER="https://peditx.ir/projects/docker/uninstall.sh"
 URL_UNINSTALL_WIREGUARDPLUS="https://peditx.ir/projects/WireGuard-Plus/uninstall.sh"
@@ -92,6 +94,11 @@ install_homeassistant() {
 install_mosquittomqtt() {
 	echo "Downloading Mosquitto mqtt components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_MOSQUITTOMQTT" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_nodered() {
+	echo "Downloading Node-Red components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_NODERED" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_portainer() {
@@ -219,6 +226,11 @@ uninstall_homeassistant() {
 uninstall_mosquittomqtt() {
 	echo "Downloading Uninstall Mosquitto mqtt components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_MOSQUITTOMQTT" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_nodered() {
+	echo "Downloading Uninstall Node-Red components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_NODERED" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
 uninstall_portainer() {
@@ -359,6 +371,8 @@ case "$ACTION" in
 	uninstall_homeassistant) uninstall_homeassistant ;;
 	install_mosquittomqtt) install_mosquittomqtt ;;
 	uninstall_mosquittomqtt) uninstall_mosquittomqtt ;;
+	install_nodered) install_nodered ;;
+	uninstall_nodered) uninstall_nodered ;;
 	install_portainer) install_portainer ;;
 	uninstall_portainer) uninstall_portainer ;;
 	install_docker) install_docker ;;
