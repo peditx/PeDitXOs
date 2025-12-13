@@ -72,6 +72,18 @@
     "script_url": "https://peditx.ir/projects/Home%20Assistant-x86-pi/install.sh"
   },
   {
+    "id": "install_mosquittomqtt",
+    "name": "Mosquitto mqtt",
+    "description": "Mosquitto mqtt Installation [Docker] on OpenWrt For optimal performance, it is recommended to use x86/64 architecture or Single Board Computers (SBCs) such as Raspberry Pi or NanoPi.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765642055248-mosquitto-mono.png",
+    "version": "v1.0.1",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_mosquittomqtt",
+    "uninstall_script_url": "https://peditx.ir/projects/Mosquitto/uninstall.sh",
+    "script_url": "https://peditx.ir/projects/Mosquitto/install.sh"
+  },
+  {
     "id": "install_portainer",
     "name": "Portainer ",
     "description": "Portainer Installation [Docker] on OpenWrt For optimal performance, it is recommended to use x86/64 architecture or Single Board Computers (SBCs) such as Raspberry Pi or NanoPi.",
