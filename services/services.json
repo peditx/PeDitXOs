@@ -50,7 +50,7 @@
   {
     "id": "install_netdata",
     "name": "NetData",
-    "description": "Netdata is a lightweight, real-time performance and health monitoring solution tailored for OpenWrt devices. It provides granular insights into network traffic, CPU usage, and system resources with minimal overhead, making it ideal for monitoring router performance and connectivity stability.",
+    "description": "Netdata is a lightweight real-time performance and health monitoring solution tailored for OpenWrt devices. It provides granular insights into network traffic CPU usage and system resources with minimal overhead making it ideal for monitoring router performance and connectivity stability.",
     "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765838319410-43390781.png",
     "version": "v1.0.1",
     "publisher": "PeDitX",
