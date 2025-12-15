@@ -12,6 +12,7 @@ URL_INSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-ope
 URL_INSTALL_ADGUARDHOME="https://peditx.ir/projects/AdGuard-Home/install.sh"
 URL_INSTALL_NEXTCLOUD="https://peditx.ir/projects/NextCloud/install.sh"
 URL_INSTALL_HOMEASSISTANT="https://peditx.ir/projects/Home%20Assistant-x86-pi/install.sh"
+URL_INSTALL_HOMEBRIDGE="https://peditx.ir/projects/HomeBridge/install.sh"
 URL_INSTALL_MOSQUITTOMQTT="https://peditx.ir/projects/Mosquitto/install.sh"
 URL_INSTALL_NODERED="https://peditx.ir/projects/Node-Red/install.sh"
 URL_INSTALL_PORTAINER="https://peditx.ir/projects/Portainer-x86-pi/install.sh"
@@ -41,6 +42,7 @@ URL_UNINSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-o
 URL_UNINSTALL_ADGUARDHOME="https://peditx.ir/projects/AdGuard-Home/uninstall.sh"
 URL_UNINSTALL_NEXTCLOUD="https://peditx.ir/projects/NextCloud/uninstall.sh"
 URL_UNINSTALL_HOMEASSISTANT="https://peditx.ir/projects/Home%20Assistant-x86-pi/uninstall.sh"
+URL_UNINSTALL_HOMEBRIDGE="https://peditx.ir/projects/HomeBridge/uninstall.sh"
 URL_UNINSTALL_MOSQUITTOMQTT="https://peditx.ir/projects/Mosquitto/uninstall.sh"
 URL_UNINSTALL_NODERED="https://peditx.ir/projects/Node-Red/uninstall.sh"
 URL_UNINSTALL_PORTAINER="https://peditx.ir/projects/Portainer-x86-pi/uninstall.sh"
@@ -89,6 +91,11 @@ install_nextcloud() {
 install_homeassistant() {
 	echo "Downloading Home Assistant components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_HOMEASSISTANT" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_homebridge() {
+	echo "Downloading Home Bridge components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_HOMEBRIDGE" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_mosquittomqtt() {
@@ -221,6 +228,11 @@ uninstall_nextcloud() {
 uninstall_homeassistant() {
 	echo "Downloading Uninstall Home Assistant components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_HOMEASSISTANT" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_homebridge() {
+	echo "Downloading Uninstall Home Bridge components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_HOMEBRIDGE" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
 uninstall_mosquittomqtt() {
@@ -369,6 +381,8 @@ case "$ACTION" in
 	uninstall_nextcloud) uninstall_nextcloud ;;
 	install_homeassistant) install_homeassistant ;;
 	uninstall_homeassistant) uninstall_homeassistant ;;
+	install_homebridge) install_homebridge ;;
+	uninstall_homebridge) uninstall_homebridge ;;
 	install_mosquittomqtt) install_mosquittomqtt ;;
 	uninstall_mosquittomqtt) uninstall_mosquittomqtt ;;
 	install_nodered) install_nodered ;;
