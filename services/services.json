@@ -48,6 +48,18 @@
     "script_url": "https://peditx.ir/projects/AdGuard-Home/install.sh"
   },
   {
+    "id": "install_netdata",
+    "name": "NetData",
+    "description": "Netdata is a lightweight, real-time performance and health monitoring solution tailored for OpenWrt devices. It provides granular insights into network traffic, CPU usage, and system resources with minimal overhead, making it ideal for monitoring router performance and connectivity stability.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765838319410-43390781.png",
+    "version": "v1.0.1",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_netdata",
+    "uninstall_script_url": "https://peditx.ir/projects/NetData/uninstall.sh",
+    "script_url": "https://peditx.ir/projects/NetData/install.sh"
+  },
+  {
     "id": "install_nextcloud",
     "name": "NextCloud",
     "description": "NextCloud Installation [Docker] on OpenWrt For optimal performance, it is recommended to use x86/64 architecture or Single Board Computers (SBCs) such as Raspberry Pi or NanoPi.",
