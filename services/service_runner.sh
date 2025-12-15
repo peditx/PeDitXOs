@@ -12,6 +12,7 @@ URL_INSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-ope
 URL_INSTALL_ADGUARDHOME="https://peditx.ir/projects/AdGuard-Home/install.sh"
 URL_INSTALL_NETDATA="https://peditx.ir/projects/NetData/install.sh"
 URL_INSTALL_NEXTCLOUD="https://peditx.ir/projects/NextCloud/install.sh"
+URL_INSTALL_PLEXMEDIASERVER="https://peditx.ir/projects/PlexServer/install.sh"
 URL_INSTALL_HOMEASSISTANT="https://peditx.ir/projects/Home%20Assistant-x86-pi/install.sh"
 URL_INSTALL_HOMEBRIDGE="https://peditx.ir/projects/HomeBridge/install.sh"
 URL_INSTALL_MOSQUITTOMQTT="https://peditx.ir/projects/Mosquitto/install.sh"
@@ -43,6 +44,7 @@ URL_UNINSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-o
 URL_UNINSTALL_ADGUARDHOME="https://peditx.ir/projects/AdGuard-Home/uninstall.sh"
 URL_UNINSTALL_NETDATA="https://peditx.ir/projects/NetData/uninstall.sh"
 URL_UNINSTALL_NEXTCLOUD="https://peditx.ir/projects/NextCloud/uninstall.sh"
+URL_UNINSTALL_PLEXMEDIASERVER="https://peditx.ir/projects/PlexServer/uninstall.sh"
 URL_UNINSTALL_HOMEASSISTANT="https://peditx.ir/projects/Home%20Assistant-x86-pi/uninstall.sh"
 URL_UNINSTALL_HOMEBRIDGE="https://peditx.ir/projects/HomeBridge/uninstall.sh"
 URL_UNINSTALL_MOSQUITTOMQTT="https://peditx.ir/projects/Mosquitto/uninstall.sh"
@@ -93,6 +95,11 @@ install_netdata() {
 install_nextcloud() {
 	echo "Downloading NextCloud components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_NEXTCLOUD" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_plexmediaserver() {
+	echo "Downloading Plex Media Server components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_PLEXMEDIASERVER" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_homeassistant() {
@@ -235,6 +242,11 @@ uninstall_netdata() {
 uninstall_nextcloud() {
 	echo "Downloading Uninstall NextCloud components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_NEXTCLOUD" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_plexmediaserver() {
+	echo "Downloading Uninstall Plex Media Server components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_PLEXMEDIASERVER" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
 uninstall_homeassistant() {
@@ -393,6 +405,8 @@ case "$ACTION" in
 	uninstall_netdata) uninstall_netdata ;;
 	install_nextcloud) install_nextcloud ;;
 	uninstall_nextcloud) uninstall_nextcloud ;;
+	install_plexmediaserver) install_plexmediaserver ;;
+	uninstall_plexmediaserver) uninstall_plexmediaserver ;;
 	install_homeassistant) install_homeassistant ;;
 	uninstall_homeassistant) uninstall_homeassistant ;;
 	install_homebridge) install_homebridge ;;
