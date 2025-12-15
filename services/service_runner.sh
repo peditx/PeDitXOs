@@ -10,6 +10,7 @@ URL_INSTALL_INSTALLDNSJUMPER="https://peditx.ir/projects/DNSJumper/code/install.
 URL_INSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/install.sh"
 URL_INSTALL_INSTALLAIRCAST="https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765836576167-aircast (1).png"
 URL_INSTALL_ADGUARDHOME="https://peditx.ir/projects/AdGuard-Home/install.sh"
+URL_INSTALL_NETDATA="https://peditx.ir/projects/NetData/install.sh"
 URL_INSTALL_NEXTCLOUD="https://peditx.ir/projects/NextCloud/install.sh"
 URL_INSTALL_HOMEASSISTANT="https://peditx.ir/projects/Home%20Assistant-x86-pi/install.sh"
 URL_INSTALL_HOMEBRIDGE="https://peditx.ir/projects/HomeBridge/install.sh"
@@ -40,6 +41,7 @@ URL_UNINSTALL_INSTALLDNSJUMPER="https://peditx.ir/projects/DNSJumper/code/uninst
 URL_UNINSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/uninstall.sh"
 URL_UNINSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_uninstall.sh"
 URL_UNINSTALL_ADGUARDHOME="https://peditx.ir/projects/AdGuard-Home/uninstall.sh"
+URL_UNINSTALL_NETDATA="https://peditx.ir/projects/NetData/uninstall.sh"
 URL_UNINSTALL_NEXTCLOUD="https://peditx.ir/projects/NextCloud/uninstall.sh"
 URL_UNINSTALL_HOMEASSISTANT="https://peditx.ir/projects/Home%20Assistant-x86-pi/uninstall.sh"
 URL_UNINSTALL_HOMEBRIDGE="https://peditx.ir/projects/HomeBridge/uninstall.sh"
@@ -81,6 +83,11 @@ install_installaircast() {
 install_adguardhome() {
 	echo "Downloading AdGuard Home components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_ADGUARDHOME" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_netdata() {
+	echo "Downloading NetData components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_NETDATA" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_nextcloud() {
@@ -218,6 +225,11 @@ uninstall_installaircast() {
 uninstall_adguardhome() {
 	echo "Downloading Uninstall AdGuard Home components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_ADGUARDHOME" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_netdata() {
+	echo "Downloading Uninstall NetData components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_NETDATA" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
 uninstall_nextcloud() {
@@ -377,6 +389,8 @@ case "$ACTION" in
 	uninstall_installaircast) uninstall_installaircast ;;
 	install_adguardhome) install_adguardhome ;;
 	uninstall_adguardhome) uninstall_adguardhome ;;
+	install_netdata) install_netdata ;;
+	uninstall_netdata) uninstall_netdata ;;
 	install_nextcloud) install_nextcloud ;;
 	uninstall_nextcloud) uninstall_nextcloud ;;
 	install_homeassistant) install_homeassistant ;;
