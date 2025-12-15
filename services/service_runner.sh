@@ -8,7 +8,7 @@ ACTION="$1"
 # --- Dynamic URLs Start ---
 URL_INSTALL_INSTALLDNSJUMPER="https://peditx.ir/projects/DNSJumper/code/install.sh"
 URL_INSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/install.sh"
-URL_INSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
+URL_INSTALL_INSTALLAIRCAST="https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765836576167-aircast (1).png"
 URL_INSTALL_ADGUARDHOME="https://peditx.ir/projects/AdGuard-Home/install.sh"
 URL_INSTALL_NEXTCLOUD="https://peditx.ir/projects/NextCloud/install.sh"
 URL_INSTALL_HOMEASSISTANT="https://peditx.ir/projects/Home%20Assistant-x86-pi/install.sh"
@@ -75,7 +75,7 @@ install_pxnotifier() {
 
 install_installaircast() {
 	echo "Downloading Air-Cast components..."
-	cd /tmp && rm -f aircast_install.sh && wget -q "$URL_INSTALL_INSTALLAIRCAST" -O aircast_install.sh && chmod +x aircast_install.sh && sh aircast_install.sh
+	cd /tmp && rm -f 1765836576167-aircast (1).png && wget -q "$URL_INSTALL_INSTALLAIRCAST" -O 1765836576167-aircast (1).png && chmod +x 1765836576167-aircast (1).png && sh 1765836576167-aircast (1).png
 }
 
 install_adguardhome() {
