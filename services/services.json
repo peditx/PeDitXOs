@@ -27,13 +27,13 @@
     "id": "install_installaircast",
     "name": "Air-Cast",
     "description": "A service for audio and video streaming.",
-    "icon_url": "https://raw.githubusercontent.com/peditx/aircast-openwrt/refs/heads/main/icon/aircast.png",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765836576167-aircast (1).png",
     "version": "v15",
     "publisher": "PeDitX",
     "publisher_url": "https://github.com/peditx",
     "uninstall_id": "uninstall_installaircast",
     "uninstall_script_url": "https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_uninstall.sh",
-    "script_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765836576167-aircast (1).png"
+    "script_url": "https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
   },
   {
     "id": "install_adguardhome",
@@ -50,7 +50,7 @@
   {
     "id": "install_netdata",
     "name": "NetData",
-    "description": "1",
+    "description": "Netdata is a lightweight, real-time performance and health monitoring solution tailored for OpenWrt devices. It provides granular insights into network traffic, CPU usage, and system resources with minimal overhead, making it ideal for monitoring router performance and connectivity stability.",
     "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765838319410-43390781.png",
     "version": "v1.0.1",
     "publisher": "PeDitX",
