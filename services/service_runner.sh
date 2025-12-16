@@ -13,6 +13,7 @@ URL_INSTALL_ADGUARDHOME="https://peditx.ir/projects/AdGuard-Home/install.sh"
 URL_INSTALL_NETDATA="https://peditx.ir/projects/NetData/install.sh"
 URL_INSTALL_NEXTCLOUD="https://peditx.ir/projects/NextCloud/install.sh"
 URL_INSTALL_PLEXMEDIASERVER="https://peditx.ir/projects/PlexServer/install.sh"
+URL_INSTALL_MUSICASSISTANT="https://peditx.ir/projects/MusicAssistant/install.sh"
 URL_INSTALL_HOMEASSISTANT="https://peditx.ir/projects/Home%20Assistant-x86-pi/install.sh"
 URL_INSTALL_HOMEBRIDGE="https://peditx.ir/projects/HomeBridge/install.sh"
 URL_INSTALL_MOSQUITTOMQTT="https://peditx.ir/projects/Mosquitto/install.sh"
@@ -46,6 +47,7 @@ URL_UNINSTALL_ADGUARDHOME="https://peditx.ir/projects/AdGuard-Home/uninstall.sh"
 URL_UNINSTALL_NETDATA="https://peditx.ir/projects/NetData/uninstall.sh"
 URL_UNINSTALL_NEXTCLOUD="https://peditx.ir/projects/NextCloud/uninstall.sh"
 URL_UNINSTALL_PLEXMEDIASERVER="https://peditx.ir/projects/PlexServer/uninstall.sh"
+URL_UNINSTALL_MUSICASSISTANT="https://peditx.ir/projects/MusicAssistant/uninstall.sh"
 URL_UNINSTALL_HOMEASSISTANT="https://peditx.ir/projects/Home%20Assistant-x86-pi/uninstall.sh"
 URL_UNINSTALL_HOMEBRIDGE="https://peditx.ir/projects/HomeBridge/uninstall.sh"
 URL_UNINSTALL_MOSQUITTOMQTT="https://peditx.ir/projects/Mosquitto/uninstall.sh"
@@ -102,6 +104,11 @@ install_nextcloud() {
 install_plexmediaserver() {
 	echo "Downloading Plex Media Server components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_PLEXMEDIASERVER" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_musicassistant() {
+	echo "Downloading Music Assistant components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_MUSICASSISTANT" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_homeassistant() {
@@ -254,6 +261,11 @@ uninstall_nextcloud() {
 uninstall_plexmediaserver() {
 	echo "Downloading Uninstall Plex Media Server components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_PLEXMEDIASERVER" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_musicassistant() {
+	echo "Downloading Uninstall Music Assistant components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_MUSICASSISTANT" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
 uninstall_homeassistant() {
@@ -419,6 +431,8 @@ case "$ACTION" in
 	uninstall_nextcloud) uninstall_nextcloud ;;
 	install_plexmediaserver) install_plexmediaserver ;;
 	uninstall_plexmediaserver) uninstall_plexmediaserver ;;
+	install_musicassistant) install_musicassistant ;;
+	uninstall_musicassistant) uninstall_musicassistant ;;
 	install_homeassistant) install_homeassistant ;;
 	uninstall_homeassistant) uninstall_homeassistant ;;
 	install_homebridge) install_homebridge ;;
