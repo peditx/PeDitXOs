@@ -84,6 +84,18 @@
     "script_url": "https://peditx.ir/projects/PlexServer/install.sh"
   },
   {
+    "id": "install_musicassistant",
+    "name": "Music Assistant",
+    "description": "Music Assistant Installation [Docker] on OpenWrt For optimal performance, it is recommended to use x86/64 architecture or Single Board Computers (SBCs) such as Raspberry Pi or NanoPi.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765924817610-71128003.png",
+    "version": "v1.0.1",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_musicassistant",
+    "uninstall_script_url": "https://peditx.ir/projects/MusicAssistant/uninstall.sh",
+    "script_url": "https://peditx.ir/projects/MusicAssistant/install.sh"
+  },
+  {
     "id": "install_homeassistant",
     "name": "Home Assistant",
     "description": "Home Assistant Installation [Docker] on OpenWrt For optimal performance, it is recommended to use x86/64 architecture or Single Board Computers (SBCs) such as Raspberry Pi or NanoPi.",
