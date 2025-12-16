@@ -296,6 +296,18 @@
     "script_url": "https://raw.githubusercontent.com/peditx/iranIPS/refs/heads/main/.files/iranips.sh"
   },
   {
+    "id": "install_linuxtinydesktop",
+    "name": "Linux Tiny Desktop",
+    "description": "Linux Desktop Installation [Docker] on OpenWrt For optimal performance, it is recommended to use x86/64 architecture or Single Board Computers (SBCs) such as Raspberry Pi or NanoPi.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765847231015-Icons8_flat_linux.svg.png",
+    "version": "v1.0.1",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_linuxtinydesktop",
+    "uninstall_script_url": "https://peditx.ir/projects/Linux/uninstall.sh",
+    "script_url": "https://peditx.ir/projects/Linux/install.sh"
+  },
+  {
     "id": "install_carbonpx",
     "name": "CarbonPX Theme",
     "description": "CarbonPX theme is a Oled modern, mobile-optimized theme for OpenWrt, designed for both desktop and mobile devices.",
