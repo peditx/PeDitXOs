@@ -12,6 +12,7 @@ URL_INSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-ope
 URL_INSTALL_ADGUARDHOME="https://peditx.ir/projects/AdGuard-Home/install.sh"
 URL_INSTALL_NETDATA="https://peditx.ir/projects/NetData/install.sh"
 URL_INSTALL_NEXTCLOUD="https://peditx.ir/projects/NextCloud/install.sh"
+URL_INSTALL_JELLYFIN="https://peditx.ir/projects/Jellyfin/install.sh"
 URL_INSTALL_PLEXMEDIASERVER="https://peditx.ir/projects/PlexServer/install.sh"
 URL_INSTALL_MUSICASSISTANT="https://peditx.ir/projects/MusicAssistant/install.sh"
 URL_INSTALL_HOMEASSISTANT="https://peditx.ir/projects/Home%20Assistant-x86-pi/install.sh"
@@ -46,6 +47,7 @@ URL_UNINSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-o
 URL_UNINSTALL_ADGUARDHOME="https://peditx.ir/projects/AdGuard-Home/uninstall.sh"
 URL_UNINSTALL_NETDATA="https://peditx.ir/projects/NetData/uninstall.sh"
 URL_UNINSTALL_NEXTCLOUD="https://peditx.ir/projects/NextCloud/uninstall.sh"
+URL_UNINSTALL_JELLYFIN="https://peditx.ir/projects/Jellyfin/uninstall.sh"
 URL_UNINSTALL_PLEXMEDIASERVER="https://peditx.ir/projects/PlexServer/uninstall.sh"
 URL_UNINSTALL_MUSICASSISTANT="https://peditx.ir/projects/MusicAssistant/uninstall.sh"
 URL_UNINSTALL_HOMEASSISTANT="https://peditx.ir/projects/Home%20Assistant-x86-pi/uninstall.sh"
@@ -99,6 +101,11 @@ install_netdata() {
 install_nextcloud() {
 	echo "Downloading NextCloud components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_NEXTCLOUD" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_jellyfin() {
+	echo "Downloading Jellyfin components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_JELLYFIN" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_plexmediaserver() {
@@ -256,6 +263,11 @@ uninstall_netdata() {
 uninstall_nextcloud() {
 	echo "Downloading Uninstall NextCloud components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_NEXTCLOUD" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_jellyfin() {
+	echo "Downloading Uninstall Jellyfin components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_JELLYFIN" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
 uninstall_plexmediaserver() {
@@ -429,6 +441,8 @@ case "$ACTION" in
 	uninstall_netdata) uninstall_netdata ;;
 	install_nextcloud) install_nextcloud ;;
 	uninstall_nextcloud) uninstall_nextcloud ;;
+	install_jellyfin) install_jellyfin ;;
+	uninstall_jellyfin) uninstall_jellyfin ;;
 	install_plexmediaserver) install_plexmediaserver ;;
 	uninstall_plexmediaserver) uninstall_plexmediaserver ;;
 	install_musicassistant) install_musicassistant ;;
