@@ -72,6 +72,18 @@
     "script_url": "https://peditx.ir/projects/NextCloud/install.sh"
   },
   {
+    "id": "install_jellyfin",
+    "name": "Jellyfin",
+    "description": "Jellyfin Installation [Docker] on OpenWrt For optimal performance, it is recommended to use x86/64 architecture or Single Board Computers (SBCs) such as Raspberry Pi or NanoPi.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765929652665-unnamed (2).png",
+    "version": "v1.0.1",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_jellyfin",
+    "uninstall_script_url": "https://peditx.ir/projects/Jellyfin/uninstall.sh",
+    "script_url": "https://peditx.ir/projects/Jellyfin/install.sh"
+  },
+  {
     "id": "install_plexmediaserver",
     "name": "Plex Media Server",
     "description": "Plex Media Server Installation [Docker] on OpenWrt For optimal performance, it is recommended to use x86/64 architecture or Single Board Computers (SBCs) such as Raspberry Pi or NanoPi.",
