@@ -112,7 +112,7 @@
     "name": "Home Assistant",
     "description": "Home Assistant Installation [Docker] on OpenWrt For optimal performance, it is recommended to use x86/64 architecture or Single Board Computers (SBCs) such as Raspberry Pi or NanoPi.",
     "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765436961306-New_Home_Assistant_logo.svg.png",
-    "version": "v1.0.1",
+    "version": "v2.0.1",
     "publisher": "PeDitX",
     "publisher_url": "https://github.com/peditx",
     "uninstall_id": "uninstall_homeassistant",
