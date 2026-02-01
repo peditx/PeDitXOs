@@ -6,6 +6,7 @@
 ACTION="$1"
 
 # --- Dynamic URLs Start ---
+URL_INSTALL_PEDITXOSIRANIANREPO="https://peditx.ir/projects/PeDitXOS-Repo/install.sh"
 URL_INSTALL_INSTALLDNSJUMPER="https://peditx.ir/projects/DNSJumper/code/install.sh"
 URL_INSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/install.sh"
 URL_INSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
@@ -41,6 +42,7 @@ URL_INSTALL_INSTALLARGONTHEME="https://peditx.ir/foreignscs/luci-theme-argon/ins
 # --- Dynamic URLs End ---
 
 # --- Dynamic Uninstall URLs Start ---
+URL_UNINSTALL_PEDITXOSIRANIANREPO="https://peditx.ir/projects/PeDitXOS-Repo/uninstall.sh"
 URL_UNINSTALL_INSTALLDNSJUMPER="https://peditx.ir/projects/DNSJumper/code/uninstall.sh"
 URL_UNINSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/uninstall.sh"
 URL_UNINSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_uninstall.sh"
@@ -73,6 +75,11 @@ URL_UNINSTALL_INSTALLARGONTHEME="https://peditx.ir/foreignscs/luci-theme-argon/u
 
 
 # --- Dynamic Functions Start ---
+install_peditxosiranianrepo() {
+	echo "Downloading PeDitXOS Iranian Repo components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_PEDITXOSIRANIANREPO" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
 install_installdnsjumper() {
 	echo "Downloading DNSJumper components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_INSTALLDNSJUMPER" -O install.sh && chmod +x install.sh && sh install.sh
@@ -235,6 +242,11 @@ install_installargontheme() {
 # --- Dynamic Functions End ---
 
 # --- Dynamic Uninstall Functions Start ---
+uninstall_peditxosiranianrepo() {
+	echo "Downloading Uninstall PeDitXOS Iranian Repo components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_PEDITXOSIRANIANREPO" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
 uninstall_installdnsjumper() {
 	echo "Downloading Uninstall DNSJumper components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_INSTALLDNSJUMPER" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
@@ -429,6 +441,8 @@ self_update_view() {
 # --- Main Execution Block ---
 case "$ACTION" in
 # --- Dynamic Cases Start ---
+	install_peditxosiranianrepo) install_peditxosiranianrepo ;;
+	uninstall_peditxosiranianrepo) uninstall_peditxosiranianrepo ;;
 	install_installdnsjumper) install_installdnsjumper ;;
 	uninstall_installdnsjumper) uninstall_installdnsjumper ;;
 	install_pxnotifier) install_pxnotifier ;;
