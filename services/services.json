@@ -4,7 +4,7 @@
     "name": "PeDitXOS Iranian Repo",
     "description": "PeDitXOS repository is highly recommended for users in Iran",
     "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1769938551545-photo_2025-08-22_22-18-57.jpg",
-    "version": "v2.0.0",
+    "version": "v2.0.1",
     "publisher": "PeDitX",
     "publisher_url": "https://github.com/peditx",
     "uninstall_id": "uninstall_peditxosiranianrepo",
