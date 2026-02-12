@@ -324,6 +324,16 @@
     "script_url": "https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/install.sh"
   },
   {
+    "id": "install_amneziawg",
+    "name": "AmneziaWG",
+    "description": "AmneziaWG service for OpenWrt.",
+    "icon_url": "https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/icon/amneziawg.png",
+    "version": "v24.10.2",
+    "publisher": "Slava-Shchipunov",
+    "publisher_url": "https://github.com/Slava-Shchipunov/",
+    "script_url": "https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh"
+  },
+  {
     "id": "install_openclashplus",
     "name": "OpenClash Plus",
     "description": "Easy install Clash Client For OpenWrt (full UI for apk and ipk)",
@@ -336,16 +346,6 @@
     "script_url": "https://peditx.ir/foreignscs/OpenClash/install.sh"
   },
   {
-    "id": "install_amneziawg",
-    "name": "AmneziaWG",
-    "description": "AmneziaWG service for OpenWrt.",
-    "icon_url": "https://raw.githubusercontent.com/peditx/PeDitXOs/refs/heads/main/.files/icon/amneziawg.png",
-    "version": "v24.10.2",
-    "publisher": "Slava-Shchipunov",
-    "publisher_url": "https://github.com/Slava-Shchipunov/",
-    "script_url": "https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh"
-  },
-  {
     "id": "install_iranips",
     "name": "Iran Rule IPS for Passwall2",
     "description": "Bypass iran ips for passwall2. after install this script you can use IRAN shunt in your Passwall2",
@@ -354,6 +354,18 @@
     "publisher": "PeDitX",
     "publisher_url": "https://github.com/peditx",
     "script_url": "https://raw.githubusercontent.com/peditx/iranIPS/refs/heads/main/.files/iranips.sh"
+  },
+  {
+    "id": "install_python",
+    "name": "Python",
+    "description": "Installing Python on Openwrt.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1770903427840-Python-logo-notext.svg.png",
+    "version": "Master",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_python",
+    "uninstall_script_url": "https://peditx.ir/projects/Python/uninstall.sh",
+    "script_url": "https://peditx.ir/projects/Python/install.sh"
   },
   {
     "id": "install_linuxtinydesktop",
