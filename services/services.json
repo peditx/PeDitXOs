@@ -12,6 +12,30 @@
     "script_url": "https://peditx.ir/projects/PeDitXOS-Repo/install.sh"
   },
   {
+    "id": "install_passwall2",
+    "name": "Passwall2",
+    "description": "PassWall2 is a powerful LuCI web interface application for OpenWrt that provides advanced proxy and VPN functionality. It's a comprehensive solution for network traffic management proxy services and access control on OpenWrt-based routers.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1770898110634-Gemini_Generated_Image_4bzjkd4bzjkd4bzj.png",
+    "version": "Latest",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_passwall2",
+    "uninstall_script_url": "https://peditx.ir/projects/passwall/Passwall2/uninstall.sh",
+    "script_url": "https://peditx.ir/projects/passwall/Passwall2/install.sh"
+  },
+  {
+    "id": "install_passwall",
+    "name": "Passwall",
+    "description": "PassWall is a powerful LuCI web interface application for OpenWrt that provides advanced proxy and VPN functionality. It's a comprehensive solution for network traffic management proxy services and access control on OpenWrt-based routers.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1770898361476-Gemini_Generated_Image_dwllxsdwllxsdwll.png",
+    "version": "Latest",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_passwall",
+    "uninstall_script_url": "https://peditx.ir/projects/passwall/Passwall1/uninstall.sh",
+    "script_url": "https://peditx.ir/projects/passwall/Passwall1/install.sh"
+  },
+  {
     "id": "install_installdnsjumper",
     "name": "DNSJumper",
     "description": "An advanced DNS management panel for OpenWrt (LuCI) to test, sort, and easily change DNS with one click.",
