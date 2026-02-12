@@ -7,6 +7,8 @@ ACTION="$1"
 
 # --- Dynamic URLs Start ---
 URL_INSTALL_PEDITXOSIRANIANREPO="https://peditx.ir/projects/PeDitXOS-Repo/install.sh"
+URL_INSTALL_PASSWALL2="https://peditx.ir/projects/passwall/Passwall2/install.sh"
+URL_INSTALL_PASSWALL="https://peditx.ir/projects/passwall/Passwall1/install.sh"
 URL_INSTALL_INSTALLDNSJUMPER="https://peditx.ir/projects/DNSJumper/code/install.sh"
 URL_INSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/install.sh"
 URL_INSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
@@ -43,6 +45,8 @@ URL_INSTALL_INSTALLARGONTHEME="https://peditx.ir/foreignscs/luci-theme-argon/ins
 
 # --- Dynamic Uninstall URLs Start ---
 URL_UNINSTALL_PEDITXOSIRANIANREPO="https://peditx.ir/projects/PeDitXOS-Repo/uninstall.sh"
+URL_UNINSTALL_PASSWALL2="https://peditx.ir/projects/passwall/Passwall2/uninstall.sh"
+URL_UNINSTALL_PASSWALL="https://peditx.ir/projects/passwall/Passwall1/uninstall.sh"
 URL_UNINSTALL_INSTALLDNSJUMPER="https://peditx.ir/projects/DNSJumper/code/uninstall.sh"
 URL_UNINSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/uninstall.sh"
 URL_UNINSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_uninstall.sh"
@@ -78,6 +82,16 @@ URL_UNINSTALL_INSTALLARGONTHEME="https://peditx.ir/foreignscs/luci-theme-argon/u
 install_peditxosiranianrepo() {
 	echo "Downloading PeDitXOS Iranian Repo components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_PEDITXOSIRANIANREPO" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_passwall2() {
+	echo "Downloading Passwall2 components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_PASSWALL2" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_passwall() {
+	echo "Downloading Passwall components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_PASSWALL" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_installdnsjumper() {
@@ -245,6 +259,16 @@ install_installargontheme() {
 uninstall_peditxosiranianrepo() {
 	echo "Downloading Uninstall PeDitXOS Iranian Repo components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_PEDITXOSIRANIANREPO" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_passwall2() {
+	echo "Downloading Uninstall Passwall2 components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_PASSWALL2" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_passwall() {
+	echo "Downloading Uninstall Passwall components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_PASSWALL" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
 uninstall_installdnsjumper() {
@@ -443,6 +467,10 @@ case "$ACTION" in
 # --- Dynamic Cases Start ---
 	install_peditxosiranianrepo) install_peditxosiranianrepo ;;
 	uninstall_peditxosiranianrepo) uninstall_peditxosiranianrepo ;;
+	install_passwall2) install_passwall2 ;;
+	uninstall_passwall2) uninstall_passwall2 ;;
+	install_passwall) install_passwall ;;
+	uninstall_passwall) uninstall_passwall ;;
 	install_installdnsjumper) install_installdnsjumper ;;
 	uninstall_installdnsjumper) uninstall_installdnsjumper ;;
 	install_pxnotifier) install_pxnotifier ;;
