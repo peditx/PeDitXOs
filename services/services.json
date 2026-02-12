@@ -356,18 +356,6 @@
     "script_url": "https://raw.githubusercontent.com/peditx/iranIPS/refs/heads/main/.files/iranips.sh"
   },
   {
-    "id": "install_python",
-    "name": "Python",
-    "description": "Installing Python on Openwrt.",
-    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1770903427840-Python-logo-notext.svg.png",
-    "version": "Master",
-    "publisher": "PeDitX",
-    "publisher_url": "https://github.com/peditx",
-    "uninstall_id": "uninstall_python",
-    "uninstall_script_url": "https://peditx.ir/projects/Python/uninstall.sh",
-    "script_url": "https://peditx.ir/projects/Python/install.sh"
-  },
-  {
     "id": "install_linuxtinydesktop",
     "name": "Linux Tiny Desktop",
     "description": "Linux Desktop Installation [Docker] on OpenWrt For optimal performance, it is recommended to use x86/64 architecture or Single Board Computers (SBCs) such as Raspberry Pi or NanoPi.",
@@ -378,6 +366,18 @@
     "uninstall_id": "uninstall_linuxtinydesktop",
     "uninstall_script_url": "https://peditx.ir/projects/Linux/uninstall.sh",
     "script_url": "https://peditx.ir/projects/Linux/install.sh"
+  },
+  {
+    "id": "install_python",
+    "name": "Python",
+    "description": "Installing Python on Openwrt.",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1770903427840-Python-logo-notext.svg.png",
+    "version": "Master",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_python",
+    "uninstall_script_url": "https://peditx.ir/projects/Python/uninstall.sh",
+    "script_url": "https://peditx.ir/projects/Python/install.sh"
   },
   {
     "id": "install_carbonpx",
