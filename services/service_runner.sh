@@ -36,8 +36,8 @@ URL_INSTALL_WARPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpp
 URL_INSTALL_AMNEZIAWG="https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh"
 URL_INSTALL_OPENCLASHPLUS="https://peditx.ir/foreignscs/OpenClash/install.sh"
 URL_INSTALL_IRANIPS="https://raw.githubusercontent.com/peditx/iranIPS/refs/heads/main/.files/iranips.sh"
-URL_INSTALL_PYTHON="https://peditx.ir/projects/Python/install.sh"
 URL_INSTALL_LINUXTINYDESKTOP="https://peditx.ir/projects/Linux/install.sh"
+URL_INSTALL_PYTHON="https://peditx.ir/projects/Python/install.sh"
 URL_INSTALL_CARBONPX="https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/install.sh"
 URL_INSTALL_PEDITX="https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/install.sh"
 URL_INSTALL_INSTALLAURORATHEME="https://peditx.ir/foreignscs/luci-theme-aurora/install.sh"
@@ -73,8 +73,8 @@ URL_UNINSTALL_INSTALLSSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/m
 URL_UNINSTALL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/uninstall.sh"
 URL_UNINSTALL_WARPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/uninstall.sh"
 URL_UNINSTALL_OPENCLASHPLUS="https://peditx.ir/foreignscs/OpenClash/uninstall.sh"
-URL_UNINSTALL_PYTHON="https://peditx.ir/projects/Python/uninstall.sh"
 URL_UNINSTALL_LINUXTINYDESKTOP="https://peditx.ir/projects/Linux/uninstall.sh"
+URL_UNINSTALL_PYTHON="https://peditx.ir/projects/Python/uninstall.sh"
 URL_UNINSTALL_INSTALLAURORATHEME="https://peditx.ir/foreignscs/luci-theme-aurora/uninstall.sh"
 URL_UNINSTALL_INSTALLARGONTHEME="https://peditx.ir/foreignscs/luci-theme-argon/uninstall.sh"
 # --- Dynamic Uninstall URLs End ---
@@ -231,14 +231,14 @@ install_iranips() {
 	cd /tmp && rm -f iranips.sh && wget -q "$URL_INSTALL_IRANIPS" -O iranips.sh && chmod +x iranips.sh && sh iranips.sh
 }
 
-install_python() {
-	echo "Downloading Python components..."
-	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_PYTHON" -O install.sh && chmod +x install.sh && sh install.sh
-}
-
 install_linuxtinydesktop() {
 	echo "Downloading Linux Tiny Desktop components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_LINUXTINYDESKTOP" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_python() {
+	echo "Downloading Python components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_PYTHON" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_carbonpx() {
@@ -403,14 +403,14 @@ uninstall_openclashplus() {
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_OPENCLASHPLUS" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
-uninstall_python() {
-	echo "Downloading Uninstall Python components..."
-	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_PYTHON" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
-}
-
 uninstall_linuxtinydesktop() {
 	echo "Downloading Uninstall Linux Tiny Desktop components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_LINUXTINYDESKTOP" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_python() {
+	echo "Downloading Uninstall Python components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_PYTHON" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
 uninstall_installauroratheme() {
@@ -535,10 +535,10 @@ case "$ACTION" in
 	install_openclashplus) install_openclashplus ;;
 	uninstall_openclashplus) uninstall_openclashplus ;;
 	install_iranips) install_iranips ;;
-	install_python) install_python ;;
-	uninstall_python) uninstall_python ;;
 	install_linuxtinydesktop) install_linuxtinydesktop ;;
 	uninstall_linuxtinydesktop) uninstall_linuxtinydesktop ;;
+	install_python) install_python ;;
+	uninstall_python) uninstall_python ;;
 	install_carbonpx) install_carbonpx ;;
 	install_peditx) install_peditx ;;
 	install_installauroratheme) install_installauroratheme ;;
