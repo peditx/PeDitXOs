@@ -33,9 +33,10 @@ URL_INSTALL_INSTALLTORPLUS="https://raw.githubusercontent.com/peditx/openwrt-tor
 URL_INSTALL_INSTALLSSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/main/Files/install_sshplus.sh"
 URL_INSTALL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/install.sh"
 URL_INSTALL_WARPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/install.sh"
-URL_INSTALL_OPENCLASHPLUS="https://peditx.ir/foreignscs/OpenClash/install.sh"
 URL_INSTALL_AMNEZIAWG="https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh"
+URL_INSTALL_OPENCLASHPLUS="https://peditx.ir/foreignscs/OpenClash/install.sh"
 URL_INSTALL_IRANIPS="https://raw.githubusercontent.com/peditx/iranIPS/refs/heads/main/.files/iranips.sh"
+URL_INSTALL_PYTHON="https://peditx.ir/projects/Python/install.sh"
 URL_INSTALL_LINUXTINYDESKTOP="https://peditx.ir/projects/Linux/install.sh"
 URL_INSTALL_CARBONPX="https://raw.githubusercontent.com/peditx/luci-theme-carbonpx/refs/heads/main/install.sh"
 URL_INSTALL_PEDITX="https://raw.githubusercontent.com/peditx/luci-theme-peditx/refs/heads/main/install.sh"
@@ -72,6 +73,7 @@ URL_UNINSTALL_INSTALLSSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/m
 URL_UNINSTALL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/uninstall.sh"
 URL_UNINSTALL_WARPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/uninstall.sh"
 URL_UNINSTALL_OPENCLASHPLUS="https://peditx.ir/foreignscs/OpenClash/uninstall.sh"
+URL_UNINSTALL_PYTHON="https://peditx.ir/projects/Python/uninstall.sh"
 URL_UNINSTALL_LINUXTINYDESKTOP="https://peditx.ir/projects/Linux/uninstall.sh"
 URL_UNINSTALL_INSTALLAURORATHEME="https://peditx.ir/foreignscs/luci-theme-aurora/uninstall.sh"
 URL_UNINSTALL_INSTALLARGONTHEME="https://peditx.ir/foreignscs/luci-theme-argon/uninstall.sh"
@@ -214,19 +216,24 @@ install_warpplusplus() {
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_WARPPLUSPLUS" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
-install_openclashplus() {
-	echo "Downloading OpenClash Plus components..."
-	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_OPENCLASHPLUS" -O install.sh && chmod +x install.sh && sh install.sh
-}
-
 install_amneziawg() {
 	echo "Downloading AmneziaWG components..."
 	cd /tmp && rm -f amneziawg-install.sh && wget -q "$URL_INSTALL_AMNEZIAWG" -O amneziawg-install.sh && chmod +x amneziawg-install.sh && sh amneziawg-install.sh
 }
 
+install_openclashplus() {
+	echo "Downloading OpenClash Plus components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_OPENCLASHPLUS" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
 install_iranips() {
 	echo "Downloading Iran Rule IPS for Passwall2 components..."
 	cd /tmp && rm -f iranips.sh && wget -q "$URL_INSTALL_IRANIPS" -O iranips.sh && chmod +x iranips.sh && sh iranips.sh
+}
+
+install_python() {
+	echo "Downloading Python components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_PYTHON" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_linuxtinydesktop() {
@@ -396,6 +403,11 @@ uninstall_openclashplus() {
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_OPENCLASHPLUS" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
+uninstall_python() {
+	echo "Downloading Uninstall Python components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_PYTHON" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
 uninstall_linuxtinydesktop() {
 	echo "Downloading Uninstall Linux Tiny Desktop components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_LINUXTINYDESKTOP" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
@@ -519,10 +531,12 @@ case "$ACTION" in
 	uninstall_warp) uninstall_warp ;;
 	install_warpplusplus) install_warpplusplus ;;
 	uninstall_warpplusplus) uninstall_warpplusplus ;;
+	install_amneziawg) install_amneziawg ;;
 	install_openclashplus) install_openclashplus ;;
 	uninstall_openclashplus) uninstall_openclashplus ;;
-	install_amneziawg) install_amneziawg ;;
 	install_iranips) install_iranips ;;
+	install_python) install_python ;;
+	uninstall_python) uninstall_python ;;
 	install_linuxtinydesktop) install_linuxtinydesktop ;;
 	uninstall_linuxtinydesktop) uninstall_linuxtinydesktop ;;
 	install_carbonpx) install_carbonpx ;;
