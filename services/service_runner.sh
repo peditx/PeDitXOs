@@ -9,6 +9,7 @@ ACTION="$1"
 URL_INSTALL_PEDITXOSIRANIANREPO="https://peditx.ir/projects/PeDitXOS-Repo/install.sh"
 URL_INSTALL_PASSWALL2="https://peditx.ir/projects/passwall/Passwall2/install.sh"
 URL_INSTALL_PASSWALL="https://peditx.ir/projects/passwall/Passwall1/install.sh"
+URL_INSTALL_GITHUBFIX="https://peditx.ir//projects/Github-fix/install.sh"
 URL_INSTALL_INSTALLDNSJUMPER="https://peditx.ir/projects/DNSJumper/code/install.sh"
 URL_INSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/install.sh"
 URL_INSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
@@ -48,6 +49,7 @@ URL_INSTALL_INSTALLARGONTHEME="https://peditx.ir/foreignscs/luci-theme-argon/ins
 URL_UNINSTALL_PEDITXOSIRANIANREPO="https://peditx.ir/projects/PeDitXOS-Repo/uninstall.sh"
 URL_UNINSTALL_PASSWALL2="https://peditx.ir/projects/passwall/Passwall2/uninstall.sh"
 URL_UNINSTALL_PASSWALL="https://peditx.ir/projects/passwall/Passwall1/uninstall.sh"
+URL_UNINSTALL_GITHUBFIX="https://peditx.ir//projects/Github-fix/uninstall.sh"
 URL_UNINSTALL_INSTALLDNSJUMPER="https://peditx.ir/projects/DNSJumper/code/uninstall.sh"
 URL_UNINSTALL_PXNOTIFIER="https://peditx.ir/projects/PXnotifier/code/uninstall.sh"
 URL_UNINSTALL_INSTALLAIRCAST="https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_uninstall.sh"
@@ -94,6 +96,11 @@ install_passwall2() {
 install_passwall() {
 	echo "Downloading Passwall components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_PASSWALL" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_githubfix() {
+	echo "Downloading Github-fix components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_GITHUBFIX" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_installdnsjumper() {
@@ -276,6 +283,11 @@ uninstall_passwall2() {
 uninstall_passwall() {
 	echo "Downloading Uninstall Passwall components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_PASSWALL" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
+uninstall_githubfix() {
+	echo "Downloading Uninstall Github-fix components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_GITHUBFIX" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
 uninstall_installdnsjumper() {
@@ -483,6 +495,8 @@ case "$ACTION" in
 	uninstall_passwall2) uninstall_passwall2 ;;
 	install_passwall) install_passwall ;;
 	uninstall_passwall) uninstall_passwall ;;
+	install_githubfix) install_githubfix ;;
+	uninstall_githubfix) uninstall_githubfix ;;
 	install_installdnsjumper) install_installdnsjumper ;;
 	uninstall_installdnsjumper) uninstall_installdnsjumper ;;
 	install_pxnotifier) install_pxnotifier ;;
