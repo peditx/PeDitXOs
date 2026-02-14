@@ -36,6 +36,7 @@ URL_INSTALL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs
 URL_INSTALL_WARPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/install.sh"
 URL_INSTALL_AMNEZIAWG="https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh"
 URL_INSTALL_OPENCLASHPLUS="https://peditx.ir/foreignscs/OpenClash/install.sh"
+URL_INSTALL_PASSWALL12MOD="https://peditx.ir/projects/passwall/passwallmod/install.sh"
 URL_INSTALL_IRANIPS="https://raw.githubusercontent.com/peditx/iranIPS/refs/heads/main/.files/iranips.sh"
 URL_INSTALL_LINUXTINYDESKTOP="https://peditx.ir/projects/Linux/install.sh"
 URL_INSTALL_PYTHON="https://peditx.ir/projects/Python/install.sh"
@@ -75,6 +76,7 @@ URL_UNINSTALL_INSTALLSSHPLUS="https://raw.githubusercontent.com/peditx/SshPlus/m
 URL_UNINSTALL_WARP="https://raw.githubusercontent.com/peditx/openwrt-warpplus/refs/heads/main/files/uninstall.sh"
 URL_UNINSTALL_WARPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpplusplus/refs/heads/main/uninstall.sh"
 URL_UNINSTALL_OPENCLASHPLUS="https://peditx.ir/foreignscs/OpenClash/uninstall.sh"
+URL_UNINSTALL_PASSWALL12MOD="https://peditx.ir/projects/passwall/passwallmod/uninstall.sh"
 URL_UNINSTALL_LINUXTINYDESKTOP="https://peditx.ir/projects/Linux/uninstall.sh"
 URL_UNINSTALL_PYTHON="https://peditx.ir/projects/Python/uninstall.sh"
 URL_UNINSTALL_INSTALLAURORATHEME="https://peditx.ir/foreignscs/luci-theme-aurora/uninstall.sh"
@@ -231,6 +233,11 @@ install_amneziawg() {
 install_openclashplus() {
 	echo "Downloading OpenClash Plus components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_OPENCLASHPLUS" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_passwall12mod() {
+	echo "Downloading Passwall1-2 Mod components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_PASSWALL12MOD" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_iranips() {
@@ -415,6 +422,11 @@ uninstall_openclashplus() {
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_OPENCLASHPLUS" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
 }
 
+uninstall_passwall12mod() {
+	echo "Downloading Uninstall Passwall1-2 Mod components..."
+	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_PASSWALL12MOD" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+}
+
 uninstall_linuxtinydesktop() {
 	echo "Downloading Uninstall Linux Tiny Desktop components..."
 	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_LINUXTINYDESKTOP" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
@@ -548,6 +560,8 @@ case "$ACTION" in
 	install_amneziawg) install_amneziawg ;;
 	install_openclashplus) install_openclashplus ;;
 	uninstall_openclashplus) uninstall_openclashplus ;;
+	install_passwall12mod) install_passwall12mod ;;
+	uninstall_passwall12mod) uninstall_passwall12mod ;;
 	install_iranips) install_iranips ;;
 	install_linuxtinydesktop) install_linuxtinydesktop ;;
 	uninstall_linuxtinydesktop) uninstall_linuxtinydesktop ;;
