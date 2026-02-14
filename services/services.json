@@ -36,6 +36,18 @@
     "script_url": "https://peditx.ir/projects/passwall/Passwall1/install.sh"
   },
   {
+    "id": "install_githubfix",
+    "name": "Github-fix",
+    "description": "Professional GitHub mirror selector with Proxy-Bypass and Auto-Purge",
+    "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1771063852911-IMG_7689.jpeg",
+    "version": "V4.0.0",
+    "publisher": "PeDitX",
+    "publisher_url": "https://github.com/peditx",
+    "uninstall_id": "uninstall_githubfix",
+    "uninstall_script_url": "https://peditx.ir//projects/Github-fix/uninstall.sh",
+    "script_url": "https://peditx.ir//projects/Github-fix/install.sh"
+  },
+  {
     "id": "install_installdnsjumper",
     "name": "DNSJumper",
     "description": "An advanced DNS management panel for OpenWrt (LuCI) to test, sort, and easily change DNS with one click.",
