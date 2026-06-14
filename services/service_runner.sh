@@ -37,6 +37,7 @@ URL_INSTALL_WARPPLUSPLUS="https://raw.githubusercontent.com/peditx/openwrt-warpp
 URL_INSTALL_AMNEZIAWG="https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh"
 URL_INSTALL_OPENCLASHPLUS="https://peditx.ir/foreignscs/OpenClash/install.sh"
 URL_INSTALL_PASSWALL12MOD="https://peditx.ir/projects/passwall/passwallmod/install.sh"
+URL_INSTALL_PASSWALL12PEDITXCLASSICMOD="https://peditx.ir/projects/passwall/passwallmod-classic/install.sh"
 URL_INSTALL_IRANIPS="https://raw.githubusercontent.com/peditx/iranIPS/refs/heads/main/.files/iranips.sh"
 URL_INSTALL_LINUXTINYDESKTOP="https://peditx.ir/projects/Linux/install.sh"
 URL_INSTALL_PYTHON="https://peditx.ir/projects/Python/install.sh"
@@ -238,6 +239,11 @@ install_openclashplus() {
 install_passwall12mod() {
 	echo "Downloading Passwall1-2 Mod components..."
 	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_PASSWALL12MOD" -O install.sh && chmod +x install.sh && sh install.sh
+}
+
+install_passwall12peditxclassicmod() {
+	echo "Downloading Passwall1-2 PeDitX Classic Mod components..."
+	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_PASSWALL12PEDITXCLASSICMOD" -O install.sh && chmod +x install.sh && sh install.sh
 }
 
 install_iranips() {
@@ -562,6 +568,7 @@ case "$ACTION" in
 	uninstall_openclashplus) uninstall_openclashplus ;;
 	install_passwall12mod) install_passwall12mod ;;
 	uninstall_passwall12mod) uninstall_passwall12mod ;;
+	install_passwall12peditxclassicmod) install_passwall12peditxclassicmod ;;
 	install_iranips) install_iranips ;;
 	install_linuxtinydesktop) install_linuxtinydesktop ;;
 	uninstall_linuxtinydesktop) uninstall_linuxtinydesktop ;;
