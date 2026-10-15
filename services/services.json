@@ -304,7 +304,7 @@
     "name": "SSHPlus",
     "description": "Advanced SSH management tool.",
     "icon_url": "https://raw.githubusercontent.com/peditx/SshPlus/refs/heads/main/icon/sshplus.png",
-    "version": "v15",
+    "version": "v16",
     "publisher": "PeDitX",
     "publisher_url": "https://github.com/peditx",
     "uninstall_id": "uninstall_installsshplus",
