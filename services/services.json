@@ -76,9 +76,9 @@
     "name": "Air-Cast",
     "description": "A service for audio and video streaming.",
     "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1765836576167-aircast (1).png",
-    "version": "v15",
+    "version": "v50",
     "publisher": "PeDitX",
-    "publisher_url": "https://github.com/peditx",
+    "publisher_url": "https://github.com/peditx/aircast-openwrt",
     "uninstall_id": "uninstall_installaircast",
     "uninstall_script_url": "https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_uninstall.sh",
     "script_url": "https://raw.githubusercontent.com/peditx/aircast-openwrt/main/aircast_install.sh"
