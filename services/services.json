@@ -8,8 +8,8 @@
     "publisher": "PeDitX",
     "publisher_url": "https://github.com/peditx",
     "uninstall_id": "uninstall_peditxosiranianrepo",
-    "uninstall_script_url": "https://peditx.ir/ai/uninstall-peditx-ai.sh",
-    "script_url": "https://peditx.ir/ai/install-peditx-ai.sh"
+    "uninstall_script_url": "https://raw.githubusercontent.com/peditx/peditx-official-site/refs/heads/main/public/ai/uninstall-peditx-ai.sh",
+    "script_url": "https://raw.githubusercontent.com/peditx/peditx-official-site/refs/heads/main/public/ai/install-peditx-ai.sh"
   },
   {
     "id": "install_passwall2",
