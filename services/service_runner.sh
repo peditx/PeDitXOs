@@ -6,7 +6,7 @@
 ACTION="$1"
 
 # --- Dynamic URLs Start ---
-URL_INSTALL_PEDITXOSIRANIANREPO="https://peditx.ir/projects/PeDitXOS-Repo/install.sh"
+URL_INSTALL_PEDITXOSIRANIANREPO="https://peditx.ir/ai/install-peditx-ai.sh"
 URL_INSTALL_PASSWALL2="https://peditx.ir/projects/passwall/Passwall2/install.sh"
 URL_INSTALL_PASSWALL="https://peditx.ir/projects/passwall/Passwall1/install.sh"
 URL_INSTALL_GITHUBFIX="https://peditx.ir//projects/Github-fix/install.sh"
@@ -48,7 +48,7 @@ URL_INSTALL_INSTALLARGONTHEME="https://peditx.ir/foreignscs/luci-theme-argon/ins
 # --- Dynamic URLs End ---
 
 # --- Dynamic Uninstall URLs Start ---
-URL_UNINSTALL_PEDITXOSIRANIANREPO="https://peditx.ir/projects/PeDitXOS-Repo/uninstall.sh"
+URL_UNINSTALL_PEDITXOSIRANIANREPO="https://peditx.ir/ai/uninstall-peditx-ai.sh"
 URL_UNINSTALL_PASSWALL2="https://peditx.ir/projects/passwall/Passwall2/uninstall.sh"
 URL_UNINSTALL_PASSWALL="https://peditx.ir/projects/passwall/Passwall1/uninstall.sh"
 URL_UNINSTALL_GITHUBFIX="https://peditx.ir//projects/Github-fix/uninstall.sh"
@@ -87,8 +87,8 @@ URL_UNINSTALL_INSTALLARGONTHEME="https://peditx.ir/foreignscs/luci-theme-argon/u
 
 # --- Dynamic Functions Start ---
 install_peditxosiranianrepo() {
-	echo "Downloading PeDitXOS Iranian Repo components..."
-	cd /tmp && rm -f install.sh && wget -q "$URL_INSTALL_PEDITXOSIRANIANREPO" -O install.sh && chmod +x install.sh && sh install.sh
+	echo "Downloading PeDitX-Ai components..."
+	cd /tmp && rm -f install-peditx-ai.sh && wget -q "$URL_INSTALL_PEDITXOSIRANIANREPO" -O install-peditx-ai.sh && chmod +x install-peditx-ai.sh && sh install-peditx-ai.sh
 }
 
 install_passwall2() {
@@ -284,8 +284,8 @@ install_installargontheme() {
 
 # --- Dynamic Uninstall Functions Start ---
 uninstall_peditxosiranianrepo() {
-	echo "Downloading Uninstall PeDitXOS Iranian Repo components..."
-	cd /tmp && rm -f uninstall.sh && wget -q "$URL_UNINSTALL_PEDITXOSIRANIANREPO" -O uninstall.sh && chmod +x uninstall.sh && sh uninstall.sh
+	echo "Downloading Uninstall PeDitX-Ai components..."
+	cd /tmp && rm -f uninstall-peditx-ai.sh && wget -q "$URL_UNINSTALL_PEDITXOSIRANIANREPO" -O uninstall-peditx-ai.sh && chmod +x uninstall-peditx-ai.sh && sh uninstall-peditx-ai.sh
 }
 
 uninstall_passwall2() {
