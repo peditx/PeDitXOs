@@ -1,15 +1,15 @@
 [
   {
     "id": "install_peditxosiranianrepo",
-    "name": "PeDitXOS Iranian Repo",
-    "description": "PeDitXOS repository is highly recommended for users in Iran",
+    "name": "PeDitX-Ai",
+    "description": "PeDitX-AI - local AI assistant with web UI and CLI",
     "icon_url": "https://cdn.jsdelivr.net/gh/peditx/PeDitXOs@main/.files/icon/store_icons/1769938551545-photo_2025-08-22_22-18-57.jpg",
-    "version": "v1.0.3",
+    "version": "v1.0.1",
     "publisher": "PeDitX",
     "publisher_url": "https://github.com/peditx",
     "uninstall_id": "uninstall_peditxosiranianrepo",
-    "uninstall_script_url": "https://peditx.ir/projects/PeDitXOS-Repo/uninstall.sh",
-    "script_url": "https://peditx.ir/projects/PeDitXOS-Repo/install.sh"
+    "uninstall_script_url": "https://peditx.ir/ai/uninstall-peditx-ai.sh",
+    "script_url": "https://peditx.ir/ai/install-peditx-ai.sh"
   },
   {
     "id": "install_passwall2",
