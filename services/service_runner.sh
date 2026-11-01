@@ -6,7 +6,7 @@
 ACTION="$1"
 
 # --- Dynamic URLs Start ---
-URL_INSTALL_PEDITXOSIRANIANREPO="https://peditx.ir/ai/install-peditx-ai.sh"
+URL_INSTALL_PEDITXOSIRANIANREPO="https://raw.githubusercontent.com/peditx/peditx-official-site/refs/heads/main/public/ai/install-peditx-ai.sh"
 URL_INSTALL_PASSWALL2="https://peditx.ir/projects/passwall/Passwall2/install.sh"
 URL_INSTALL_PASSWALL="https://peditx.ir/projects/passwall/Passwall1/install.sh"
 URL_INSTALL_GITHUBFIX="https://peditx.ir//projects/Github-fix/install.sh"
@@ -48,7 +48,7 @@ URL_INSTALL_INSTALLARGONTHEME="https://peditx.ir/foreignscs/luci-theme-argon/ins
 # --- Dynamic URLs End ---
 
 # --- Dynamic Uninstall URLs Start ---
-URL_UNINSTALL_PEDITXOSIRANIANREPO="https://peditx.ir/ai/uninstall-peditx-ai.sh"
+URL_UNINSTALL_PEDITXOSIRANIANREPO="https://raw.githubusercontent.com/peditx/peditx-official-site/refs/heads/main/public/ai/uninstall-peditx-ai.sh"
 URL_UNINSTALL_PASSWALL2="https://peditx.ir/projects/passwall/Passwall2/uninstall.sh"
 URL_UNINSTALL_PASSWALL="https://peditx.ir/projects/passwall/Passwall1/uninstall.sh"
 URL_UNINSTALL_GITHUBFIX="https://peditx.ir//projects/Github-fix/uninstall.sh"
